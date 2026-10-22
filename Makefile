@@ -87,3 +87,4 @@ export:          ## export a test as one JSON file: make export ID=<test_id>
 check:           ## sanity check: validate library tests and grade a synthetic attempt offline
 	$(PY) tools/validate.py $(notdir $(patsubst %/,%,$(dir $(wildcard library/*/test.json))))
 	$(PY) tools/selftest.py
+	$(PY) tools/goaltest.py

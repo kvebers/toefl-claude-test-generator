@@ -11,6 +11,8 @@
   th { background: #f3f6fa; } .muted { color: #5d6779; } .tag { font-family: Consolas, monospace; font-size: 8.5pt; background: #f3f6fa; padding: 1px 5px; border-radius: 4px; }
   .up { color: #c62828; } .down { color: #1a7f37; }
   .box { border-left: 4px solid #12355b; padding: 6px 12px; margin: 8px 0; break-inside: avoid; }
+  .st { display: inline-block; font-size: 8.5pt; font-weight: 600; padding: 0 6px; border-radius: 99px; border: 1px solid currentColor; margin-right: 2px; }
+  .st.met { color: #1a7f37; } .st.partly { color: #9a6700; } .st.not_met { color: #c62828; }
   @page { size: A4; margin: 14mm 12mm; } @media print { body { padding: 0; } }
 </style>
 </head>
@@ -25,6 +27,17 @@
 {% if a.improving %}<p><b>Improving:</b> {{ a.improving|join('; ') }}</p>{% endif %}
 {% if a.persistent %}<p><b>Persistent weaknesses:</b> {{ a.persistent|join('; ') }}</p>{% endif %}
 {% for p in a.plan or [] %}<div class="box"><b>{{ p.when }}:</b> {{ p.what }}{% if p.command %} <code>{{ p.command }}</code>{% endif %}</div>{% endfor %}
+{% endif %}
+
+{% if s.goal_history %}
+{% set ST = {'met': '✓', 'partly': '◐', 'not_met': '✗'} %}
+<h2>Goals by category</h2>
+<p class="muted">Status of each category goal in the attempts that tested it, oldest to newest (✓ met, ◐ partly, ✗ not met). Unmet goals first.</p>
+<table><tr><th>Category</th><th>Goal</th><th>History</th><th>Now</th></tr>
+{% for g in s.goal_history %}<tr><td>{{ g.task_type.replace('_', ' ')|capitalize }}</td><td>{{ g.criterion.replace('_', ' ') }}</td>
+<td>{% for st in g.statuses %}<span class="st {{ st }}">{{ ST[st] }}</span>{% endfor %}</td>
+<td class="{{ 'down' if g.latest == 'met' else 'up' if g.latest == 'not_met' else '' }}">{{ g.latest.replace('_', ' ') }}{% if g.trend == 'up' %} ↑{% elif g.trend == 'down' %} ↓{% endif %}</td></tr>{% endfor %}
+</table>
 {% endif %}
 
 <h2>Bands over time</h2>

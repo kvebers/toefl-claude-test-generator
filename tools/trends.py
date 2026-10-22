@@ -54,6 +54,21 @@ def skill_accuracy(data: list[dict]) -> dict:
     return {k: {"correct": c, "total": n, "accuracy": round(c / n, 2)} for k, (c, n) in sorted(agg.items(), key=lambda x: x[1][0] / x[1][1])}
 
 
+def goal_history(data: list[dict]) -> list[dict]:
+    """Per category goal: status in each attempt that tested it (oldest first, last 6)."""
+    hist: dict[tuple, list] = {}
+    for r in data:
+        for ttype, crits in (r.get("goals") or {}).items():
+            for cid, status in crits.items():
+                if status != "not_tested":
+                    hist.setdefault((ttype, cid), []).append(status)
+    rank = {"not_met": 0, "partly": 1, "met": 2}
+    out = [{"task_type": t, "criterion": c, "statuses": v[-6:], "latest": v[-1],
+            "trend": "up" if len(v) > 1 and rank[v[-1]] > rank[v[0]] else "down" if len(v) > 1 and rank[v[-1]] < rank[v[0]] else "flat"}
+           for (t, c), v in hist.items()]
+    return sorted(out, key=lambda g: (rank[g["latest"]], g["task_type"]))
+
+
 def charts(data: list[dict]) -> list[str]:
     import matplotlib
     matplotlib.use("Agg")
@@ -118,6 +133,7 @@ def build_data() -> dict:
         "history": [{k: r.get(k) for k in ("attempt_id", "date", "mode", "test_id", "overall_band", "est_total_120", "bands", "task_scores")} for r in data],
         "error_tag_trends": tag_trends(data),
         "skill_accuracy_last5": skill_accuracy(data),
+        "goal_history": goal_history(data),
         "charts": charts(data),
     }
     save_json(OUT / "trends.json", summary)

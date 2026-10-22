@@ -26,17 +26,27 @@ from the spec. Optional: count, difficulty (`easy|medium|hard|mixed`, default `m
    (passages, talks, conversations, email scenarios, discussion and interview topics) that have NOT been used.
    The learner takes many tests; repeated topics inflate their score.
 1. Pick an id: `YYYYMMDD-HHMM-<full|task>-<short-topic-slug>` (lowercase, hyphens). Work in `tests/<id>/`.
-2. **Full test**, generate the four sections in parallel with subagents (one per section). Give each
+2. **Full test**: if `tests/` already has a folder from an interrupted run of the same request (it has
+   `parts/` but no `test.json`), reuse it: keep its id and only generate the missing sections.
+   Generate the missing sections with subagents (one per section). Run them in the **foreground** and wait
+   for all of them in this turn: never start them in the background and never end your turn while they run
+   (in headless `claude -p` mode, ending the turn stops the whole run). Subagents only write their JSON
+   file; they do not run shell commands (you validate afterwards). Give each
    subagent: the spec block for its section, the schema, the item-writing guide, the target difficulty,
    the list of topics already used by the other sections (keep topics varied across the whole test),
    and the output path `tests/<id>/parts/<section>.json` (a single section object
    `{"id": "...", "modules": {...}}`). Reading and listening must contain `m1`, `m2_easy`, `m2_hard`
    with `time_sec` from the spec; writing and speaking contain only `m1` with per-task `time_sec`.
+   **Counts follow the ETS 2026 blueprint in the spec**: a task's `m1` / `m2` number is how many tasks of
+   that type go in module 1 / each module 2 variant (`m2_easy` / `m2_hard` override `m2`); `count` for writing
+   and speaking is the number of items (sentences, questions). A full test has about 50 reading items,
+   about 47 listening items, 12 writing items and 11 speaking items; the validator warns on any mismatch,
+   and you must fix every count warning.
    Task ids must be unique across the test, prefix with the section letter and module, e.g. `r1-ctw`,
    `r2h-acad2`, `l1-cr3`, `w-email`, `s-interview`.
    Then run:
    `python tools/assemble.py <id> --title "<title>" --mode full --difficulty <d> --description "<one line>"`
-3. **Practice set**, write `tests/<id>/test.json` directly with `"mode": "practice"`, containing only
+3. **Practice set**: write `tests/<id>/test.json` directly with `"mode": "practice"`, containing only
    the requested section, a single `m1` module, and `count` instances of the requested task type
    (default: the per-module count in the spec, or 2 for email/discussion, 2 interview topics).
    Give reading/listening practice modules a `time_sec` scaled to the number of items.
@@ -52,6 +62,7 @@ from the spec. Optional: count, difficulty (`easy|medium|hard|mixed`, default `m
 7. Finish with one line: `Ready: make take ID=<id>` and a 1-line description of the topics.
 
 Do not start the web server yourself; the Makefile does that.
+Do not end your turn before step 7 has printed `Ready: ...`, unless something failed; then say exactly what failed.
 
 ## Writing style
 Never use em dashes (the long dash) in any text you write: test content, explanations, feedback or

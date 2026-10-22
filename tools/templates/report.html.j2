@@ -27,6 +27,23 @@
   .tag { font-family: Consolas, monospace; font-size: 8.5pt; background: var(--soft); padding: 1px 5px; border-radius: 4px; white-space: nowrap; }
   del { color: var(--bad); } ins { color: var(--ok); text-decoration: none; font-weight: 600; }
   .metrics span { display: inline-block; margin-right: 12px; }
+  .st { display: inline-block; white-space: nowrap; font-weight: 600; font-size: 9.5pt; padding: 1px 8px; border-radius: 99px; border: 1px solid currentColor; }
+  .st.met { color: var(--ok); } .st.partly { color: #9a6700; } .st.not_met { color: var(--bad); } .st.not_tested { color: var(--muted); }
+  .goals td:first-child { width: 26%; } .goals td:nth-child(3) { width: 12%; }
+  .learn { background: #f6f9ff; border-left: 3px solid #1f6feb; padding: 6px 10px; margin: 4px 0 2px; font-size: 9.8pt; }
+  .learn b { color: #12355b; }
+  .levels td { vertical-align: top; } .levels td:first-child { width: 16%; font-weight: 600; }
+  .goal-cat { border: 1px solid var(--line); border-radius: 8px; margin: 10px 0; padding: 4px 12px 8px; }
+  .goal-head { padding: 6px 0; border-bottom: 1px solid var(--line); break-after: avoid; }
+  .goal { padding: 7px 0; border-bottom: 1px dashed var(--line); break-inside: avoid; }
+  .goal:last-child { border-bottom: none; }
+  .goal-line { display: flex; gap: 10px; align-items: baseline; }
+  .goal-ev { font-size: 9.5pt; margin: 2px 0 0 0; }
+  .levels-wrap { break-inside: avoid; }
+  .calc td:first-child { width: 16%; font-weight: 600; }
+  audio { height: 30px; vertical-align: middle; max-width: 260px; }
+  .play { white-space: nowrap; } .play .file { display: none; font-size: 8.5pt; color: var(--muted); }
+  @media print { audio { display: none; } .play .file { display: inline; } }
   .note { font-size: 9pt; color: var(--muted); margin-top: 26px; border-top: 1px solid var(--line); padding-top: 8px; }
   @page { size: A4; margin: 14mm 12mm; }
   @media print { body { padding: 0; } }
@@ -46,6 +63,15 @@
   {% endfor %}
 </div>
 <div class="muted">{{ S.estimate_note }}</div>
+{% set CALC = score.get('sections', {}) %}
+{% if CALC %}
+<table class="calc" style="margin-top:10px"><tr><th>Section</th><th>How the band was calculated</th></tr>
+{% for sid, sec in CALC.items() %}<tr><td>{{ sid|label }}</td><td>
+{% if sec.raw %}{{ sec.raw }} correct ({{ (sec.accuracy * 100)|round|int }}%){% if sec.route %} on the {{ 'harder' if sec.route == 'm2_hard' else 'easier' }} part 2, which allows bands {{ '3.5 to 6' if sec.route == 'm2_hard' else '1 to 4.5' }}{% endif %}.
+{% elif sec.task_scores_0_5 %}{% for t, v in sec.task_scores_0_5.items() %}{{ t|label }} {{ v }}/5{% if sec.weights %} (weight {{ (sec.weights[t] * 100)|round|int }}%){% endif %}{% if not loop.last %} · {% endif %}{% endfor %}. Weights follow ETS raw points.
+{% else %}Not scored.{% endif %}</td></tr>{% endfor %}
+</table>
+{% endif %}
 {% for n in score.get('notes', []) %}<div class="bad">⚠ {{ n }}</div>{% endfor %}
 {% if meta.fullscreen_exits %}<div class="bad">⚠ Left full screen {{ meta.fullscreen_exits }} time(s). In the real Home Edition this can void a test.</div>{% endif %}
 
@@ -64,6 +90,42 @@
 {% if grading.objective_patterns %}<p><b>Patterns in your multiple-choice mistakes:</b> {{ grading.objective_patterns }}</p>{% endif %}
 {% else %}
 <h2>Summary</h2><p class="muted">Claude grading was not run for this attempt, so writing/speaking feedback is missing. Run <code>make grade ID={{ attempt.id }}</code>.</p>
+{% endif %}
+
+{% if levels %}
+<div class="levels-wrap">
+<h2>Your level and the next step</h2>
+<p class="muted">What your band means for each section, and what the next level up can do: that is your target. Based on the ETS 2026 blueprint's CEFR descriptions.</p>
+<table class="levels"><tr><th>Section</th><th>What you can do now</th><th>Next level: your target</th></tr>
+{% for sid, l in levels.items() %}<tr><td>{{ sid|label }}<br><span class="muted">band {{ l.band }} · {{ l.cefr }}</span></td>
+<td><b>{{ l.group|capitalize }}.</b> {{ l.now }}</td>
+<td>{% if l.next %}<b>{{ l.next_group|capitalize }}.</b> {{ l.next }}{% else %}You are at the top level; keep it consistent across tests.{% endif %}</td></tr>{% endfor %}
+</table>
+</div>
+{% endif %}
+
+{% if score.goals %}
+{% set ST = {'met': '✓ Met', 'partly': '◐ Partly', 'not_met': '✗ Not met', 'not_tested': 'Not tested'} %}
+<h2>Goals by category</h2>
+<p class="muted">Every task type is checked against what it is designed to measure. Reading, listening and sentence goals come from
+your accuracy on each question type (met: 80%+, partly: 50%+); writing and speaking goals are rated by Claude with evidence from your answers.</p>
+{% set all_c = score.goals|map(attribute='criteria')|sum(start=[]) %}
+<p><b>{{ all_c|selectattr('status', 'equalto', 'met')|list|length }}</b> of {{ all_c|rejectattr('status', 'equalto', 'not_tested')|list|length }} goals met ·
+<b>{{ all_c|selectattr('status', 'equalto', 'partly')|list|length }}</b> partly · <b>{{ all_c|selectattr('status', 'equalto', 'not_met')|list|length }}</b> not met</p>
+{% for g in score.goals %}
+<div class="goal-cat">
+  <div class="goal-head"><b>{{ g.task_type|label }}</b> <span class="muted">· {{ g.measures }}</span></div>
+  {% for c in g.criteria %}
+  <div class="goal">
+    <div class="goal-line"><span class="st {{ c.status }}">{{ ST[c.status] }}</span> <span>{{ c.text }}</span></div>
+    <div class="muted goal-ev">{{ c.evidence }}</div>
+    {% if c.status in ['partly', 'not_met'] and (c.tip or c.example) %}
+    <div class="learn">{% if c.tip %}<b>How to improve:</b> {{ c.tip }}{% endif %}{% if c.example %}<br><b>Example:</b> {{ c.example }}{% endif %}</div>
+    {% endif %}
+  </div>
+  {% endfor %}
+</div>
+{% endfor %}
 {% endif %}
 
 {% for sid in ['reading', 'listening'] if sid in tasks %}
@@ -116,10 +178,13 @@
 {% for t in tasks.speaking %}
   {% if t.type == 'listen_and_repeat' %}
   <h3>Listen and Repeat</h3>
-  <table><tr><th>Sentence</th><th>What we heard</th><th>Accuracy</th></tr>
+  <p class="muted">Each sentence is rated 0–5 by word errors: word-perfect = 5, one slip = 4, two or three = 3, more but half right = 2, any attempt = 1. Words the speech recogniser was unsure of count half.</p>
+  <table><tr><th>Sentence</th><th>What we heard</th><th>Accuracy</th><th>Points</th><th class="play">Listen: original / you</th></tr>
   {% for r in objective.repeats if r.task_id == t.id %}
     <tr><td>{{ r.target }}</td><td>{{ r.said if r.said is not none else '(not transcribed)' }}</td>
-    <td class="{{ 'ok' if (r.accuracy or 0) >= 0.9 else 'bad' }}">{{ ((r.accuracy or 0) * 100)|round|int }}%</td></tr>
+    <td class="{{ 'ok' if (r.accuracy or 0) >= 0.9 else 'bad' }}">{{ ((r.accuracy or 0) * 100)|round|int }}%</td><td>{{ r.points if r.points is defined else '-' }}/5</td>
+    <td class="play">{% if originals.get(r.key) %}<audio controls preload="none" src="{{ originals[r.key] }}"></audio>{% endif %}
+      {% if recordings.get(r.key) %}<audio controls preload="none" src="{{ recordings[r.key] }}"></audio><span class="file">{{ recordings[r.key] }}</span>{% endif %}</td></tr>
   {% endfor %}</table>
   {% else %}
   {% set g = g_tasks.get(t.id) %}
@@ -130,6 +195,8 @@
     {% set gq = (g.questions or {}).get(q.id) if g else none %}
     <div class="box">
       <b>Q{{ loop.index }}. {{ q.text }}</b>{% if gq %} ({{ gq.score }}/5){% endif %}
+      {% set rk = t.id ~ '__' ~ q.id %}
+      {% if recordings.get(rk) %}<div class="play">Your answer: <audio controls preload="none" src="{{ recordings[rk] }}"></audio><span class="file">{{ recordings[rk] }}</span></div>{% endif %}
       <div class="resp">{{ tr.text or tr.error or '(no recording)' }}</div>
       {% if tr.wpm is defined %}<div class="metrics muted"><span>{{ tr.wpm }} words/min</span><span>{{ tr.pauses }} pauses &gt;0.5s</span><span>{{ tr.long_pauses }} long pauses</span><span>{{ tr.fillers }} fillers</span><span>spoke for {{ tr.duration }}s of {{ t.answer_sec }}s</span></div>{% endif %}
       {% if gq %}<p>{{ gq.summary }}</p>
@@ -141,7 +208,7 @@
   {% if g and g.errors %}<table><tr><th>You said</th><th>Better</th><th>Why</th></tr>{% for e in g.errors %}<tr><td><del>{{ e.quote }}</del></td><td><ins>{{ e.correction }}</ins></td><td>{{ e.explanation }} <span class="tag">{{ e.tag }}</span></td></tr>{% endfor %}</table>{% endif %}
   {% endif %}
 {% endfor %}
-<p class="muted">Pronunciation is estimated from speech-recognition confidence and repeat accuracy only; Claude grades the transcript, not the sound of your voice.</p>
+<p class="muted">Your recordings are saved in <code>results/{{ attempt.id }}/recordings/</code>; open report.html to play them next to the feedback. Pronunciation is estimated from speech-recognition confidence and repeat accuracy only; Claude grades the transcript, not the sound of your voice.</p>
 {% endif %}
 
 {% if score.error_tags %}

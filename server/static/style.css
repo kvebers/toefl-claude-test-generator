@@ -159,6 +159,15 @@ tbody tr:hover { background: var(--accent-soft); }
 textarea.writing { width: 100%; min-height: 300px; padding: 14px; border: 1.5px solid var(--line-strong); border-radius: 10px;
                    background: var(--panel); resize: vertical; line-height: 1.7; transition: border-color .15s, box-shadow .15s; }
 textarea.writing:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+.wc-row { display: flex; gap: 12px; align-items: center; justify-content: space-between; }
+.wc { flex: 1; display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.wc-text { display: flex; gap: 4px; align-items: baseline; font-size: .95rem; }
+.wc-num { font-size: 1.15rem; font-variant-numeric: tabular-nums; transition: color .2s; }
+.wc-bar { height: 6px; background: var(--line); border-radius: 99px; overflow: hidden; }
+.wc-bar > div { height: 100%; width: 0; background: var(--muted); border-radius: 99px; transition: width .25s var(--ease), background .2s; }
+.wc[data-state="in"] .wc-num { color: var(--ok); } .wc[data-state="in"] .wc-bar > div { background: var(--ok); }
+.wc[data-state="over"] .wc-bar > div { background: var(--accent); }
+.wc-toggle { padding: 4px 12px; font-size: .85rem; flex: none; }
 .wordcount { display: flex; justify-content: space-between; color: var(--muted); font-size: .9rem; }
 .post { border-left: 4px solid var(--line-strong); padding: 6px 14px; }
 .post.prof { border-color: var(--brand); }

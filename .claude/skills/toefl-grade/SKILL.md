@@ -20,6 +20,16 @@ already scored deterministically.
 
 ## Output: `<folder>/grading.json`
 1. `tasks.<task_id>` for **every** email, academic_discussion and interview task in the input:
+   - `criteria`: rate **every** criterion listed in that task's `criteria_to_rate` against the task's
+     `measures` goal: `{"id", "status": "met" | "partly" | "not_met", "evidence"}`. Evidence quotes or
+     points to the response ("all 3 bullets covered", "no example given: 'it is very useful for me'").
+     For every criterion that is `partly` or `not_met`, also give `improve` (one or two concrete sentences
+     of advice for this learner, not generic) and `example` (the learner's own sentence or answer,
+     rewritten so it meets the criterion: "You wrote: '...' Better: '...'"). The checker rejects unmet
+     criteria without both. Write like a supportive teacher: name what works, then exactly what to change.
+     The criteria are the goals of the category; judge them before deciding the score, and keep the score
+     consistent with them (mostly met: 4+, mixed: about 3, mostly not met: 2 or below). The checker rejects a
+     score more than 1 point away from what the criteria imply (met 4.5, partly 3, not met 1.5, averaged).
    - `score` 0–5 (half points allowed) using the rubric for that task type.
    - `dimensions`: one short sentence per rubric dimension.
    - `summary`: 2–3 sentences, what drove the score.
@@ -35,7 +45,12 @@ already scored deterministically.
 2. `objective_patterns`: 2–4 sentences on what the reading/listening/build-sentence misses have in
    common (question types, inference vs detail, vocabulary, time pressure if many blanks at the end).
    Write "No multiple-choice mistakes." if there are none.
-3. `overall`: `summary` (3–5 sentences: level estimate in plain words, biggest gap, encouragement
+3. Analyse by goals, not just by mistakes. `objective_goals` in the input already says which
+   reading/listening/build-sentence goals were met (from accuracy per question type). Combine those with
+   your writing/speaking criteria ratings: the summary must say which category goals are met and which are
+   not, and every priority must target an unmet or partly met goal (put the criterion id in its `tags`,
+   e.g. `academic_discussion.new_contribution`, alongside error-taxonomy tags).
+4. `overall`: `summary` (3–5 sentences: level estimate in plain words, biggest gap, encouragement
    grounded in evidence), `strengths`, and 3–5 `priorities` ordered by expected score gain. Each has
    `title`, `why` (with evidence), `how` (2–4 concrete drills), `tags`, and `practice_command`
    like `make practice TASK=academic_discussion` or `make practice TASK=reading LEVEL=hard`.

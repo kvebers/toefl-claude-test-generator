@@ -51,6 +51,12 @@ def main() -> int:
                     "duration": 21.5, "speech_start": 1.2, "wpm": 95, "pauses": 6, "long_pauses": 2, "fillers": 3,
                     "mean_word_prob": 0.86, "low_confidence_words": []}
 
+    from common import load_spec
+    goals = load_spec()["goals"]
+    crit = lambda t, st: [{"id": k, "status": st, "evidence": "synthetic", "improve": "synthetic advice", "example": "synthetic example"}
+                          for k, v in goals[t]["criteria"].items()
+                          if "skills" not in v and "repeat" not in v]
+
     def attempt(aid: str, score_shift: float):
         d = tmp / aid
         (d / "recordings").mkdir(parents=True)
@@ -67,11 +73,14 @@ def main() -> int:
             for q in test["sections"][3]["modules"]["m1"]["tasks"][1]["questions"]}
         save_json(d / "grading.json", {
             "tasks": {"w-email": {"score": 2.5 + score_shift, "summary": "Covers all points briefly.", "errors": [err],
+                                  "criteria": crit("email", "partly"),
                                   "dimensions": {"task_completion": "All bullets touched, thinly."}, "improved_version": "Dear Ms Chen, ..."},
-                      "w-disc": {"score": 2 + score_shift, "summary": "Off-topic: the response is an email.", "errors": [
+                      "w-disc": {"score": 2 + score_shift, "summary": "Off-topic: the response is an email.",
+                                 "criteria": crit("academic_discussion", "partly" if score_shift else "not_met"), "errors": [
                           {"tag": "discourse.relevance", "quote": "Dear Ms Chen", "correction": "(answer the professor's question)",
                            "explanation": "The discussion task needs an opinion on lecture recordings."}]},
-                      "s-interview": {"score": 2.5 + score_shift, "summary": "Answers are short.", "errors": [], "questions": q_grades}},
+                      "s-interview": {"score": 2.5 + score_shift, "summary": "Answers are short.", "errors": [], "questions": q_grades,
+                                      "criteria": crit("interview", "met" if score_shift else "partly")}},
             "objective_patterns": "Most misses are inference questions.",
             "overall": {"summary": "Solid B1–B2 base.", "strengths": ["Clear reading of details"],
                         "priorities": [{"title": "Develop your answers", "why": "Interview answers use 21 of 45 seconds.",
@@ -89,6 +98,9 @@ def main() -> int:
               f"bands { {k: v['band'] for k, v in score['sections'].items()} }")
         assert score["summary"]["overall_band"] is not None, "overall band missing"
         assert (d / "report.html").exists(), "report.html missing"
+        untested = [(g["task_type"], c["id"]) for g in score["goals"] for c in g["criteria"] if c["status"] == "not_tested"
+                    and g["task_type"] != "listen_and_repeat" and not c["evidence"].startswith("no questions of this kind")]
+        assert not untested, f"goal checks incomplete: {untested}"
     r = subprocess.run([py, str(TOOLS / "trends.py"), "data"], capture_output=True, text=True)
     r2 = subprocess.run([py, str(TOOLS / "trends.py"), "render"], capture_output=True, text=True)
     print(r.stdout.strip(), r2.stdout.strip(), r.stderr[-1500:], r2.stderr[-1500:])

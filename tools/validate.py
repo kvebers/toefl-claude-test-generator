@@ -41,6 +41,15 @@ def validate(test: dict) -> tuple[list[str], list[str]]:
         allowed = spec["sections"][sid]["tasks"]
         if task["type"] not in allowed:
             errors.append(f"{where}: task type {task['type']} does not belong in {sid}")
+        goal = spec.get("goals", {}).get(task["type"])
+        if goal is None:
+            errors.append(f"{where}: no goals defined for task type {task['type']} in the spec")
+        else:
+            covered = {sk for c in goal["criteria"].values() for sk in c.get("skills", [])}
+            for q in task.get("questions", []) + (task.get("items", []) if task["type"] == "build_sentence" else []):
+                if covered and q.get("skill") and q["skill"] not in covered:
+                    warnings.append(f"{where}/{q['id']}: skill {q['skill']} is not part of any {task['type']} goal "
+                                    f"(use one of: {', '.join(sorted(covered))})")
         q_ids = Counter()
         for q in task.get("questions", []):
             if "answer" in q:
@@ -70,6 +79,18 @@ def validate(test: dict) -> tuple[list[str], list[str]]:
                 warnings.append(f"{where}: only {n} gaps")
 
     errors += [f"task id '{k}' used {v} times (must be unique across the test)" for k, v in task_ids.items() if v > 1]
+    if test["mode"] == "full" and "sample" not in test.get("tags", []):
+        for sec in test["sections"]:
+            for mkey, module in sec["modules"].items():
+                got = Counter(t["type"] for t in module["tasks"])
+                for ttype, cfg in spec["sections"][sec["id"]]["tasks"].items():
+                    want = cfg.get(mkey, cfg.get(mkey[:2], cfg.get("count")))
+                    if ttype in ("build_sentence", "listen_and_repeat", "interview"):   # counted in items/questions
+                        n = sum(len(t.get("items") or t.get("questions")) for t in module["tasks"] if t["type"] == ttype)
+                        if want and n != want:
+                            warnings.append(f"{sec['id']}/{mkey}: {n} {ttype} items, ETS spec says {want}")
+                    elif want is not None and got[ttype] != want:
+                        warnings.append(f"{sec['id']}/{mkey}: {got[ttype]} x {ttype}, spec says {want}")
     if "—" in json.dumps(test, ensure_ascii=False):
         errors.append("test text contains em dashes (—); use a comma, colon or full stop instead")
     total = sum(answer_positions.values())

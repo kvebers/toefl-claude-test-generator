@@ -13,7 +13,7 @@ from pathlib import Path
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
-from common import iter_tasks, load_json
+from common import find_test_dir, iter_tasks, load_json, load_spec
 
 TEMPLATES = Path(__file__).resolve().parent / "templates"
 BROWSERS = [
@@ -71,7 +71,34 @@ def context(d: Path) -> dict:
     tasks = {sid: [] for sid in [s["id"] for s in test["sections"]]}
     for sid, mkey, task in iter_tasks(test, routes):
         tasks[sid].append({"module": mkey, **task})
+    # Your recordings (results/<attempt>/recordings) and, for Listen & Repeat, the original sentence audio,
+    # copied next to the report so the folder stays self-contained.
+    recordings = {p.stem: f"recordings/{p.name}" for p in sorted((d / "recordings").glob("*")) if p.stat().st_size > 0}
+    originals = {}
+    try:
+        manifest = load_json(find_test_dir(attempt["test_id"]) / "audio" / "manifest.json")
+        src_dir = find_test_dir(attempt["test_id"]) / "audio"
+        (d / "audio").mkdir(exist_ok=True)
+        for key in recordings:
+            files = [e["file"] for e in manifest.get(key, []) if e.get("file")]
+            if files and "__" in key and (src_dir / files[0]).exists():
+                shutil.copyfile(src_dir / files[0], d / "audio" / files[0])
+                originals[key] = f"audio/{files[0]}"
+    except (FileNotFoundError, KeyError):
+        pass
+    spec = load_spec()
+    levels = {}
+    for sid, sec in (score.get("sections") or {}).items():
+        band = sec.get("band")
+        if band is None or sid not in spec["level_descriptors"]:
+            continue
+        group = "basic" if band <= 2.5 else "independent" if band <= 4.5 else "proficient"
+        nxt = {"basic": "independent", "independent": "proficient"}.get(group)
+        d = spec["level_descriptors"][sid]
+        levels[sid] = {"band": band, "cefr": sec.get("cefr"), "group": group, "now": d[group],
+                       "next_group": nxt, "next": d.get(nxt) if nxt else None}
     return {
+        "levels": levels, "recordings": recordings, "originals": originals,
         "test": test, "attempt": attempt, "objective": objective, "score": score, "grading": grading or {},
         "g_tasks": (grading or {}).get("tasks", {}), "responses": responses.get("tasks", {}),
         "meta": responses.get("meta", {}), "transcripts": transcripts, "tasks": tasks,

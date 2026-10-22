@@ -15,7 +15,7 @@ import sys
 import time
 from concurrent.futures import ThreadPoolExecutor
 
-from common import ROOT, TESTS_DIR
+from common import ROOT, TESTS_DIR, usage_limit_message
 
 FLAGS = ["--permission-mode", "acceptEdits", "--allowedTools", "Read", "Write", "Edit", "Glob", "Grep", "Agent", "Skill",
          "Bash(python tools/*)", "Bash(python3 tools/*)"]
@@ -30,14 +30,21 @@ def run_generation(prompt: str, log, claude: str | None = None) -> list[str]:
     log.parent.mkdir(parents=True, exist_ok=True)
     with open(log, "w", encoding="utf-8") as out:
         subprocess.run([claude, "-p", prompt, *FLAGS], cwd=ROOT, stdout=out, stderr=subprocess.STDOUT, check=False)
-    return sorted({p.parent.name for p in TESTS_DIR.glob("*/test.json")} - before)
+    new = sorted({p.parent.name for p in TESTS_DIR.glob("*/test.json")} - before)
+    if not new and (limit := usage_limit_message(log.read_text(encoding="utf-8", errors="replace"))):
+        raise RuntimeError(f"Claude usage limit reached ({limit}). Run it again after the reset; finished sections are kept.")
+    return new
 
 
 def generate(i: int, n: int, level: str, claude: str) -> bool:
     t0 = time.time()
     print(f"[{i}/{n}] generating…", flush=True)
     log = TESTS_DIR / ".jobs" / f"bank-{i}.log"
-    new = run_generation(f"/toefl-generate full {level}".strip(), log, claude)
+    try:
+        new = run_generation(f"/toefl-generate full {level}".strip(), log, claude)
+    except RuntimeError as e:
+        print(f"[{i}/{n}] {e}", flush=True)
+        return False
     print(f"[{i}/{n}] {'ready: ' + ', '.join(new) if new else 'FAILED, see ' + str(log)} ({(time.time() - t0) / 60:.1f} min)", flush=True)
     if new:
         log.unlink(missing_ok=True)

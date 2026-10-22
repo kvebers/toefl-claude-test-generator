@@ -49,6 +49,20 @@
       "required": ["score", "summary", "errors"],
       "properties": {
         "score": { "type": "number", "minimum": 0, "maximum": 5 },
+        "criteria": {
+          "type": "array",
+          "description": "One entry per criterion in criteria_to_rate (goals from spec/toefl-2026.yaml).",
+          "items": {
+            "type": "object", "required": ["id", "status", "evidence"],
+            "properties": {
+              "id": { "type": "string" },
+              "status": { "enum": ["met", "partly", "not_met"] },
+              "evidence": { "type": "string" },
+              "improve": { "type": "string", "description": "Required unless met: concrete advice for this learner." },
+              "example": { "type": "string", "description": "Required unless met: the learner's own sentence rewritten to meet the criterion." }
+            }
+          }
+        },
         "dimensions": { "type": "object", "additionalProperties": { "type": "string" } },
         "summary": { "type": "string" },
         "strengths": { "type": "array", "items": { "type": "string" } },

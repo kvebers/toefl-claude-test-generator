@@ -268,12 +268,24 @@ function writingTask(task) {
   const resp = taskResp(task.id, { text: '' });
   bar.progress(task.type === 'email' ? 'Write an Email' : 'Academic Discussion');
   return show((app, done) => {
-    const words = h('span');
+    // Live word counter (the real test also shows a word count you can hide)
+    const [lo, hi] = CFG.spec.sections.writing.tasks[task.type]?.target_words || [100, 150];
+    const num = h('b', { class: 'wc-num' }, '0'), fill = h('div');
+    const counter = h('div', { class: 'wc', role: 'status', 'aria-live': 'polite' },
+      h('div', { class: 'wc-text' }, h('span', {}, 'Words: ', num), h('span', { class: 'muted' }, ` · target ${lo}–${hi}`)),
+      h('div', { class: 'wc-bar' }, fill));
+    const toggle = h('button', { class: 'btn wc-toggle', onclick: () => {
+      counter.hidden = !counter.hidden; toggle.textContent = counter.hidden ? 'Show word count' : 'Hide word count'; } }, 'Hide word count');
     const ta = h('textarea', { class: 'writing', spellcheck: 'false', autocorrect: 'off', autocapitalize: 'off', autocomplete: 'off',
       'aria-label': 'Your response',
       oninput: e => { resp.text = e.target.value; count(); save(); } });
     ta.value = resp.text;
-    const count = () => { words.textContent = `Word count: ${(resp.text.match(/\S+/g) || []).length}`; };
+    const count = () => {
+      const n = (resp.text.match(/\S+/g) || []).length;
+      num.textContent = n;
+      counter.dataset.state = n < lo ? 'under' : n <= hi ? 'in' : 'over';
+      fill.style.width = `${Math.min(100, (100 * n) / hi)}%`;
+    };
     count();
     let prompt;
     if (task.type === 'email') {
@@ -286,7 +298,8 @@ function writingTask(task) {
     }
     const editor = h('div', { class: 'panel editor' },
       task.type === 'email' && h('div', { class: 'email-head' }, h('b', {}, 'To:'), h('span', {}, task.to), h('b', {}, 'Subject:'), h('span', {}, task.subject)),
-      ta, h('div', { class: 'wordcount' }, words, h('span', {}, 'Spell-check is off, as in the real test')));
+      h('div', { class: 'wc-row' }, counter, toggle),
+      ta, h('div', { class: 'wordcount' }, h('span', {}, 'Spell-check is off, as in the real test')));
     app.append(h('div', { class: 'split' }, prompt, editor));
     bar.next('Next', () => done());
     ta.focus();

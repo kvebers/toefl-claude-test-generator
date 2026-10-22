@@ -1,63 +1,244 @@
 # TOEFL iBT (January 2026 format): single source of truth for generator, runner and scorer.
 # Applies to both the test-centre iBT and the iBT Home Edition (same content; Home Edition adds
-# at-home rules, see `home_edition`). Counts/timings are best-known values; verify against
-# https://www.ets.org/toefl and adjust here; nothing else in the repo hard-codes them.
+# at-home rules, see `home_edition`). Nothing else in the repo hard-codes these numbers.
+#
+# Source: ETS, "TOEFL iBT Test: 2026 Update, Test Blueprint and Specifications Document"
+# https://www.eu.ets.org/pdfs/toefl/toefl-ibt-test-specifications-2026.pdf
+# Section totals, item counts, module times, text/audio lengths and raw points follow that document.
+# How items are split between module 1 and module 2 is not published; the split below is ours.
 
 format: toefl-ibt-2026
 
-voices:            # logical voice -> edge-tts voice (python tools/tts.py)
+voices:            # logical voice -> edge-tts voice. ETS balances US/Canadian, British and Australian accents.
   narrator:  en-US-AriaNeural
   female_1:  en-US-JennyNeural
   female_2:  en-GB-SoniaNeural
   female_3:  en-AU-NatashaNeural
+  female_4:  en-CA-ClaraNeural
   male_1:    en-US-GuyNeural
   male_2:    en-GB-RyanNeural
   male_3:    en-US-ChristopherNeural
+  male_4:    en-CA-LiamNeural
+  male_5:    en-AU-WilliamMultilingualNeural
   interviewer: en-US-EricNeural
 
 sections:
   reading:
     title: Reading
-    adaptive: true
-    routing_threshold: 0.6          # share of module-1 points needed for the harder module 2
+    adaptive: true                  # two-stage: router module, then a lower or upper module
+    routing_threshold: 0.6          # share of module-1 points needed for the upper module
+    items_total: 50                 # ETS: 50 items (35 raw points; some items are unscored pretest items)
     modules:
-      m1:      { time_sec: 720 }
-      m2:      { time_sec: 600 }
+      m1:      { time_sec: 1200 }   # ETS router: 18-21 min
+      m2:      { time_sec: 540 }    # ETS lower/upper: 9 min
     tasks:
-      complete_the_words: { per_module: 1, gaps: 10, gap_rule: "second half of every 2nd word, C-test style" }
-      daily_life:         { per_module: 2, questions_each: [2, 3], genres: [email, notice, menu, schedule, advertisement, text_message, form, social_post] }
-      academic_passage:   { per_module: 1, questions_each: 5, words: [180, 230] }
+      complete_the_words: { m1: 2, m2: 1, gaps: 10, words: [70, 100], cefr: "B1-C1+", gap_rule: "second half of every 2nd word, C-test style" }
+      daily_life:         { m1: 2, m2: 2, questions_each: [2, 3], words: [15, 150], cefr: "A1-C1", genres: [email, notice, menu, schedule, advertisement, text_message, form, social_post, sign] }
+      academic_passage:   { m1: 1, m2: 1, questions_each: 5, words: [150, 200], cefr: "B1-C2" }
 
   listening:
     title: Listening
     adaptive: true
     routing_threshold: 0.6
-    timer_pauses_during_audio: true
+    items_total: 47                 # ETS: 47 items (35 raw points)
+    timer_pauses_during_audio: true # our choice: the clock only runs while you answer, so slow TTS never costs time
     modules:
-      m1:      { time_sec: 600 }
-      m2:      { time_sec: 480 }
+      m1:      { time_sec: 1080 }   # ETS router: 18 min
+      m2_easy: { time_sec: 420 }    # ETS lower: 7 min
+      m2_hard: { time_sec: 660 }    # ETS upper: 11 min
     tasks:
-      choose_response: { per_module: 4, note: "one short utterance, pick the best reply (text options)" }
-      conversation:    { per_module: 1, questions_each: 2, turns: [6, 10] }
-      announcement:    { per_module: 1, questions_each: 2, genres: [campus, workplace, public] }
-      academic_talk:   { per_module: 1, questions_each: 4, words: [250, 350] }
+      choose_response: { m1: 8, m2: 8, cefr: "A1-B2", note: "one brief utterance (at most about six stressed syllables), pick the best written reply" }
+      conversation:    { m1: 3, m2: 2, questions_each: 2, words: [35, 100], cefr: "A2-C1" }
+      announcement:    { m1: 2, m2: 1, questions_each: 2, words: [35, 100], cefr: "A2-C1", genres: [campus, classroom, workplace, public] }
+      academic_talk:   { m1: 2, m2_easy: 1, m2_hard: 2, questions_each: 4, words: [150, 250], cefr: "A2-C2" }
 
   writing:
     title: Writing
     adaptive: false
+    items_total: 12                 # ETS: 12 items, 23 min, 20 raw points
     tasks:
-      build_sentence:      { count: 10, time_sec: 360, note: "arrange word chunks into a grammatical reply to a short prompt" }
-      email:               { count: 1, time_sec: 420, target_words: [100, 150] }
-      academic_discussion: { count: 1, time_sec: 600, target_words: [100, 150] }
+      build_sentence:      { count: 10, time_sec: 360, cefr: "A1-C2", note: "arrange word chunks into a grammatical reply to a short prompt" }
+      email:               { count: 1, time_sec: 420, target_words: [100, 150], cefr: "B1-C2" }
+      academic_discussion: { count: 1, time_sec: 600, target_words: [100, 150], cefr: "B1-C2" }
 
   speaking:
     title: Speaking
     adaptive: false
+    items_total: 11                 # ETS: 11 items, 8 min, 55 raw points (5 per item)
     tasks:
-      listen_and_repeat: { count: 7, response_sec: [8, 12], replay: false, note: "sentences grow longer; one shared setting (e.g. a tour guide)" }
-      interview:         { count: 4, prep_sec: 0, answer_sec: 45, replay: false, note: "pre-recorded interviewer, one topic, questions do NOT react to answers" }
+      listen_and_repeat: { count: 7, response_sec: [8, 12], replay: false, cefr: "A1-C2", note: "sentences grow from one simple clause to compound verbs, dependent and relative clauses; one shared setting" }
+      interview:         { count: 4, prep_sec: 0, answer_sec: 45, replay: false, cefr: "A1-C2", note: "pre-recorded interviewer, one topic, from brief factual answers to opinion, explanation, prediction and narration; questions do NOT react to answers" }
 
 order: [reading, listening, writing, speaking]
+
+# What each section looks like at each level (paraphrased from the ETS blueprint's CEFR evidence
+# statements). The report shows the learner's level and the next level up as a concrete target.
+level_descriptors:
+  reading:
+    basic: "Understands short, simple texts and everyday materials; completes predictable word gaps; finds the purpose of a short message."
+    independent: "Reads moderately complex texts; uses grammar and word-form clues to fill gaps; scans for details, skims for main ideas, follows a writer's purpose and common idioms."
+    proficient: "Understands long, complex texts; connects information across a text; infers what is implied but not stated; handles nuance and stylistic choices."
+  listening:
+    basic: "Gets the main idea and key details of short, clear messages; predicts what a speaker will do next; recognises the purpose of a short message."
+    independent: "Infers meaning that is not stated directly; follows compare/contrast and cause/effect structures; understands a wide range of vocabulary and idioms at natural speed."
+    proficient: "Understands colloquial and idiomatic speech, implied meaning, attitude and subtle rhetorical moves in complex talks, with little effort."
+  writing:
+    basic: "Rebuilds a range of simple sentence structures; writes short notes and messages in simple language."
+    independent: "Writes reasonably clear, organised multi-sentence texts; gives relevant paragraph-length answers suited to an academic context."
+    proficient: "Writes coherent, well-organised, well-elaborated texts with a clear argument, varied grammar and precise vocabulary."
+  speaking:
+    basic: "Repeats short sentences with support; answers simple questions with short, formulaic responses; frequent pauses; pronunciation can limit intelligibility."
+    independent: "Repeats longer sentences with mostly accurate pronunciation; elaborates on familiar topics at a conversational pace with occasional hesitation; generally intelligible."
+    proficient: "Repeats complex sentences accurately with natural rhythm and intonation; responds fluently and spontaneously to complex questions with precise vocabulary; fully intelligible."
+
+# What each task type is designed to measure, and the criteria a strong response meets.
+# Every analysis checks performance against these goals.
+#   skills: objective criterion, scored from accuracy on items with these skill tags (python, deterministic)
+#   repeat: objective criterion from Listen & Repeat (all | long = the last 3 sentences | intelligibility)
+#   no key: rated by Claude with quoted evidence (writing and speaking)
+#   tip / example: shown in the report under a goal that is not met, so the learner knows how to improve
+goal_thresholds: { met: 0.8, partly: 0.5 }
+goals:
+  complete_the_words:
+    measures: Using word order, vocabulary and comprehension to rebuild a meaningful academic text
+    criteria:
+      word_completion:
+        text: "Restores the missing letters of common academic words"
+        skills: [reading.vocabulary.form]
+        tip: "Read the whole sentence first and decide the part of speech the gap needs (noun, verb, adjective). Then check the ending: plural -s, past -ed, -tion, -ly. Count the blanks: the missing part is exactly that many letters."
+        example: "'Within ha__ a century' -> the sentence needs a quantity word before 'a century' with 2 missing letters: 'half'."
+  daily_life:
+    measures: Understanding short everyday texts quickly (notices, emails, menus, schedules, posts)
+    criteria:
+      key_details:
+        text: "Finds specific facts, times and conditions, including what is NOT stated"
+        skills: [reading.detail, reading.negative_factual]
+        tip: "Read the question first, then scan for its key word (a day, a price, a name). For NOT questions, find each option in the text and cross it out; the one you cannot find is the answer."
+        example: "'Study rooms must be booked at least one day in advance': a question about Sunday rooms is answered by 'book online by Saturday'."
+      purpose_inference:
+        text: "Works out the writer's purpose, reasons and what the reader should do"
+        skills: [reading.main_idea, reading.inference, reading.purpose, reading.cause_effect, reading.reference]
+        tip: "Ask: who wrote this, to whom, and what do they want the reader to do? The answer is usually in the first and last sentences."
+        example: "A text message that starts 'The bus is running late' and ends 'Can you buy my ticket?' has the purpose: asking for help because of a delay."
+  academic_passage:
+    measures: Understanding an academic text by its main ideas, key details, inferences, idea relationships and structure
+    criteria:
+      main_idea_detail:
+        text: "Identifies main ideas and supporting details"
+        skills: [reading.main_idea, reading.detail, reading.negative_factual]
+        tip: "Before the questions, write a 3-word summary of each paragraph on your whiteboard. For detail questions, go back to the paragraph named in the question and match meaning, not identical words."
+        example: "Paragraph summary 'cause: concrete, asphalt' lets you answer 'why are cities warmer?' without rereading the whole text."
+      vocabulary_in_context:
+        text: "Infers word meaning from context"
+        skills: [reading.vocabulary]
+        tip: "Replace the word with each option and reread the sentence. The right option keeps the meaning of the whole sentence, not just a common meaning of the word."
+        example: "'Materials absorb heat and release it at night': 'give off' fits; 'reflect' is a heat word but changes the meaning."
+      inference_purpose:
+        text: "Makes inferences and recognises why the author includes information"
+        skills: [reading.inference, reading.purpose, reading.cause_effect, reading.reference]
+        tip: "For 'why does the author mention X', look at the sentence before X: X is usually an example or evidence for that claim. For inference, the answer must follow from the text without adding outside knowledge."
+        example: "'Tall buildings trap warm air' follows 'Human activity adds to the effect', so tall buildings are mentioned as another cause of warmth."
+  choose_response:
+    measures: Understanding a single exchange between two people, including indirect meaning
+    criteria:
+      spoken_intent:
+        text: "Recognises requests, suggestions and indirect meaning and picks a natural reply"
+        skills: [listening.response]
+        tip: "Decide the function first (request, invitation, complaint, suggestion), then pick the reply that responds to that function. Distractors often repeat words you heard but answer a different question."
+        example: "'You wouldn't happen to have a spare charger?' is a request, so 'Afraid not, mine's at home too' fits; 'I charge it every night' repeats 'charge' but does not answer."
+  conversation:
+    measures: Following a short conversation between two people about a problem and its resolution
+    criteria:
+      gist_detail:
+        text: "Understands the problem and key details"
+        skills: [listening.detail, listening.main_idea, listening.organization]
+        tip: "Note on your whiteboard: PROBLEM / CAUSE / SOLUTION. Most questions ask about one of these three."
+        example: "Problem: no heating. Cause: request sent to the wrong building. Solution: borrow a heater with student ID."
+      next_step_inference:
+        text: "Infers what speakers mean, why they say it, or what they will do next"
+        skills: [listening.inference, listening.attitude, listening.purpose]
+        tip: "The last 2 to 3 lines usually contain the next step. Listen for offers and instructions: 'Just bring...', 'Why don't you...', 'I'll...'."
+        example: "'Just bring your student ID to the front desk' -> the student will probably borrow a heater."
+  announcement:
+    measures: Understanding classroom or campus announcements
+    criteria:
+      practical_info:
+        text: "Catches changes, times, places and instructions"
+        skills: [listening.detail, listening.main_idea]
+        tip: "Announcements are built around a change. Listen for 'instead of', 'has been moved', 'will now'; write the old and the new value."
+        example: "'The 4:15 train will depart from platform 7 instead of platform 3' -> what changed: the platform."
+      purpose_inference:
+        text: "Understands why the announcement is made and what listeners should infer"
+        skills: [listening.purpose, listening.inference, listening.attitude]
+        tip: "Ask why the speaker is making the announcement now, and who it is for."
+        example: "An announcement about closing in fifteen minutes is meant to get shoppers to finish and pay."
+  academic_talk:
+    measures: Understanding academic talks, including main and supporting ideas, inferences and less common vocabulary
+    criteria:
+      main_idea:
+        text: "Identifies the topic and main points"
+        skills: [listening.main_idea, listening.organization]
+        tip: "The topic is announced in the first 20 seconds ('Today I want to talk about...'). Write it down before anything else."
+        example: "'Today I want to talk about how plants defend themselves' -> main idea: ways plants protect themselves."
+      details_examples:
+        text: "Understands details and why examples are used"
+        skills: [listening.detail, listening.purpose]
+        tip: "Each example illustrates the point made just before it. Note 'point -> example' pairs."
+        example: "'Some rely on physical defences, such as spines' -> cacti are mentioned as an example of a physical defence."
+      inference_attitude:
+        text: "Infers implied meaning and the speaker's attitude"
+        skills: [listening.inference, listening.attitude]
+        tip: "Listen for the speaker's evaluation words (interesting, surprisingly, unrealistic) and for 'so, in a sense...': they signal what is implied."
+        example: "'Even if the original price was never realistic' implies the price was set high on purpose."
+  build_sentence:
+    measures: Rebuilding a range of sentence structures with appropriate grammar
+    criteria:
+      grammatical_order:
+        text: "Builds grammatical sentences: word order, tenses, question forms, clauses"
+        skills: [grammar.word_order, grammar.tense, grammar.agreement, grammar.comparatives, grammar.questions, grammar.clauses, grammar.verb_form, grammar.preposition, grammar.article, grammar.plural]
+        tip: "Find the subject and the main verb first, then attach the object, then place and time phrases. In indirect questions use statement order: 'I wonder where it is', not 'where is it'."
+        example: "'nobody / had told / me / about it' -> because nobody had told me about it (past perfect for the earlier event)."
+  email:
+    measures: Writing appropriate multi-sentence text for a real-life purpose
+    criteria:
+      task_completion: { text: "Addresses all three required points clearly", tip: "Before writing, number the three bullet points and give each its own short paragraph." }
+      organization: { text: "Logical order with clear opening, body and closing", tip: "Use the frame: greeting, reason for writing, one paragraph per point, polite closing line, sign-off." }
+      register_tone: { text: "Tone and formality suit the reader and the situation", tip: "Writing to a manager, landlord or organiser: no slang, full sentences, polite requests ('Would it be possible to...')." }
+      language_accuracy: { text: "Grammar and vocabulary are accurate and varied enough", tip: "Leave 1 minute to reread for subject-verb agreement, articles and verb forms after prepositions." }
+  academic_discussion:
+    measures: Writing a clear, well-supported academic argument with varied grammar and vocabulary
+    criteria:
+      clear_position: { text: "States a clear position that answers the professor's question", tip: "Your first sentence answers the professor's exact question: 'In my view, universities should...'." }
+      new_contribution: { text: "Adds an idea beyond the two classmates' posts", tip: "Name a reason neither classmate gave. You may mention them briefly ('Unlike Andrew, I think...') but your main point must be new." }
+      support: { text: "Supports the idea with reasons and a specific example", tip: "Use reason, then example, then result: one concrete example (a person, a study, your own experience) is worth more than general claims." }
+      language_accuracy: { text: "Grammar and vocabulary are accurate and varied enough", tip: "Vary sentence types (because/although/which clauses) and avoid repeating the same key word; reread for agreement and articles." }
+  listen_and_repeat:
+    measures: Repeating spoken sentences with accuracy and intelligibility
+    criteria:
+      accurate_repetition:
+        text: "Repeats sentences word for word"
+        repeat: all
+        tip: "Repeat the sentence in your head in meaning chunks as you hear it ('Before you leave / don't forget / to visit the gift shop'), then say the chunks in order."
+        example: "'Photography is allowed, but please turn off your flash': keep the small words ('your'), they count."
+      long_sentences:
+        text: "Keeps accuracy as sentences get longer"
+        repeat: long
+        tip: "For long sentences, hold on to the structure words (if, which, before, but) and the key nouns; small function words are easier to rebuild from the structure."
+        example: "'If you need assistance, / staff members in blue shirts / will be happy to help you.' Three chunks, not sixteen words."
+      intelligibility:
+        text: "Speaks clearly enough to be understood without effort"
+        repeat: intelligibility
+        tip: "Slow down slightly, finish word endings (-s, -ed, -t) and stress the content words. Record yourself and check that every word is clear."
+        example: "Words the speech recogniser was unsure of are listed in your speaking section; practise those words aloud."
+  interview:
+    measures: Speaking spontaneously with clear, coherent elaboration, accurate grammar, varied vocabulary and intelligible prosody
+    criteria:
+      answers_question: { text: "Answers exactly what was asked", tip: "Start by repeating the key idea of the question in your answer: 'The technology I use most is...'." }
+      development: { text: "Develops answers with reasons, examples or details", tip: "Use answer, reason, example, result. That pattern alone fills about 35 seconds." }
+      fluency: { text: "Speaks smoothly at a natural pace with few long pauses or fillers", tip: "Replace 'um' with short linking phrases ('The main reason is...', 'For example...'), and keep going after small mistakes." }
+      language_range: { text: "Uses varied, mostly accurate grammar and vocabulary", tip: "Prepare a few flexible structures: 'If I had to choose, I would...', 'Compared to..., ...', 'What I find interesting is...'." }
+      intelligibility: { text: "Pronunciation, rhythm and intonation make speech easy to follow", tip: "Stress the important words and pause between ideas, not in the middle of phrases." }
+      time_use: { text: "Uses most of the 45 seconds", tip: "Aim for 35 to 45 seconds. If you finish early, add an example or a comparison." }
 
 home_edition:
   fullscreen_required: true
@@ -66,7 +247,7 @@ home_edition:
   checklist:
     - Quiet private room, door closed, nobody enters
     - Desk cleared; only computer, whiteboard/sheet + marker
-    - Headphones are NOT allowed in Home Edition: use computer speakers
+    - Headphones are NOT allowed in Home Edition; use computer speakers
     - Webcam and microphone working; ID ready
     - Close all other applications
 
@@ -78,8 +259,8 @@ scoring:
   adaptive_band_range:          # band span reachable from each module-2 route
     m2_easy: [1.0, 4.5]
     m2_hard: [3.5, 6.0]
-  weights:
-    writing:  { build_sentence: 0.3, email: 0.3, academic_discussion: 0.4 }
-    speaking: { listen_and_repeat: 0.4, interview: 0.6 }
+  weights:                      # ETS raw points: writing 10 x 1 (sentences) + 5 + 5; speaking 11 items x 5 points
+    writing:  { build_sentence: 0.5, email: 0.25, academic_discussion: 0.25 }
+    speaking: { listen_and_repeat: 0.636, interview: 0.364 }
 
 error_taxonomy_file: .claude/skills/toefl-grade/error-taxonomy.md

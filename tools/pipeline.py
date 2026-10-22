@@ -21,10 +21,11 @@ from pathlib import Path
 
 import jsonschema
 
-from common import RESULTS_DIR, ROOT, iter_tasks, load_json, save_json
-from score import compute, error_profile, objective_results
+from common import RESULTS_DIR, ROOT, iter_tasks, load_json, load_spec, save_json, usage_limit_message
+from score import compute, error_profile, goal_checks, objective_results
 
 GRADING_SCHEMA = ROOT / "schemas" / "grading.schema.json"
+CRITERION_POINTS = {"met": 4.5, "partly": 3.0, "not_met": 1.5}   # rough 0-5 score a criterion status implies
 
 
 def status(d: Path, stage: str, **extra):
@@ -46,6 +47,8 @@ def resolve(aid: str) -> Path:
 
 def grading_input(d: Path, test: dict, attempt: dict, responses: dict, transcripts: dict, objective: dict) -> dict:
     routes = attempt.get("routes", {})
+    goals = load_spec()["goals"]
+    crit = lambda t: [{"id": k, "text": v["text"]} for k, v in goals[t]["criteria"].items() if "skills" not in v and "repeat" not in v]
     writing, speaking = [], []
     secs = responses.get("meta", {}).get("task_seconds", {})
     for sid, _, task in iter_tasks(test, routes):
@@ -53,11 +56,13 @@ def grading_input(d: Path, test: dict, attempt: dict, responses: dict, transcrip
         if task["type"] in ("email", "academic_discussion"):
             prompt = {k: task[k] for k in ("scenario", "to", "subject", "bullets", "course", "professor", "students") if k in task}
             text = resp.get("text", "")
-            writing.append({"task_id": task["id"], "type": task["type"], "prompt": prompt, "response": text,
+            writing.append({"task_id": task["id"], "type": task["type"], "measures": goals[task["type"]]["measures"],
+                            "criteria_to_rate": crit(task["type"]), "prompt": prompt, "response": text,
                             "word_count": len(text.split()), "seconds_used": secs.get(task["id"]),
                             "time_limit_sec": task.get("time_sec")})
         elif task["type"] == "interview":
-            speaking.append({"task_id": task["id"], "type": "interview", "topic": task["topic"], "answer_sec": task["answer_sec"],
+            speaking.append({"task_id": task["id"], "type": "interview", "measures": goals["interview"]["measures"],
+                             "criteria_to_rate": crit("interview"), "topic": task["topic"], "answer_sec": task["answer_sec"],
                              "questions": [{"id": q["id"], "text": q["text"],
                                             "transcript": transcripts.get(f"{task['id']}__{q['id']}", {"error": "no recording"})}
                                            for q in task["questions"]]})
@@ -77,6 +82,9 @@ def grading_input(d: Path, test: dict, attempt: dict, responses: dict, transcrip
         "writing": writing, "speaking": speaking,
         "objective_summary": {k: f"{c}/{n}" for k, (c, n) in by_sec.items()},
         "objective_misses": misses,
+        "objective_goals": [{**g, "criteria": [c for c in g["criteria"] if c["source"] == "objective"]}
+                            for g in goal_checks(test, routes, objective, None)
+                            if any(c["source"] == "objective" for c in g["criteria"])],
         "history": [h for h in history if h.get("attempt_id") != d.name],
         "output_file": str(d / "grading.json"),
         "schema_file": "schemas/grading.schema.json",
@@ -96,6 +104,9 @@ def run_claude(d: Path) -> None:
         cmd += ["--model", os.environ["CLAUDE_MODEL"]]
     with open(d / "claude.log", "w", encoding="utf-8") as log:
         subprocess.run(cmd, cwd=ROOT, stdout=log, stderr=subprocess.STDOUT, timeout=1800, check=False)
+    if limit := usage_limit_message((d / "claude.log").read_text(encoding="utf-8", errors="replace")):
+        raise RuntimeError(f"Claude usage limit reached ({limit}). Your answers are saved; "
+                           f"run `make grade ID={d.name}` after the reset.")
 
 
 def check_grading(d: Path, gin: dict) -> list[str]:
@@ -110,10 +121,25 @@ def check_grading(d: Path, gin: dict) -> list[str]:
             for e in jsonschema.Draft202012Validator(load_json(GRADING_SCHEMA)).iter_errors(g)]
     needed = [w["task_id"] for w in gin["writing"]] + [s["task_id"] for s in gin["speaking"] if s["type"] == "interview"]
     errs += [f"missing grade for task {t}" for t in needed if t not in g.get("tasks", {})]
+    for item in gin["writing"] + [x for x in gin["speaking"] if x["type"] == "interview"]:
+        rated = {c.get("id") for c in g.get("tasks", {}).get(item["task_id"], {}).get("criteria", [])}
+        missing = [c["id"] for c in item.get("criteria_to_rate", []) if c["id"] not in rated]
+        if missing:
+            errs.append(f"task {item['task_id']}: criteria not rated: {', '.join(missing)}")
+        crit = g.get("tasks", {}).get(item["task_id"], {}).get("criteria", [])
+        for c in crit:
+            if c.get("status") in ("partly", "not_met") and not (c.get("improve") and c.get("example")):
+                errs.append(f"task {item['task_id']}: criterion {c.get('id')} is {c.get('status')} but has no improve/example")
+        if crit and not missing:
+            implied = sum(CRITERION_POINTS.get(c.get("status"), 0) for c in crit) / len(crit)
+            given = g["tasks"][item["task_id"]].get("score", 0)
+            if abs(given - implied) > 1.0:
+                errs.append(f"task {item['task_id']}: score {given} contradicts its criteria (they imply about "
+                            f"{implied:.1f}); re-check the criteria or the score")
     return errs
 
 
-def update_index(d: Path, test: dict, attempt: dict, score: dict, profile: dict) -> None:
+def update_index(d: Path, test: dict, attempt: dict, score: dict, profile: dict, goals: list) -> None:
     index = RESULTS_DIR / "index.jsonl"
     rows = [json.loads(l) for l in index.read_text(encoding="utf-8").splitlines() if l.strip()] if index.exists() else []
     rows = [r for r in rows if r["attempt_id"] != d.name]
@@ -122,7 +148,8 @@ def update_index(d: Path, test: dict, attempt: dict, score: dict, profile: dict)
                  "overall_band": score["summary"]["overall_band"], "est_total_120": score["summary"]["est_total_120"],
                  "bands": {k: v["band"] for k, v in score["sections"].items()},
                  "task_scores": {k: v.get("task_scores_0_5") for k, v in score["sections"].items() if v.get("task_scores_0_5")},
-                 "routes": attempt.get("routes", {}), **profile})
+                 "routes": attempt.get("routes", {}), **profile,
+                 "goals": {g["task_type"]: {c["id"]: c["status"] for c in g["criteria"]} for g in goals}})
     rows.sort(key=lambda r: r["attempt_id"])
     index.write_text("".join(json.dumps(r, ensure_ascii=False) + "\n" for r in rows), encoding="utf-8")
 
@@ -163,8 +190,9 @@ def grade(d: Path, use_claude: bool, do_transcribe: bool, force: bool) -> None:
     status(d, "scoring")
     score = compute(test, attempt, objective, grading)
     profile = error_profile(objective, grading)
-    save_json(d / "score.json", {**score, **profile})
-    update_index(d, test, attempt, score, profile)
+    goals = goal_checks(test, routes, objective, grading)
+    save_json(d / "score.json", {**score, **profile, "goals": goals})
+    update_index(d, test, attempt, score, profile, goals)
 
     status(d, "report")
     from report import render

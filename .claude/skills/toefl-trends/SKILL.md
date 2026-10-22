@@ -24,6 +24,10 @@ description: Analyse the learner's TOEFL practice history (scores and error type
      If fewer than 2 full tests, say so and set confidence `low`.
    - Plan: 5–7 entries covering ~2 weeks, ending with a full test (`make test`). Prioritise by expected
      score gain: the lowest section and the most frequent persistent tags first.
+   - Judge progress against the goals of each category (`goal_history`, defined under `goals` in
+     `spec/toefl-2026.yaml`): name goals newly met, goals still not met, and goals that slipped. `improving`
+     and `persistent` must reference goals (e.g. "academic_discussion.new_contribution: not met in 3 of 4"),
+     and every plan entry must target an unmet or partly met goal.
    - Use only numbers present in the data; never invent attempts.
 4. Run `python tools/trends.py render` and reply with the PDF path and a 2-line summary.
 

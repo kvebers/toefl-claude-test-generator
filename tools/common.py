@@ -22,6 +22,17 @@ AUDIO_TYPES = {"choose_response", "conversation", "announcement", "academic_talk
 GAP_RE = re.compile(r"([A-Za-z'-]*)\[([A-Za-z'-]+)\]")
 
 
+LIMIT_MARKERS = ("hit your session limit", "usage limit", "rate limit")
+
+
+def usage_limit_message(log_text: str) -> str | None:
+    """The Claude Code line that says the plan's usage limit was reached, if any."""
+    for line in log_text.splitlines():
+        if any(m in line.lower() for m in LIMIT_MARKERS):
+            return line.strip()
+    return None
+
+
 def load_json(path: Path):
     return json.loads(Path(path).read_text(encoding="utf-8"))
 
@@ -155,13 +166,29 @@ def norm_words(s: str) -> list[str]:
     return out
 
 
-def repeat_accuracy(target: str, said: str) -> float:
-    """Share of target words reproduced in order (Listen & Repeat)."""
+def repeat_accuracy(target: str, said: str, unclear: set[str] | None = None) -> float:
+    """Share of target words reproduced in order (Listen & Repeat).
+
+    Words Whisper was unsure of (`unclear`) count half: Whisper tends to "clean up" unclear speech
+    into the expected word, so full credit would flatter the speaker.
+    """
     t, s = norm_words(target), norm_words(said)
     if not t:
         return 0.0
-    matched = sum(b.size for b in difflib.SequenceMatcher(None, t, s, autojunk=False).get_matching_blocks())
-    return matched / len(t)
+    unclear = {w for u in (unclear or ()) for w in norm_words(u)}
+    credit = 0.0
+    for b in difflib.SequenceMatcher(None, t, s, autojunk=False).get_matching_blocks():
+        credit += sum(0.5 if w in unclear else 1.0 for w in t[b.a:b.a + b.size])
+    return credit / len(t)
+
+
+def repeat_points(accuracy: float | None, n_words: int) -> int:
+    """Per-sentence rating 0-5 from the number of word errors, so short and long sentences are judged alike:
+    word-perfect 5, one slip 4, two or three 3, more but at least half right 2, any attempt 1."""
+    if not accuracy:
+        return 0
+    errors = round((1 - accuracy) * n_words)
+    return 5 if errors == 0 else 4 if errors == 1 else 3 if errors <= 3 else 2 if accuracy >= 0.5 else 1
 
 
 def score_task(section: str, module: str, task: dict, resp: dict | None) -> list[dict]:

@@ -21,35 +21,36 @@ listening.response, listening.organization, grammar.word_order, grammar.tense, g
 grammar.comparatives, grammar.questions, grammar.clauses
 
 ## Reading
-**complete_the_words**: one academic-style paragraph of 70–100 words. Leave the first sentence intact.
+**complete_the_words**: one academic-style paragraph of 70–100 words (3 per full test: 2 in module 1, 1 in module 2). Leave the first sentence intact.
 From the second sentence, damage every second word: keep the first half of its letters (round up),
 mark the missing half in brackets: `exa[mple]`, `o[f]`, `bi[rds]`. One-letter words are skipped.
 Exactly 10 gaps. Missing parts must be uniquely recoverable from context and spelling.
 
-**daily_life**: short real-world text (40–150 words): email, notice, menu, schedule, ad, text
+**daily_life**: short real-world text (easier: 15–50 words, harder: up to 150 words), in sets of 2 or 3 questions: email, notice, menu, schedule, ad, text
 message, form, social post. Set `text.genre`. 2–3 questions: detail, inference, purpose.
 
-**academic_passage**: 180–230 words, title, 2–3 paragraphs, introductory textbook register.
+**academic_passage**: 150–200 words (ETS maximum is about 200), title, 2–3 paragraphs, introductory textbook register.
 5 questions mixing detail, vocabulary-in-context ("The word X in paragraph N is closest in meaning to"),
 inference, purpose/rhetorical function, negative factual (NOT/EXCEPT).
 
 ## Listening
-Scripts must sound spoken: contractions, short sentences, occasional self-correction or "um" in
+Balance accents across the test: US, Canadian, British and Australian voices (see `voices` in the spec),
+and both genders. Scripts must sound spoken: contractions, short sentences, occasional self-correction or "um" in
 conversations (not in announcements). Assign voices from the spec (`male_1`, `female_2`, `narrator`,
 ...). Use two different-gender voices in conversations. `speaker` is a role label ("Student",
 "Professor", "Employee").
 
-**choose_response**: one natural utterance (question, request, complaint, suggestion, indirect
-statement). 4 written reply options; the right one is pragmatically appropriate, distractors repeat
+**choose_response**: one brief natural utterance of at most about six stressed syllables (question,
+request, complaint, suggestion, indirect statement), e.g. "Do you know if the lab's open tonight?". 4 written reply options; the right one is pragmatically appropriate, distractors repeat
 words from the prompt, answer a different question, or are grammatically fine but socially wrong.
 Prompt text: "Choose the best response."
 
-**conversation**: 6–10 turns, campus or everyday service setting, a problem and a resolution. 2 questions
+**conversation**: 35–100 words in 4–8 short turns, campus or everyday service setting, a problem and a resolution. 2 questions
 (gist/detail/next action/inference). Provide `context`.
 
-**announcement**: 60–110 words, single speaker, campus/workplace/public. 2 questions.
+**announcement**: 35–100 words, single speaker, campus/workplace/public. 2 questions.
 
-**academic_talk**: 250–350 words by a professor (may include one brief student question as a separate
+**academic_talk**: 150–250 words (ETS maximum is 250) by a professor (may include one brief student question as a separate
 line). Clear structure: topic, definition, example, contrast/implication. 4 questions: main idea, detail,
 purpose of an example, inference/attitude.
 
@@ -70,10 +71,11 @@ student posts (2–3 sentences each) taking different positions so the learner c
 
 ## Speaking
 **listen_and_repeat**: one `setting` (guide training, new-employee orientation, lab assistant...).
-7 sentences, all said by the same voice, growing from 4–5 words to 16–20 words. `response_sec`: 6 for
+7 sentences, all said by the same voice, growing from one simple clause (4–5 words) to sentences with
+compound verbs, dependent or relative clauses and complex noun phrases (16–20 words). Use natural contractions. `response_sec`: 6 for
 the shortest rising to 12 for the longest. Natural, useful sentences, no tongue twisters or rare names.
 
-**interview**: one topic, a friendly `intro` (1–2 sentences), 4 questions that go from personal and
-concrete to abstract and opinion-based (experience -> describe -> compare -> opinion on a broader
-issue). Each answerable in 45 s. Questions do not depend on previous answers. `answer_sec` 45,
+**interview**: one topic, a friendly `intro` (1–2 sentences), 4 questions that go from brief factual answers to
+opinion, explanation, prediction and narration (e.g. describe -> tell about a time -> compare/predict -> opinion
+on a broader issue). Topics may come from everyday life or familiar academic areas (life sciences, history, business). Each answerable in 45 s. Questions do not depend on previous answers. `answer_sec` 45,
 `voice` "interviewer".

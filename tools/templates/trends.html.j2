@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>TOEFL progress</title>
+<style>
+  body { font-family: "Segoe UI", system-ui, Arial, sans-serif; color: #1d2433; font-size: 10.5pt; line-height: 1.45; margin: 0; padding: 24px; background: #fff; }
+  h1 { color: #12355b; margin: 0 0 4px; } h2 { color: #12355b; border-bottom: 2px solid #12355b; padding-bottom: 3px; margin-top: 24px; }
+  img { width: 100%; max-width: 760px; }
+  table { width: 100%; border-collapse: collapse; } th, td { border-bottom: 1px solid #dde2ea; padding: 5px 6px; text-align: left; }
+  th { background: #f3f6fa; } .muted { color: #5d6779; } .tag { font-family: Consolas, monospace; font-size: 8.5pt; background: #f3f6fa; padding: 1px 5px; border-radius: 4px; }
+  .up { color: #c62828; } .down { color: #1a7f37; }
+  .box { border-left: 4px solid #12355b; padding: 6px 12px; margin: 8px 0; break-inside: avoid; }
+  @page { size: A4; margin: 14mm 12mm; } @media print { body { padding: 0; } }
+</style>
+</head>
+<body>
+<h1>TOEFL progress report</h1>
+<div class="muted">{{ s.attempts }} graded attempts ({{ s.full_tests }} full tests)</div>
+
+{% if a %}
+<h2>Analysis</h2>
+<p>{{ a.summary }}</p>
+{% if a.predicted_band %}<p><b>Estimated current level:</b> band {{ a.predicted_band }}{% if a.predicted_total_120 %} (~{{ a.predicted_total_120 }}/120){% endif %}{% if a.confidence %} · confidence: {{ a.confidence }}{% endif %}</p>{% endif %}
+{% if a.improving %}<p><b>Improving:</b> {{ a.improving|join('; ') }}</p>{% endif %}
+{% if a.persistent %}<p><b>Persistent weaknesses:</b> {{ a.persistent|join('; ') }}</p>{% endif %}
+{% for p in a.plan or [] %}<div class="box"><b>{{ p.when }}:</b> {{ p.what }}{% if p.command %} <code>{{ p.command }}</code>{% endif %}</div>{% endfor %}
+{% endif %}
+
+<h2>Bands over time</h2>
+{% if 'bands.png' in s.charts %}<img src="bands.png" alt="Section and overall bands per attempt">{% endif %}
+<table><tr><th>Date</th><th>Test</th><th>Mode</th><th>Overall</th><th>Reading</th><th>Listening</th><th>Writing</th><th>Speaking</th><th>~/120</th></tr>
+{% for r in s.history %}<tr><td>{{ r.date }}</td><td>{{ r.test_id }}</td><td>{{ r.mode }}</td><td>{{ r.overall_band or '-' }}</td>
+{% for k in ['reading','listening','writing','speaking'] %}<td>{{ r.bands.get(k) or '-' }}</td>{% endfor %}<td>{{ r.est_total_120 or '-' }}</td></tr>{% endfor %}
+</table>
+
+<h2>Error types</h2>
+{% if 'errors.png' in s.charts %}<img src="errors.png" alt="Most frequent error types, earlier vs recent attempts">{% endif %}
+<table><tr><th>Tag</th><th>Earlier / attempt</th><th>Recent / attempt</th><th>Change</th></tr>
+{% for t in s.error_tag_trends[:15] %}<tr><td><span class="tag">{{ t.tag }}</span></td><td>{{ t.per_attempt_before }}</td><td>{{ t.per_attempt_recent }}</td>
+<td class="{{ 'up' if t.change > 0 else 'down' if t.change < 0 else '' }}">{{ '+' if t.change > 0 else '' }}{{ t.change }}</td></tr>{% endfor %}
+</table>
+
+<h2>Question-type accuracy (last 5 attempts)</h2>
+<table><tr><th>Skill</th><th>Correct</th><th>Accuracy</th></tr>
+{% for k, v in s.skill_accuracy_last5.items() %}<tr><td><span class="tag">{{ k }}</span></td><td>{{ v.correct }}/{{ v.total }}</td><td>{{ (v.accuracy * 100)|round|int }}%</td></tr>{% endfor %}
+</table>
+<p class="muted">Unofficial practice data; not affiliated with ETS.</p>
+</body>
+</html>

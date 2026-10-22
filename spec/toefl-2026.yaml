@@ -1,0 +1,85 @@
+# TOEFL iBT (January 2026 format): single source of truth for generator, runner and scorer.
+# Applies to both the test-centre iBT and the iBT Home Edition (same content; Home Edition adds
+# at-home rules, see `home_edition`). Counts/timings are best-known values; verify against
+# https://www.ets.org/toefl and adjust here; nothing else in the repo hard-codes them.
+
+format: toefl-ibt-2026
+
+voices:            # logical voice -> edge-tts voice (python tools/tts.py)
+  narrator:  en-US-AriaNeural
+  female_1:  en-US-JennyNeural
+  female_2:  en-GB-SoniaNeural
+  female_3:  en-AU-NatashaNeural
+  male_1:    en-US-GuyNeural
+  male_2:    en-GB-RyanNeural
+  male_3:    en-US-ChristopherNeural
+  interviewer: en-US-EricNeural
+
+sections:
+  reading:
+    title: Reading
+    adaptive: true
+    routing_threshold: 0.6          # share of module-1 points needed for the harder module 2
+    modules:
+      m1:      { time_sec: 720 }
+      m2:      { time_sec: 600 }
+    tasks:
+      complete_the_words: { per_module: 1, gaps: 10, gap_rule: "second half of every 2nd word, C-test style" }
+      daily_life:         { per_module: 2, questions_each: [2, 3], genres: [email, notice, menu, schedule, advertisement, text_message, form, social_post] }
+      academic_passage:   { per_module: 1, questions_each: 5, words: [180, 230] }
+
+  listening:
+    title: Listening
+    adaptive: true
+    routing_threshold: 0.6
+    timer_pauses_during_audio: true
+    modules:
+      m1:      { time_sec: 600 }
+      m2:      { time_sec: 480 }
+    tasks:
+      choose_response: { per_module: 4, note: "one short utterance, pick the best reply (text options)" }
+      conversation:    { per_module: 1, questions_each: 2, turns: [6, 10] }
+      announcement:    { per_module: 1, questions_each: 2, genres: [campus, workplace, public] }
+      academic_talk:   { per_module: 1, questions_each: 4, words: [250, 350] }
+
+  writing:
+    title: Writing
+    adaptive: false
+    tasks:
+      build_sentence:      { count: 10, time_sec: 360, note: "arrange word chunks into a grammatical reply to a short prompt" }
+      email:               { count: 1, time_sec: 420, target_words: [100, 150] }
+      academic_discussion: { count: 1, time_sec: 600, target_words: [100, 150] }
+
+  speaking:
+    title: Speaking
+    adaptive: false
+    tasks:
+      listen_and_repeat: { count: 7, response_sec: [8, 12], replay: false, note: "sentences grow longer; one shared setting (e.g. a tour guide)" }
+      interview:         { count: 4, prep_sec: 0, answer_sec: 45, replay: false, note: "pre-recorded interviewer, one topic, questions do NOT react to answers" }
+
+order: [reading, listening, writing, speaking]
+
+home_edition:
+  fullscreen_required: true
+  breaks: false
+  notes: "Small whiteboard or transparent sheet with erasable marker only; shown to proctor and erased at the end."
+  checklist:
+    - Quiet private room, door closed, nobody enters
+    - Desk cleared; only computer, whiteboard/sheet + marker
+    - Headphones are NOT allowed in Home Edition: use computer speakers
+    - Webcam and microphone working; ID ready
+    - Close all other applications
+
+scoring:
+  # Section band = 1.0–6.0 in 0.5 steps; overall = mean of sections rounded to nearest 0.5.
+  # Approximate band -> legacy 0-30 section scale (ETS publishes the official concordance; edit as needed).
+  band_to_30: { 6.0: 30, 5.5: 28, 5.0: 25, 4.5: 22, 4.0: 19, 3.5: 15, 3.0: 11, 2.5: 8, 2.0: 5, 1.5: 3, 1.0: 1 }
+  cefr: { 6.0: C2, 5.5: C1, 5.0: C1, 4.5: B2, 4.0: B2, 3.5: B1, 3.0: B1, 2.5: A2, 2.0: A2, 1.5: A1, 1.0: A1 }
+  adaptive_band_range:          # band span reachable from each module-2 route
+    m2_easy: [1.0, 4.5]
+    m2_hard: [3.5, 6.0]
+  weights:
+    writing:  { build_sentence: 0.3, email: 0.3, academic_discussion: 0.4 }
+    speaking: { listen_and_repeat: 0.4, interview: 0.6 }
+
+error_taxonomy_file: .claude/skills/toefl-grade/error-taxonomy.md

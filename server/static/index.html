@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TOEFL Practice Runner</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="bar">
+    <div class="bar-left"><span class="brand">TOEFL iBT practice</span><span id="bar-section"></span></div>
+    <nav id="stepper" class="stepper" aria-label="Sections"></nav>
+    <div class="bar-right">
+      <span id="bar-progress"></span>
+      <span id="bar-timer" class="timer" role="timer" hidden></span>
+      <button id="bar-next" class="btn primary" hidden>Next</button>
+    </div>
+  </header>
+  <div class="progress-track" aria-hidden="true"><div id="progress-fill"></div></div>
+  <main id="app"></main>
+  <div id="overlay" hidden></div>
+  <script src="/static/app.js"></script>
+</body>
+</html>

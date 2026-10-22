@@ -1,0 +1,14 @@
+# personal data: your attempts, recordings, reports
+results/
+# your generated / imported tests (publish to library/ to share)
+tests/
+exports/
+# audio is re-rendered locally from test.json
+library/*/audio/
+library/*/blind.json
+library/*/solver.json
+
+__pycache__/
+*.pyc
+.venv/
+.claude/settings.local.json

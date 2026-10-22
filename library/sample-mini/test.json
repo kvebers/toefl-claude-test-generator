@@ -1,0 +1,866 @@
+{
+  "id": "sample-mini",
+  "title": "Sample test: every task type (shortened)",
+  "format": "toefl-ibt-2026",
+  "mode": "full",
+  "created": "2026-10-22",
+  "author": "toefl-claude-test-generator",
+  "difficulty": "mixed",
+  "description": "A short hand-checked test with one of every task type. Use it to try the runner and grader without generating anything.",
+  "tags": [
+    "sample"
+  ],
+  "sections": [
+    {
+      "id": "reading",
+      "modules": {
+        "m1": {
+          "time_sec": 540,
+          "tasks": [
+            {
+              "id": "r1-ctw",
+              "type": "complete_the_words",
+              "title": "Fill in the missing letters in the paragraph.",
+              "text": "Many animals travel long distances each year. Bi[rds] are the best-known exa[mple], but some ins[ects] migrate as we[ll]. Monarch butter[flies], for exa[mple], fly thousands o[f] kilometres to sp[end] the winter in Mex[ico], where the clim[ate] is mild."
+            },
+            {
+              "id": "r1-daily",
+              "type": "daily_life",
+              "text": {
+                "genre": "notice",
+                "title": "Riverside Library: Weekend Changes",
+                "body": "From March 4, the library will close at 5 p.m. on Saturdays instead of 8 p.m. Sunday hours are unchanged (noon to 6 p.m.). Books may still be returned at any time using the drop box beside the main entrance. Study rooms must now be booked online at least one day in advance; walk-in bookings will no longer be accepted."
+              },
+              "questions": [
+                {
+                  "id": "q1",
+                  "prompt": "What change is being announced for Saturdays?",
+                  "options": [
+                    "The library will open later.",
+                    "The drop box will be closed.",
+                    "The library will close earlier.",
+                    "Study rooms will be unavailable."
+                  ],
+                  "answer": 2,
+                  "skill": "reading.detail",
+                  "explanation": "The notice says the library will close at 5 p.m. instead of 8 p.m. on Saturdays."
+                },
+                {
+                  "id": "q2",
+                  "prompt": "What should a student who wants a study room on Sunday do?",
+                  "options": [
+                    "Book it online by Saturday",
+                    "Ask at the front desk on Sunday",
+                    "Return books through the drop box",
+                    "Arrive before noon"
+                  ],
+                  "answer": 0,
+                  "skill": "reading.inference",
+                  "explanation": "Rooms must be booked online at least one day in advance, so a Sunday room must be booked by Saturday."
+                }
+              ]
+            },
+            {
+              "id": "r1-acad",
+              "type": "academic_passage",
+              "text": {
+                "title": "Urban Heat Islands",
+                "body": "Cities are often several degrees warmer than the surrounding countryside, a phenomenon known as the urban heat island effect. The main cause is the replacement of vegetation with materials such as asphalt and concrete, which absorb sunlight during the day and release it slowly at night. Because of this, the temperature difference between a city and its surroundings is usually greatest after sunset rather than at midday.\n\nHuman activity adds to the effect. Cars, air conditioners and factories all release heat directly into the air. Tall buildings also play a role: they trap warm air between them and reduce wind speed at street level.\n\nCities are experimenting with several solutions. Painting roofs white reflects sunlight back into the atmosphere, and planting trees provides shade while cooling the air through evaporation. Some researchers argue that such measures could reduce peak summer temperatures by up to two degrees, which would lower both energy use and heat-related illness."
+              },
+              "questions": [
+                {
+                  "id": "q1",
+                  "prompt": "According to paragraph 1, when is the temperature difference between a city and the countryside usually largest?",
+                  "options": [
+                    "In the early morning",
+                    "At midday",
+                    "During winter",
+                    "After sunset"
+                  ],
+                  "answer": 3,
+                  "skill": "reading.detail",
+                  "explanation": "Paragraph 1: the difference 'is usually greatest after sunset rather than at midday'."
+                },
+                {
+                  "id": "q2",
+                  "prompt": "The word \"release\" in paragraph 1 is closest in meaning to",
+                  "options": [
+                    "hold back",
+                    "give off",
+                    "measure",
+                    "reflect"
+                  ],
+                  "answer": 1,
+                  "skill": "reading.vocabulary",
+                  "explanation": "Materials absorb heat and then 'release' (give off) it at night."
+                },
+                {
+                  "id": "q3",
+                  "prompt": "Why does the author mention tall buildings?",
+                  "options": [
+                    "To show that cities use too much energy",
+                    "To argue that cities should be smaller",
+                    "To explain another way cities stay warm",
+                    "To describe how wind is produced"
+                  ],
+                  "answer": 2,
+                  "skill": "reading.purpose",
+                  "explanation": "Buildings are another cause: they trap warm air and reduce wind."
+                },
+                {
+                  "id": "q4",
+                  "prompt": "Which of the following is NOT mentioned as a solution?",
+                  "options": [
+                    "Reducing building height",
+                    "Painting roofs white",
+                    "Planting trees",
+                    "Using reflective surfaces"
+                  ],
+                  "answer": 0,
+                  "skill": "reading.negative_factual",
+                  "explanation": "White roofs (reflective surfaces) and trees are mentioned; lowering buildings is not."
+                },
+                {
+                  "id": "q5",
+                  "prompt": "What can be inferred about the proposed solutions?",
+                  "options": [
+                    "They have already removed the heat island effect.",
+                    "They increase energy use in summer.",
+                    "They work only in small towns.",
+                    "They could have health benefits."
+                  ],
+                  "answer": 3,
+                  "skill": "reading.inference",
+                  "explanation": "Lower temperatures would reduce 'heat-related illness', a health benefit."
+                }
+              ]
+            }
+          ]
+        },
+        "m2_easy": {
+          "time_sec": 300,
+          "tasks": [
+            {
+              "id": "r2e-daily",
+              "type": "daily_life",
+              "text": {
+                "genre": "text_message",
+                "title": "Message from Dana",
+                "body": "Hi! The bus is running 20 minutes late, so I'll miss the start of the movie. Can you buy my ticket and save me a seat near the back? I'll pay you when I get there. Thanks!"
+              },
+              "questions": [
+                {
+                  "id": "q1",
+                  "prompt": "Why is Dana writing?",
+                  "options": [
+                    "To cancel plans",
+                    "To ask for help because she is late",
+                    "To suggest a different movie",
+                    "To ask for a ride"
+                  ],
+                  "answer": 1,
+                  "skill": "reading.main_idea",
+                  "explanation": "Dana is late because of the bus and asks the friend to buy her ticket and save a seat."
+                },
+                {
+                  "id": "q2",
+                  "prompt": "What will Dana do when she arrives?",
+                  "options": [
+                    "Buy snacks",
+                    "Change seats",
+                    "Pay her friend back",
+                    "Call the bus company"
+                  ],
+                  "answer": 2,
+                  "skill": "reading.detail",
+                  "explanation": "'I'll pay you when I get there.'"
+                }
+              ]
+            }
+          ]
+        },
+        "m2_hard": {
+          "time_sec": 360,
+          "tasks": [
+            {
+              "id": "r2h-acad",
+              "type": "academic_passage",
+              "text": {
+                "title": "The Origins of Writing",
+                "body": "Writing appears to have developed independently in at least three places: Mesopotamia, China and Mesoamerica. In Mesopotamia, the earliest written records were not literature but accounts. Clay tokens representing goods such as grain or sheep were used to track trade, and over time these tokens were replaced by marks pressed into clay tablets.\n\nInitially, each sign represented a whole object or idea. Such a system, however, requires thousands of signs and is difficult to learn. Scribes gradually began to use some signs for their sound rather than their meaning, so that a symbol could be combined with others to spell words that had no simple picture. This shift toward phonetic writing made it possible to record names, grammar and eventually stories.\n\nThe consequences were far-reaching. Laws could be fixed in a permanent form, knowledge could be passed across generations without relying on memory, and governments could administer larger territories. Yet for centuries literacy remained limited to a small group of trained specialists."
+              },
+              "questions": [
+                {
+                  "id": "q1",
+                  "prompt": "According to the passage, what was the original purpose of writing in Mesopotamia?",
+                  "options": [
+                    "Keeping track of goods",
+                    "Recording stories",
+                    "Teaching children",
+                    "Writing laws"
+                  ],
+                  "answer": 0,
+                  "skill": "reading.detail",
+                  "explanation": "The earliest records were 'accounts' of goods like grain and sheep."
+                },
+                {
+                  "id": "q2",
+                  "prompt": "Why did scribes begin to use signs for their sounds?",
+                  "options": [
+                    "Clay became too expensive.",
+                    "Other civilizations demanded it.",
+                    "Governments banned picture signs.",
+                    "Pictures could not represent every word easily."
+                  ],
+                  "answer": 3,
+                  "skill": "reading.cause_effect",
+                  "explanation": "A system of whole-word signs needs thousands of signs; sound signs could spell words without a simple picture."
+                },
+                {
+                  "id": "q3",
+                  "prompt": "The word \"administer\" in paragraph 3 is closest in meaning to",
+                  "options": [
+                    "defend",
+                    "manage",
+                    "discover",
+                    "describe"
+                  ],
+                  "answer": 1,
+                  "skill": "reading.vocabulary",
+                  "explanation": "To administer a territory is to manage or govern it."
+                },
+                {
+                  "id": "q4",
+                  "prompt": "What does the final sentence suggest?",
+                  "options": [
+                    "Writing spread to everyone quickly.",
+                    "Specialists opposed phonetic writing.",
+                    "Most people could not read for a long time.",
+                    "Literacy declined after laws were written."
+                  ],
+                  "answer": 2,
+                  "skill": "reading.inference",
+                  "explanation": "Literacy 'remained limited to a small group' for centuries."
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "listening",
+      "modules": {
+        "m1": {
+          "time_sec": 420,
+          "tasks": [
+            {
+              "id": "l1-cr1",
+              "type": "choose_response",
+              "audio": [
+                {
+                  "speaker": "Man",
+                  "voice": "male_1",
+                  "text": "Do you know if the chemistry lab is open this evening?"
+                }
+              ],
+              "questions": [
+                {
+                  "id": "q1",
+                  "prompt": "Choose the best response.",
+                  "options": [
+                    "I think it closes at six today.",
+                    "Yes, it's on the second floor.",
+                    "I prefer biology, actually.",
+                    "No, I didn't open it."
+                  ],
+                  "answer": 0,
+                  "skill": "listening.response",
+                  "explanation": "The question asks about opening hours; only 'closes at six' answers when it is open."
+                }
+              ]
+            },
+            {
+              "id": "l1-cr2",
+              "type": "choose_response",
+              "audio": [
+                {
+                  "speaker": "Woman",
+                  "voice": "female_2",
+                  "text": "I can't believe the deadline for the essay got moved up to Friday."
+                }
+              ],
+              "questions": [
+                {
+                  "id": "q1",
+                  "prompt": "Choose the best response.",
+                  "options": [
+                    "Great, so we have more time.",
+                    "The essay was about Friday.",
+                    "Let's move the desk up.",
+                    "I know, I'll have to start tonight."
+                  ],
+                  "answer": 3,
+                  "skill": "listening.response",
+                  "explanation": "'Moved up' means earlier, so the natural reply expresses needing to start sooner."
+                }
+              ]
+            },
+            {
+              "id": "l1-conv",
+              "type": "conversation",
+              "context": "Listen to a conversation between a student and a housing office employee.",
+              "audio": [
+                {
+                  "speaker": "Student",
+                  "voice": "female_1",
+                  "text": "Hi, I'm having a problem with the heating in my dorm room. It's been cold for three days."
+                },
+                {
+                  "speaker": "Employee",
+                  "voice": "male_2",
+                  "text": "I'm sorry to hear that. Have you filled out a maintenance request online?"
+                },
+                {
+                  "speaker": "Student",
+                  "voice": "female_1",
+                  "text": "I did, on Monday, but nobody has come yet."
+                },
+                {
+                  "speaker": "Employee",
+                  "voice": "male_2",
+                  "text": "Let me check. Ah, I see it. It looks like it was sent to the wrong building. I'll mark it urgent and send it to the right team now."
+                },
+                {
+                  "speaker": "Student",
+                  "voice": "female_1",
+                  "text": "Thank you. Is there anything I can do in the meantime?"
+                },
+                {
+                  "speaker": "Employee",
+                  "voice": "male_2",
+                  "text": "We have portable heaters you can borrow. Just bring your student ID to the front desk."
+                }
+              ],
+              "questions": [
+                {
+                  "id": "q1",
+                  "prompt": "Why was the student's problem not fixed?",
+                  "options": [
+                    "She did not submit a request.",
+                    "The request went to the wrong building.",
+                    "The repair team was on holiday.",
+                    "The heater was too old to repair."
+                  ],
+                  "answer": 1,
+                  "skill": "listening.detail",
+                  "explanation": "The employee finds the request 'was sent to the wrong building'."
+                },
+                {
+                  "id": "q2",
+                  "prompt": "What will the student probably do next?",
+                  "options": [
+                    "Fill out another form",
+                    "Move to a different room",
+                    "Borrow a heater with her ID",
+                    "Call the maintenance team"
+                  ],
+                  "answer": 2,
+                  "skill": "listening.inference",
+                  "explanation": "She is told to bring her student ID to borrow a portable heater."
+                }
+              ]
+            },
+            {
+              "id": "l1-ann",
+              "type": "announcement",
+              "context": "Listen to an announcement at a train station.",
+              "audio": [
+                {
+                  "speaker": "Announcer",
+                  "voice": "narrator",
+                  "text": "Attention passengers travelling to Northfield. Due to track repairs, the 4:15 train will depart from platform 7 instead of platform 3. Passengers with bicycles should board the last carriage. We apologise for any inconvenience."
+                }
+              ],
+              "questions": [
+                {
+                  "id": "q1",
+                  "prompt": "What has changed?",
+                  "options": [
+                    "The platform",
+                    "The departure time",
+                    "The destination",
+                    "The ticket price"
+                  ],
+                  "answer": 0,
+                  "skill": "listening.detail",
+                  "explanation": "The train leaves from platform 7 instead of 3."
+                },
+                {
+                  "id": "q2",
+                  "prompt": "What are passengers with bicycles told to do?",
+                  "options": [
+                    "Wait for the next train",
+                    "Leave bicycles on the platform",
+                    "Buy an extra ticket",
+                    "Use the last carriage"
+                  ],
+                  "answer": 3,
+                  "skill": "listening.detail",
+                  "explanation": "'Passengers with bicycles should board the last carriage.'"
+                }
+              ]
+            },
+            {
+              "id": "l1-talk",
+              "type": "academic_talk",
+              "context": "Listen to part of a talk in a biology class.",
+              "audio": [
+                {
+                  "speaker": "Professor",
+                  "voice": "male_3",
+                  "text": "Today I want to talk about how plants defend themselves. Since plants can't run away, they've developed other strategies. Some, like cacti, rely on physical defences such as spines. But many plants use chemistry instead. When a caterpillar starts eating a tomato leaf, for example, the plant produces chemicals that make the leaves harder to digest. What's really interesting is that the damaged plant also releases substances into the air. Nearby tomato plants detect these signals and begin preparing their own defences before they're even attacked. So, in a sense, plants are warning their neighbours."
+                }
+              ],
+              "questions": [
+                {
+                  "id": "q1",
+                  "prompt": "What is the talk mainly about?",
+                  "options": [
+                    "How cacti store water",
+                    "Ways plants protect themselves",
+                    "Why caterpillars eat tomatoes",
+                    "How plants grow faster"
+                  ],
+                  "answer": 1,
+                  "skill": "listening.main_idea",
+                  "explanation": "The professor opens with 'how plants defend themselves'."
+                },
+                {
+                  "id": "q2",
+                  "prompt": "Why does the professor mention cacti?",
+                  "options": [
+                    "To compare their chemistry with tomatoes",
+                    "To explain how plants communicate",
+                    "As an example of a physical defence",
+                    "As an example of a plant without defences"
+                  ],
+                  "answer": 2,
+                  "skill": "listening.purpose",
+                  "explanation": "Cacti with spines illustrate physical defences."
+                },
+                {
+                  "id": "q3",
+                  "prompt": "What happens when a tomato plant is damaged?",
+                  "options": [
+                    "It releases airborne signals.",
+                    "It stops growing.",
+                    "It drops its leaves.",
+                    "It attracts more caterpillars."
+                  ],
+                  "answer": 0,
+                  "skill": "listening.detail",
+                  "explanation": "The damaged plant 'releases substances into the air'."
+                },
+                {
+                  "id": "q4",
+                  "prompt": "What does the professor imply when he says plants are \"warning their neighbours\"?",
+                  "options": [
+                    "Plants make sounds.",
+                    "Plants move away from danger.",
+                    "Caterpillars avoid tomato fields.",
+                    "Nearby plants respond before being attacked."
+                  ],
+                  "answer": 3,
+                  "skill": "listening.inference",
+                  "explanation": "Neighbouring plants prepare defences 'before they're even attacked'."
+                }
+              ]
+            }
+          ]
+        },
+        "m2_easy": {
+          "time_sec": 240,
+          "tasks": [
+            {
+              "id": "l2e-cr",
+              "type": "choose_response",
+              "audio": [
+                {
+                  "speaker": "Woman",
+                  "voice": "female_3",
+                  "text": "Would you like to get lunch after class?"
+                }
+              ],
+              "questions": [
+                {
+                  "id": "q1",
+                  "prompt": "Choose the best response.",
+                  "options": [
+                    "I had class yesterday.",
+                    "Sure, how about the cafe on campus?",
+                    "Lunch is a meal.",
+                    "No, the class is long."
+                  ],
+                  "answer": 1,
+                  "skill": "listening.response",
+                  "explanation": "An invitation is best answered by accepting and suggesting a place."
+                }
+              ]
+            },
+            {
+              "id": "l2e-ann",
+              "type": "announcement",
+              "context": "Listen to an announcement in a supermarket.",
+              "audio": [
+                {
+                  "speaker": "Announcer",
+                  "voice": "female_1",
+                  "text": "Good afternoon, shoppers. The store will be closing in fifteen minutes. Please bring your final purchases to the registers. The self-checkout machines are already closed for cleaning."
+                }
+              ],
+              "questions": [
+                {
+                  "id": "q1",
+                  "prompt": "When will the store close?",
+                  "options": [
+                    "In five minutes",
+                    "In fifty minutes",
+                    "In fifteen minutes",
+                    "At the end of the day tomorrow"
+                  ],
+                  "answer": 2,
+                  "skill": "listening.detail",
+                  "explanation": "'The store will be closing in fifteen minutes.'"
+                },
+                {
+                  "id": "q2",
+                  "prompt": "Why can't shoppers use the self-checkout machines?",
+                  "options": [
+                    "They are being cleaned.",
+                    "They are broken.",
+                    "They only take cash.",
+                    "They are for staff only."
+                  ],
+                  "answer": 0,
+                  "skill": "listening.detail",
+                  "explanation": "They are 'closed for cleaning'."
+                }
+              ]
+            }
+          ]
+        },
+        "m2_hard": {
+          "time_sec": 300,
+          "tasks": [
+            {
+              "id": "l2h-cr",
+              "type": "choose_response",
+              "audio": [
+                {
+                  "speaker": "Man",
+                  "voice": "male_2",
+                  "text": "You wouldn't happen to have a spare charger, would you?"
+                }
+              ],
+              "questions": [
+                {
+                  "id": "q1",
+                  "prompt": "Choose the best response.",
+                  "options": [
+                    "I would, if it weren't for the rain.",
+                    "It happened yesterday.",
+                    "Yes, I charge it every night.",
+                    "Afraid not, mine's at home too."
+                  ],
+                  "answer": 3,
+                  "skill": "listening.response",
+                  "explanation": "The indirect request asks whether she has a spare charger; 'Afraid not' answers it."
+                }
+              ]
+            },
+            {
+              "id": "l2h-talk",
+              "type": "academic_talk",
+              "context": "Listen to part of a talk in an economics class.",
+              "audio": [
+                {
+                  "speaker": "Professor",
+                  "voice": "female_2",
+                  "text": "Let's look at something economists call the anchoring effect. When people estimate a value, they're heavily influenced by the first number they see, even if that number is irrelevant. In one well-known experiment, participants spun a wheel that landed on either ten or sixty-five, and were then asked to estimate a percentage. Those who saw sixty-five gave much higher estimates. Now, retailers use this all the time. A jacket labelled 'was three hundred dollars, now one fifty' feels like a bargain, even if the original price was never realistic. The lesson for consumers is to decide what something is worth to you before you look at the price tag."
+                }
+              ],
+              "questions": [
+                {
+                  "id": "q1",
+                  "prompt": "What is the anchoring effect?",
+                  "options": [
+                    "Preferring familiar brands",
+                    "Being influenced by the first number seen",
+                    "Spending more when shopping with others",
+                    "Ignoring discounts"
+                  ],
+                  "answer": 1,
+                  "skill": "listening.main_idea",
+                  "explanation": "People are 'heavily influenced by the first number they see'."
+                },
+                {
+                  "id": "q2",
+                  "prompt": "Why does the professor describe the wheel experiment?",
+                  "options": [
+                    "To show that games affect mood",
+                    "To explain how percentages are calculated",
+                    "To demonstrate that irrelevant numbers affect estimates",
+                    "To criticise an earlier study"
+                  ],
+                  "answer": 2,
+                  "skill": "listening.purpose",
+                  "explanation": "The random wheel number changed participants' estimates."
+                },
+                {
+                  "id": "q3",
+                  "prompt": "What does the professor imply about the jacket's original price?",
+                  "options": [
+                    "It may have been set artificially high.",
+                    "It was a mistake by the store.",
+                    "It was lower than the sale price.",
+                    "It was the average market price."
+                  ],
+                  "answer": 0,
+                  "skill": "listening.inference",
+                  "explanation": "'Even if the original price was never realistic' implies it was inflated to act as an anchor."
+                },
+                {
+                  "id": "q4",
+                  "prompt": "What advice does the professor give?",
+                  "options": [
+                    "Only buy items on sale",
+                    "Compare prices in several stores",
+                    "Avoid buying clothing online",
+                    "Decide an item's value before seeing the price"
+                  ],
+                  "answer": 3,
+                  "skill": "listening.detail",
+                  "explanation": "'Decide what something is worth to you before you look at the price tag.'"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "writing",
+      "modules": {
+        "m1": {
+          "tasks": [
+            {
+              "id": "w-build",
+              "type": "build_sentence",
+              "time_sec": 240,
+              "items": [
+                {
+                  "id": "b1",
+                  "prompt": "Where did you leave the keys?",
+                  "start": "I",
+                  "chunks": [
+                    "on the table",
+                    "think",
+                    "them",
+                    "I left",
+                    "by the door"
+                  ],
+                  "answer": [
+                    "think",
+                    "I left",
+                    "them",
+                    "on the table",
+                    "by the door"
+                  ],
+                  "skill": "grammar.word_order",
+                  "explanation": "Subject + verb + object + place: I think I left them on the table by the door."
+                },
+                {
+                  "id": "b2",
+                  "prompt": "Why weren't you at the meeting?",
+                  "chunks": [
+                    "about it",
+                    "nobody",
+                    "had told",
+                    "me",
+                    "because"
+                  ],
+                  "answer": [
+                    "because",
+                    "nobody",
+                    "had told",
+                    "me",
+                    "about it"
+                  ],
+                  "end": ".",
+                  "skill": "grammar.tense",
+                  "explanation": "Because nobody had told me about it: past perfect for the earlier event."
+                },
+                {
+                  "id": "b3",
+                  "prompt": "Can you tell me what time the library opens?",
+                  "chunks": [
+                    "it opens",
+                    "sure,",
+                    "I believe",
+                    "at nine"
+                  ],
+                  "answer": [
+                    "sure,",
+                    "I believe",
+                    "it opens",
+                    "at nine"
+                  ],
+                  "end": ".",
+                  "skill": "grammar.word_order",
+                  "explanation": "Sure, I believe it opens at nine."
+                },
+                {
+                  "id": "b4",
+                  "prompt": "Did you enjoy the concert?",
+                  "chunks": [
+                    "than",
+                    "it was",
+                    "I expected",
+                    "even better"
+                  ],
+                  "answer": [
+                    "it was",
+                    "even better",
+                    "than",
+                    "I expected"
+                  ],
+                  "end": "!",
+                  "skill": "grammar.comparatives",
+                  "explanation": "It was even better than I expected!"
+                }
+              ]
+            },
+            {
+              "id": "w-email",
+              "type": "email",
+              "time_sec": 420,
+              "scenario": "You recently joined a community volunteer group that cleans up local parks. At the last event, you noticed that there were not enough gloves and rubbish bags for everyone. Write an email to the group's organiser.",
+              "to": "Ms. Laura Chen, Volunteer Coordinator",
+              "subject": "Supplies for park clean-up events",
+              "bullets": [
+                "Thank the organiser for organising the event",
+                "Describe the problem you noticed",
+                "Suggest a way to solve the problem"
+              ]
+            },
+            {
+              "id": "w-disc",
+              "type": "academic_discussion",
+              "time_sec": 600,
+              "course": "Education",
+              "professor": {
+                "name": "Dr. Gupta",
+                "post": "Many universities now record their lectures and post them online. Some educators believe this helps students learn, while others worry that students stop attending class. Do you think universities should make all lecture recordings available to students? Why or why not?"
+              },
+              "students": [
+                {
+                  "name": "Kelly",
+                  "post": "I think recordings are very helpful. When I miss something during a lecture, I can go back and listen again. This is especially useful for students whose first language is not English."
+                },
+                {
+                  "name": "Andrew",
+                  "post": "I disagree. If everything is recorded, students will just skip class and plan to watch later, but most of them never actually do. Attending in person also lets you ask questions."
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "speaking",
+      "modules": {
+        "m1": {
+          "tasks": [
+            {
+              "id": "s-repeat",
+              "type": "listen_and_repeat",
+              "setting": "You are training to be a guide at a science museum. Listen to the senior guide and repeat exactly what you hear.",
+              "items": [
+                {
+                  "id": "i1",
+                  "text": "Welcome to the museum.",
+                  "voice": "female_1",
+                  "response_sec": 6
+                },
+                {
+                  "id": "i2",
+                  "text": "Please keep your tickets with you.",
+                  "voice": "female_1",
+                  "response_sec": 7
+                },
+                {
+                  "id": "i3",
+                  "text": "The space exhibit is on the second floor.",
+                  "voice": "female_1",
+                  "response_sec": 8
+                },
+                {
+                  "id": "i4",
+                  "text": "Photography is allowed, but please turn off your flash.",
+                  "voice": "female_1",
+                  "response_sec": 9
+                },
+                {
+                  "id": "i5",
+                  "text": "The planetarium show begins every hour, starting at ten in the morning.",
+                  "voice": "female_1",
+                  "response_sec": 10
+                },
+                {
+                  "id": "i6",
+                  "text": "If you need assistance, staff members in blue shirts will be happy to help you.",
+                  "voice": "female_1",
+                  "response_sec": 11
+                },
+                {
+                  "id": "i7",
+                  "text": "Before you leave, don't forget to visit the gift shop, which is located next to the main entrance.",
+                  "voice": "female_1",
+                  "response_sec": 12
+                }
+              ]
+            },
+            {
+              "id": "s-interview",
+              "type": "interview",
+              "topic": "Technology and daily life",
+              "voice": "interviewer",
+              "intro": "Hello, and thank you for taking part in this interview. I'm going to ask you some questions about technology and how it affects people's daily lives.",
+              "answer_sec": 45,
+              "questions": [
+                {
+                  "id": "q1",
+                  "text": "To start, can you tell me what kind of technology you use most in a typical day, and what you use it for?"
+                },
+                {
+                  "id": "q2",
+                  "text": "Some people say smartphones make it harder to concentrate. Has that been true in your experience? Please explain."
+                },
+                {
+                  "id": "q3",
+                  "text": "Think about a time when technology helped you solve a problem. What happened?"
+                },
+                {
+                  "id": "q4",
+                  "text": "Many schools are considering banning phones in classrooms. Do you think this is a good idea? Why or why not?"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

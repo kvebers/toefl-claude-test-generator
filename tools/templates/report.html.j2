@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>TOEFL report: {{ test.title }}</title>
+<style>
+  :root { --ink:#1d2433; --muted:#5d6779; --line:#dde2ea; --brand:#12355b; --ok:#1a7f37; --bad:#c62828; --soft:#f3f6fa; --hl:#fff4d6; }
+  * { box-sizing: border-box; }
+  body { font-family: "Segoe UI", system-ui, Arial, sans-serif; color: var(--ink); font-size: 10.5pt; line-height: 1.45; margin: 0; padding: 24px; background: #fff; }
+  h1 { font-size: 20pt; margin: 0 0 4px; color: var(--brand); }
+  h2 { font-size: 14pt; color: var(--brand); border-bottom: 2px solid var(--brand); padding-bottom: 3px; margin: 26px 0 10px; break-after: avoid; }
+  h3 { font-size: 11.5pt; margin: 16px 0 6px; break-after: avoid; }
+  .muted { color: var(--muted); }
+  .tiles { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin: 14px 0; }
+  .tile { border: 1px solid var(--line); border-radius: 8px; padding: 10px; text-align: center; background: var(--soft); }
+  .tile .big { font-size: 22pt; font-weight: 700; color: var(--brand); }
+  .tile.main { background: var(--brand); color: #fff; }
+  .tile.main .big, .tile.main .muted { color: #fff; }
+  table { width: 100%; border-collapse: collapse; margin: 6px 0 10px; break-inside: auto; }
+  th, td { border-bottom: 1px solid var(--line); padding: 5px 6px; text-align: left; vertical-align: top; }
+  th { background: var(--soft); font-size: 9.5pt; }
+  tr { break-inside: avoid; }
+  .ok { color: var(--ok); font-weight: 700; } .bad { color: var(--bad); font-weight: 700; }
+  .box { border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; margin: 8px 0; break-inside: avoid; }
+  .prio { border-left: 4px solid var(--brand); }
+  .resp { white-space: pre-wrap; background: var(--soft); padding: 10px; border-radius: 6px; font-size: 10pt; }
+  .tag { font-family: Consolas, monospace; font-size: 8.5pt; background: var(--soft); padding: 1px 5px; border-radius: 4px; white-space: nowrap; }
+  del { color: var(--bad); } ins { color: var(--ok); text-decoration: none; font-weight: 600; }
+  .metrics span { display: inline-block; margin-right: 12px; }
+  .note { font-size: 9pt; color: var(--muted); margin-top: 26px; border-top: 1px solid var(--line); padding-top: 8px; }
+  @page { size: A4; margin: 14mm 12mm; }
+  @media print { body { padding: 0; } }
+</style>
+</head>
+<body>
+{% set S = score.get('summary', {}) %}
+<h1>TOEFL iBT practice report</h1>
+<div class="muted">{{ test.title }} · {{ attempt.started[:16].replace('T', ' ') }}{% if attempt.home_edition %} · Home Edition rules{% endif %} · attempt <code>{{ attempt.id }}</code></div>
+
+<div class="tiles">
+  <div class="tile main"><div class="muted">Overall band</div><div class="big">{{ S.overall_band or '-' }}</div>
+    <div class="muted">{% if S.overall_cefr %}CEFR {{ S.overall_cefr }} · ~{{ S.est_total_120 }}/120{% else %}needs all 4 sections{% endif %}</div></div>
+  {% for sid, s in score.get('sections', {}).items() %}
+  <div class="tile"><div class="muted">{{ sid|label }}</div><div class="big">{{ s.band or '-' }}</div>
+    <div class="muted">{% if s.est_30 %}~{{ s.est_30 }}/30 · {{ s.cefr }}{% endif %}{% if s.raw %} · {{ s.raw }}{% endif %}{% if s.route %} · {{ 'harder' if s.route == 'm2_hard' else 'easier' }} part 2{% endif %}</div></div>
+  {% endfor %}
+</div>
+<div class="muted">{{ S.estimate_note }}</div>
+{% for n in score.get('notes', []) %}<div class="bad">⚠ {{ n }}</div>{% endfor %}
+{% if meta.fullscreen_exits %}<div class="bad">⚠ Left full screen {{ meta.fullscreen_exits }} time(s). In the real Home Edition this can void a test.</div>{% endif %}
+
+{% if grading.overall %}
+<h2>Summary &amp; what to improve</h2>
+<p>{{ grading.overall.summary }}</p>
+{% if grading.overall.strengths %}<p><b>Strengths:</b> {{ grading.overall.strengths|join('; ') }}</p>{% endif %}
+{% for p in grading.overall.priorities %}
+<div class="box prio">
+  <b>{{ loop.index }}. {{ p.title }}</b> {% for t in p.tags %}<span class="tag">{{ t }}</span> {% endfor %}
+  <div>{{ p.why }}</div>
+  <ul>{% for x in p.how %}<li>{{ x }}</li>{% endfor %}</ul>
+  {% if p.practice_command %}<div class="muted">Practice: <code>{{ p.practice_command }}</code></div>{% endif %}
+</div>
+{% endfor %}
+{% if grading.objective_patterns %}<p><b>Patterns in your multiple-choice mistakes:</b> {{ grading.objective_patterns }}</p>{% endif %}
+{% else %}
+<h2>Summary</h2><p class="muted">Claude grading was not run for this attempt, so writing/speaking feedback is missing. Run <code>make grade ID={{ attempt.id }}</code>.</p>
+{% endif %}
+
+{% for sid in ['reading', 'listening'] if sid in tasks %}
+{% set items = items_by_section[sid] %}
+<h2>{{ sid|label }}</h2>
+<p>{{ items|selectattr('correct')|list|length }} of {{ items|length }} correct.</p>
+<table>
+  <tr><th></th><th>Task</th><th>Question</th><th>Your answer</th><th>Correct answer &amp; why</th></tr>
+  {% for i in items %}
+  <tr>
+    <td class="{{ 'ok' if i.correct else 'bad' }}">{{ '✓' if i.correct else '✗' }}</td>
+    <td>{{ i.task_type|label }}<br><span class="tag">{{ i.skill }}</span></td>
+    <td>{{ i.prompt }}</td>
+    <td>{{ i.given or '(no answer)' }}</td>
+    <td>{% if not i.correct %}<b>{{ i.expected }}</b>{% if i.explanation %}<br><span class="muted">{{ i.explanation }}</span>{% endif %}{% else %}<span class="muted">-</span>{% endif %}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% endfor %}
+
+{% if 'writing' in tasks %}
+<h2>Writing</h2>
+{% for t in tasks.writing %}
+  {% if t.type == 'build_sentence' %}
+  {% set its = items_by_section.writing|selectattr('task_id', 'equalto', t.id)|list %}
+  <h3>Build a Sentence ({{ its|selectattr('correct')|list|length }}/{{ its|length }})</h3>
+  <table><tr><th></th><th>Prompt</th><th>Your sentence</th><th>Correct sentence</th></tr>
+  {% for i in its %}<tr><td class="{{ 'ok' if i.correct else 'bad' }}">{{ '✓' if i.correct else '✗' }}</td><td>{{ i.prompt }}</td><td>{{ i.given or '-' }}</td>
+    <td>{% if not i.correct %}{{ i.expected }}{% if i.explanation %}<br><span class="muted">{{ i.explanation }}</span>{% endif %}{% endif %}</td></tr>{% endfor %}
+  </table>
+  {% else %}
+  {% set g = g_tasks.get(t.id) %}
+  <h3>{{ 'Write an Email' if t.type == 'email' else 'Academic Discussion' }}{% if g %} ({{ g.score }}/5){% endif %}</h3>
+  {% if t.type == 'email' %}<div class="muted">{{ t.scenario }}</div>{% else %}<div class="muted">{{ t.professor.post }}</div>{% endif %}
+  <div class="resp">{{ responses.get(t.id, {}).get('text') or '(no response)' }}</div>
+  <div class="muted">{{ (responses.get(t.id, {}).get('text') or '').split()|length }} words</div>
+  {% if g %}
+    <p>{{ g.summary }}</p>
+    {% if g.dimensions %}<table>{% for k, v in g.dimensions.items() %}<tr><th style="width:22%">{{ k|label }}</th><td>{{ v }}</td></tr>{% endfor %}</table>{% endif %}
+    {% if g.errors %}<table><tr><th>You wrote</th><th>Better</th><th>Why</th></tr>
+      {% for e in g.errors %}<tr><td><del>{{ e.quote }}</del></td><td><ins>{{ e.correction }}</ins></td><td>{{ e.explanation }} <span class="tag">{{ e.tag }}</span></td></tr>{% endfor %}</table>{% endif %}
+    {% if g.improved_version %}<b>Improved version</b><div class="resp">{{ g.improved_version }}</div>{% endif %}
+  {% endif %}
+  {% endif %}
+{% endfor %}
+{% endif %}
+
+{% if 'speaking' in tasks %}
+<h2>Speaking</h2>
+{% for t in tasks.speaking %}
+  {% if t.type == 'listen_and_repeat' %}
+  <h3>Listen and Repeat</h3>
+  <table><tr><th>Sentence</th><th>What we heard</th><th>Accuracy</th></tr>
+  {% for r in objective.repeats if r.task_id == t.id %}
+    <tr><td>{{ r.target }}</td><td>{{ r.said if r.said is not none else '(not transcribed)' }}</td>
+    <td class="{{ 'ok' if (r.accuracy or 0) >= 0.9 else 'bad' }}">{{ ((r.accuracy or 0) * 100)|round|int }}%</td></tr>
+  {% endfor %}</table>
+  {% else %}
+  {% set g = g_tasks.get(t.id) %}
+  <h3>Take an Interview: {{ t.topic }}{% if g %} ({{ g.score }}/5){% endif %}</h3>
+  {% if g %}<p>{{ g.summary }}</p>{% endif %}
+  {% for q in t.questions %}
+    {% set tr = transcripts.get(t.id ~ '__' ~ q.id, {}) %}
+    {% set gq = (g.questions or {}).get(q.id) if g else none %}
+    <div class="box">
+      <b>Q{{ loop.index }}. {{ q.text }}</b>{% if gq %} ({{ gq.score }}/5){% endif %}
+      <div class="resp">{{ tr.text or tr.error or '(no recording)' }}</div>
+      {% if tr.wpm is defined %}<div class="metrics muted"><span>{{ tr.wpm }} words/min</span><span>{{ tr.pauses }} pauses &gt;0.5s</span><span>{{ tr.long_pauses }} long pauses</span><span>{{ tr.fillers }} fillers</span><span>spoke for {{ tr.duration }}s of {{ t.answer_sec }}s</span></div>{% endif %}
+      {% if gq %}<p>{{ gq.summary }}</p>
+        {% if gq.errors %}<table><tr><th>You said</th><th>Better</th><th>Why</th></tr>{% for e in gq.errors %}<tr><td><del>{{ e.quote }}</del></td><td><ins>{{ e.correction }}</ins></td><td>{{ e.explanation }} <span class="tag">{{ e.tag }}</span></td></tr>{% endfor %}</table>{% endif %}
+        {% if gq.model_answer %}<b>A strong answer could sound like:</b><div class="resp">{{ gq.model_answer }}</div>{% endif %}
+      {% endif %}
+    </div>
+  {% endfor %}
+  {% if g and g.errors %}<table><tr><th>You said</th><th>Better</th><th>Why</th></tr>{% for e in g.errors %}<tr><td><del>{{ e.quote }}</del></td><td><ins>{{ e.correction }}</ins></td><td>{{ e.explanation }} <span class="tag">{{ e.tag }}</span></td></tr>{% endfor %}</table>{% endif %}
+  {% endif %}
+{% endfor %}
+<p class="muted">Pronunciation is estimated from speech-recognition confidence and repeat accuracy only; Claude grades the transcript, not the sound of your voice.</p>
+{% endif %}
+
+{% if score.error_tags %}
+<h2>Error profile</h2>
+<table><tr><th>Tag</th><th>Count</th></tr>
+{% for tag, n in score.error_tags.items() %}{% if loop.index <= 15 %}<tr><td><span class="tag">{{ tag }}</span></td><td>{{ n }}</td></tr>{% endif %}{% endfor %}
+</table>
+{% endif %}
+
+<div class="note">Unofficial practice report generated by toefl-claude-test-generator. Not affiliated with or endorsed by ETS. TOEFL and TOEFL iBT are registered trademarks of ETS. Bands and the 0–120 figure are estimates.</div>
+</body>
+</html>

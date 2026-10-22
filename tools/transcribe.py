@@ -20,23 +20,23 @@ FILLERS = {"um", "uh", "erm", "er", "ah", "hmm", "mm"}
 def metrics(words: list) -> dict:
     if not words:
         return {"duration": 0, "wpm": 0, "pauses": 0, "long_pauses": 0, "fillers": 0, "mean_word_prob": None}
-    span = max(0.1, words[-1].end - words[0].start)
-    gaps = [b.start - a.end for a, b in zip(words, words[1:])]
+    span = max(0.1, float(words[-1].end - words[0].start))
+    gaps = [float(b.start - a.end) for a, b in zip(words, words[1:])]   # Whisper gives numpy floats
     tokens = [re.sub(r"[^a-z']", "", w.word.lower()) for w in words]
     return {
-        "duration": round(words[-1].end, 1),
-        "speech_start": round(words[0].start, 1),
-        "wpm": round(60 * len(words) / span),
-        "pauses": sum(g > 0.5 for g in gaps),
-        "long_pauses": sum(g > 1.5 for g in gaps),
-        "fillers": sum(t in FILLERS for t in tokens),
-        "mean_word_prob": round(sum(w.probability for w in words) / len(words), 3),
+        "duration": round(float(words[-1].end), 1),
+        "speech_start": round(float(words[0].start), 1),
+        "wpm": int(round(60 * len(words) / span)),
+        "pauses": int(sum(g > 0.5 for g in gaps)),
+        "long_pauses": int(sum(g > 1.5 for g in gaps)),
+        "fillers": int(sum(t in FILLERS for t in tokens)),
+        "mean_word_prob": round(float(sum(w.probability for w in words)) / len(words), 3),
         "low_confidence_words": [w.word.strip() for w in words if w.probability < 0.5][:15],
     }
 
 
 def transcribe(attempt_dir: Path) -> dict:
-    recs = sorted(p for p in (attempt_dir / "recordings").glob("*") if p.suffix in (".webm", ".ogg", ".wav", ".m4a"))
+    recs = sorted(p for p in (attempt_dir / "recordings").glob("*") if p.suffix in (".webm", ".ogg", ".wav", ".m4a", ".mp3"))
     out = {}
     if not recs:
         return out

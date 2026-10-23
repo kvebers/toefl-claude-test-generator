@@ -1,0 +1,78 @@
+{
+  "id": "20261022-1200-interview-neighbourhoods-skills",
+  "title": "Interview practice: Neighbourhoods and learning new skills",
+  "format": "toefl-ibt-2026",
+  "mode": "practice",
+  "created": "2026-10-22",
+  "author": "toefl-claude-test-generator",
+  "difficulty": "medium",
+  "description": "Two speaking interviews: local neighbourhoods and community life; learning new skills outside school.",
+  "tags": [
+    "practice",
+    "speaking",
+    "interview"
+  ],
+  "sections": [
+    {
+      "id": "speaking",
+      "modules": {
+        "m1": {
+          "tasks": [
+            {
+              "id": "s-interview1",
+              "type": "interview",
+              "topic": "Neighbourhoods and community life",
+              "voice": "interviewer",
+              "intro": "Hi, thanks for joining me today. I'm researching how people feel about the places they live, so I'd like to ask you a few questions about your neighbourhood.",
+              "answer_sec": 45,
+              "questions": [
+                {
+                  "id": "q1",
+                  "text": "To begin, could you describe the neighbourhood where you live now? What do you like most about it?"
+                },
+                {
+                  "id": "q2",
+                  "text": "Tell me about a local place, like a shop, park or café, that you visit often. Why do you keep going back there?"
+                },
+                {
+                  "id": "q3",
+                  "text": "Some people prefer living in a busy city centre, while others prefer a quiet residential area. Which would you choose, and how do the two compare for someone your age?"
+                },
+                {
+                  "id": "q4",
+                  "text": "Many people today don't know their neighbours at all. Do you think it's still important for communities to be close? Why or why not?"
+                }
+              ]
+            },
+            {
+              "id": "s-interview2",
+              "type": "interview",
+              "topic": "Learning new skills outside school",
+              "voice": "interviewer",
+              "intro": "Hello, and welcome. Today I'm talking with people about how they learn new skills outside the classroom.",
+              "answer_sec": 45,
+              "questions": [
+                {
+                  "id": "q1",
+                  "text": "First, can you tell me about a skill you've learned outside of school, such as cooking, a sport or a musical instrument? How did you learn it?"
+                },
+                {
+                  "id": "q2",
+                  "text": "What was the most difficult part of learning that skill, and what did you do to get past it?"
+                },
+                {
+                  "id": "q3",
+                  "text": "Some people learn best by taking lessons with a teacher, while others prefer teaching themselves. Which approach works better for you, and why?"
+                },
+                {
+                  "id": "q4",
+                  "text": "Some people believe employers should pay for their workers to learn new skills, even ones not directly related to the job. Do you agree? Please explain your view."
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

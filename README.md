@@ -25,6 +25,25 @@ make test HE=1        # same, with Home Edition rules (check-in, full screen, no
 When you press submit, grading runs automatically. The page shows your bands and links to
 `results/<attempt>/report.pdf`.
 
+No time to generate? `library/` already has ready-made tests (two full tests and an interview set). `make next`
+opens the next full test you haven't taken, and their voices are rendered the first time you open them.
+
+## The report
+
+Every graded attempt gets a PDF report. The screenshots below are from a real first attempt at the library test
+*Tides and Trade* (overall band 5.5, about 110/120). The report took about 3 minutes to produce after submitting.
+
+| | |
+|---|---|
+| [![Scores and summary](docs/images/report-summary.png)](docs/images/report-summary.png) | [![Top 5 priorities](docs/images/report-priorities.png)](docs/images/report-priorities.png) |
+| **1. Scores and summary.** One band (1 to 6) per section and overall, with CEFR level and an estimated 0 to 120 score. A table shows how each band was calculated: raw score and adaptive route for Reading and Listening, weighted task scores for Writing and Speaking. Then a short summary and your strengths. | **2. What to improve.** Up to five priorities, ordered by how many points they cost. Each one quotes your actual mistakes, gives concrete drills and names the `make practice` command that targets it. In this attempt, spelling and word endings came first: they cost points in both essays and caused 4 of the 6 Reading misses. |
+| [![Goals by category](docs/images/report-goals.png)](docs/images/report-goals.png) | [![Corrections](docs/images/report-corrections.png)](docs/images/report-corrections.png) |
+| **3. Goals by task.** Every task type is checked against what it is designed to measure, marked Met, Partly or Not met (here 24 of 32 met, 8 partly). Reading and Listening goals come from your accuracy per question type. Writing and Speaking goals are rated by Claude with quoted evidence, a "How to improve" tip and a before/after example. | **4. Every answer, corrected.** All Reading and Listening questions with your answer, the correct one and why. Your essays and spoken transcripts are shown in full, with a rubric breakdown and a *You wrote / Better / Why* table. Each row is tagged with an error type, and those tags feed the trends. The report ends with an improved version of each essay and a model spoken answer. |
+
+The Speaking part also lists, for each answer: words per minute, pauses, fillers and how much of the 45 seconds you
+used, plus Listen and Repeat accuracy word by word. Reports are saved as `report.pdf` and `report.html` in
+`results/<attempt>/`.
+
 ## Commands
 
 | Command | What it does |
@@ -94,7 +113,8 @@ e.g. `/toefl-practice email`.
 - `tests/` holds your own generated tests. It's git-ignored.
 - `library/` holds shared tests. It's committed, and everyone sees these in the runner.
 - `make publish ID=…` validates a test and copies it to `library/`; commit it and open a PR. Audio isn't committed,
-  because everyone renders it locally.
+  because everyone renders it locally: the runner renders missing voices when it starts (the opened test first, the
+  rest in the background).
 - From the start page: **Download** exports a test file, and **Load test from file…** imports one someone sent you.
 
 ## Results layout

@@ -187,14 +187,28 @@ async function readingTask(task, expired) {
     const nGaps = task.segments.filter(s => 'gap' in s).length;
     counter.n += nGaps; progress(nGaps);
     return show((app, done) => {
-      const p = h('p', { class: 'ctw' });
+      const p = h('p', { class: 'ctw' }), inputs = [];
+      // A full gap jumps to the next one; Backspace in an empty gap and Space/Enter move between gaps.
+      const go = (i, atEnd) => { const el = inputs[i]; if (!el) return; el.focus(); const n = atEnd ? el.value.length : 0; el.setSelectionRange(n, n); };
       for (const s of task.segments) {
         if ('t' in s) { p.append(s.t); continue; }
-        p.append(s.prefix, h('input', {
-          maxlength: s.len, size: s.len, value: resp.gaps[s.gap] || '', spellcheck: 'false', autocomplete: 'off', autocapitalize: 'off',
-          placeholder: '_'.repeat(s.len), 'aria-label': `missing letters after ${s.prefix}`,
-          oninput: e => { resp.gaps[s.gap] = e.target.value; save(); },
-        }));
+        const i = inputs.length;
+        const input = h('input', {
+          maxlength: s.len, value: resp.gaps[s.gap] || '', spellcheck: 'false', autocomplete: 'off', autocapitalize: 'off',
+          style: `--len: ${s.len}`, 'aria-label': `missing letters after ${s.prefix}`,
+          oninput: e => {
+            const v = e.target.value.replace(/\s+/g, '');
+            if (v !== e.target.value) e.target.value = v;
+            resp.gaps[s.gap] = v; save();
+            if (v.length >= s.len && e.inputType !== 'deleteContentBackward') go(i + 1);
+          },
+          onkeydown: e => {
+            if (e.key === 'Backspace' && !e.target.value) { e.preventDefault(); go(i - 1, true); }
+            else if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); go(i + 1); }
+          },
+        });
+        inputs.push(input);
+        p.append(h('span', { class: 'ctw-word' }, s.prefix, input));
       }
       app.append(h('div', { class: 'panel narrow' }, h('p', { class: 'instructions' }, task.title || DIRECTIONS.complete_the_words), p));
       bar.next('Next', () => done());
@@ -204,12 +218,32 @@ async function readingTask(task, expired) {
     if (expired()) return;
     counter.n += 1; progress();
     await show((app, done) => {
+      const body = passageBody(task.text.body, q.prompt);
       app.append(h('div', { class: 'split' },
-        h('div', { class: 'panel passage' }, task.text.genre && h('div', { class: 'genre' }, task.text.genre), h('h3', {}, task.text.title), task.text.body),
+        h('div', { class: 'panel passage' }, task.text.genre && h('div', { class: 'genre' }, task.text.genre), h('h3', {}, task.text.title), body),
         h('div', { class: 'panel' }, mcqBlock(q, resp))));
       bar.next('Next', () => done());
+      const mark = body.querySelector('mark'), pane = body.parentElement;   // scroll the passage panel only, not the page
+      if (mark) pane.scrollTop += mark.getBoundingClientRect().top - pane.getBoundingClientRect().top - pane.clientHeight / 2;
     });
   }
+}
+
+// "The word "scarce" in paragraph 2 is closest in meaning to": highlight that word in the passage, as on the real test.
+function passageBody(text, prompt) {
+  const out = h('span');
+  const m = /\b(?:word|phrase)\s+["“'‘](.+?)["”'’]\s+in\s+paragraph\s+(\d+)/i.exec(prompt || '');
+  if (!m) { out.append(text); return out; }
+  const word = new RegExp(`(?<![A-Za-z])${m[1].replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?![A-Za-z])`, 'i');
+  const parts = text.split(/(\n\s*\n)/);   // odd entries are the separators, kept so pre-line spacing is unchanged
+  const nth = 2 * (Number(m[2]) - 1);
+  const pick = word.test(parts[nth] ?? '') ? nth : parts.findIndex((p, i) => i % 2 === 0 && word.test(p));
+  for (const [i, part] of parts.entries()) {
+    const hit = i === pick && word.exec(part);
+    if (!hit) { out.append(part); continue; }
+    out.append(part.slice(0, hit.index), h('mark', { class: 'vocab' }, hit[0]), part.slice(hit.index + hit[0].length));
+  }
+  return out;
 }
 
 async function listeningTask(task, timer, expired) {

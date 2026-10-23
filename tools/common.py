@@ -84,13 +84,16 @@ def attempt_counts(test: dict) -> dict:
 
 
 def list_tests() -> list[dict]:
-    out = []
+    out, seen = [], set()
     for source, base in (("local", TESTS_DIR), ("library", LIBRARY_DIR)):
         for f in sorted(base.glob("*/test.json"), key=lambda f: f.stat().st_mtime):
             try:
                 t = load_json(f)
             except (json.JSONDecodeError, OSError):
                 continue
+            if t["id"] in seen:     # a published test is also in tests/; find_test_dir uses that copy
+                continue
+            seen.add(t["id"])
             out.append({
                 "id": t["id"], "title": t.get("title", t["id"]), "mode": t.get("mode"), "source": source,
                 "created": t.get("created"), "author": t.get("author"), "difficulty": t.get("difficulty"),

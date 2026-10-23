@@ -1,0 +1,2504 @@
+{
+  "id": "20261022-1819-full-tides-and-trade",
+  "title": "Full test: Tides and Trade",
+  "format": "toefl-ibt-2026",
+  "mode": "full",
+  "created": "2026-10-22",
+  "author": "claude",
+  "difficulty": "mixed",
+  "description": "Salt trade across the Sahara, adobe building, the testing effect, astronomy, linguistics, biology, art history and sociology talks, a laundry-room email, an urban planning discussion and a food and cooking interview.",
+  "sections": [
+    {
+      "id": "reading",
+      "modules": {
+        "m1": {
+          "time_sec": 1200,
+          "tasks": [
+            {
+              "id": "r1-ctw1",
+              "type": "complete_the_words",
+              "title": "Fill in the missing letters in the paragraph.",
+              "text": "Ocean tides are caused mainly by the gravitational pull of the Moon. As th[e] planet rota[tes], most coast[lines] receive tw[o] high tid[es] each da[y], separated b[y] roughly twe[lve] hours. Th[e] Sun al[so] influences the oceans, although its effect is weaker because it is much farther away. When the Sun and Moon line up, their combined pull produces especially large tides, known as spring tides. When they sit at right angles, the difference between high and low water is much smaller; these are called neap tides."
+            },
+            {
+              "id": "r1-ctw2",
+              "type": "complete_the_words",
+              "title": "Fill in the missing letters in the paragraph.",
+              "text": "Many Roman structures built with concrete are still standing after two thousand years. Engineers ha[ve] long wond[ered] why th[is] ancient mate[rial] lasts lon[ger] than ma[ny] modern mix[es]. Part o[f] the ans[wer] lies i[n] volcanic ash, which reacts with water and lime to form strong, stable minerals. Researchers have also found small white lumps of lime scattered through the concrete. When cracks appear and rainwater seeps in, these lumps dissolve and refill the gaps, so the material can partly repair itself."
+            },
+            {
+              "id": "r1-daily1",
+              "type": "daily_life",
+              "text": {
+                "genre": "email",
+                "title": "Email: Thursday pottery class moved",
+                "body": "From: Marta Lindqvist\nTo: Wheel-Throwing (Beginners)\nSubject: Thursday class moved\n\nHi everyone,\n\nThe kiln in Studio B needs repairs, so this Thursday's wheel-throwing class will take place on Friday instead, at the usual time (6:30 to 8:30 p.m.), in Studio A. If you can't make Friday, please reply by Wednesday and I'll move you to the Saturday morning group for this week only.\n\nPlease bring the bowls you made last week: we'll be trimming them before they are fired. Aprons are provided, but an old towel is useful.\n\nSee you there,\nMarta"
+              },
+              "questions": [
+                {
+                  "id": "q1",
+                  "prompt": "Why did Marta write the email?",
+                  "options": [
+                    "To ask students which day they prefer for class",
+                    "To tell students that a class has been moved",
+                    "To report that students damaged a kiln",
+                    "To invite students to join a new weekend course"
+                  ],
+                  "answer": 1,
+                  "skill": "reading.purpose",
+                  "explanation": "The email says Thursday's class 'will take place on Friday instead' because the kiln needs repairs."
+                },
+                {
+                  "id": "q2",
+                  "prompt": "What should a student who cannot come on Friday do?",
+                  "options": [
+                    "Go to Studio B on Thursday as usual",
+                    "Contact the studio after Friday's class",
+                    "Wait for another email from Marta",
+                    "Reply to Marta by Wednesday"
+                  ],
+                  "answer": 3,
+                  "skill": "reading.detail",
+                  "explanation": "Marta writes: 'If you can't make Friday, please reply by Wednesday'."
+                },
+                {
+                  "id": "q3",
+                  "prompt": "What are students asked to bring?",
+                  "options": [
+                    "The bowls they made last week",
+                    "An apron to protect their clothes",
+                    "Clay for a new project",
+                    "Finished bowls ready for the kiln"
+                  ],
+                  "answer": 0,
+                  "skill": "reading.detail",
+                  "explanation": "Students should 'bring the bowls you made last week' to trim them before firing; aprons are provided."
+                }
+              ]
+            },
+            {
+              "id": "r1-daily2",
+              "type": "daily_life",
+              "text": {
+                "genre": "schedule",
+                "title": "Harbour View Pool: Autumn Schedule",
+                "body": "MONDAY TO FRIDAY\n6:00 to 8:30 a.m.: Lap swimming (all lanes)\n12:00 to 1:30 p.m.: Lap swimming (4 lanes) and aqua fitness class (2 lanes)\n4:00 to 6:00 p.m.: Children's lessons (whole pool)\n6:00 to 9:00 p.m.: Lap swimming (3 lanes) and open swim (3 lanes)\n\nSATURDAY AND SUNDAY\n8:00 a.m. to 4:00 p.m.: Open swim (whole pool)\n\nAqua fitness is free for members; non-members pay $6 per class.\nSwimmers under 12 must be with an adult during open swim.\nThe pool closes 30 minutes early on public holidays."
+              },
+              "questions": [
+                {
+                  "id": "q1",
+                  "prompt": "When is the whole pool used for children's lessons?",
+                  "options": [
+                    "Weekdays from 6:00 to 8:30 a.m.",
+                    "Weekends from 8:00 a.m. to 4:00 p.m.",
+                    "Weekdays from 4:00 to 6:00 p.m.",
+                    "Weekdays from 6:00 to 9:00 p.m."
+                  ],
+                  "answer": 2,
+                  "skill": "reading.detail",
+                  "explanation": "The schedule lists 'Children's lessons (whole pool)' from 4:00 to 6:00 p.m., Monday to Friday."
+                },
+                {
+                  "id": "q2",
+                  "prompt": "What can be inferred about lap swimming?",
+                  "options": [
+                    "It is not offered at the weekend.",
+                    "It is available only to members.",
+                    "It uses the whole pool every evening.",
+                    "It is cancelled on public holidays."
+                  ],
+                  "answer": 0,
+                  "skill": "reading.inference",
+                  "explanation": "Lap swimming appears only under Monday to Friday; weekends are open swim only."
+                },
+                {
+                  "id": "q3",
+                  "prompt": "What is true about aqua fitness classes?",
+                  "options": [
+                    "They take place in the evening.",
+                    "They use the whole pool.",
+                    "They cost $6 for members.",
+                    "They are free for members."
+                  ],
+                  "answer": 3,
+                  "skill": "reading.detail",
+                  "explanation": "The note says 'Aqua fitness is free for members'; only non-members pay $6."
+                }
+              ]
+            },
+            {
+              "id": "r1-acad",
+              "type": "academic_passage",
+              "text": {
+                "title": "Salt and the Trans-Saharan Trade",
+                "body": "For most of human history, salt was far more valuable than it is today. Before refrigeration, it was the main way to preserve meat and fish, and people and animals also need it in their diet. In regions without salt deposits or access to the sea, it had to be imported, often over great distances.\n\nOne of the best-known examples is the trade that crossed the Sahara Desert for many centuries. In the north of the desert, salt was cut from dry lake beds in large slabs. Camel caravans carried these slabs south to West African trading towns such as Timbuktu, where salt was scarce. There, merchants exchanged it for gold, which was mined further south, as well as for ivory and cloth.\n\nThis exchange had effects far beyond the goods themselves. Trading cities grew wealthy by taxing the caravans that passed through them, and rulers who controlled the routes became powerful. Ideas, languages and scholarship also travelled along the same paths, turning some market towns into centres of learning."
+              },
+              "questions": [
+                {
+                  "id": "q1",
+                  "prompt": "According to paragraph 1, why was salt so valuable in the past?",
+                  "options": [
+                    "It was used to make coins for trade.",
+                    "It was used to keep food from spoiling.",
+                    "It could be found only in the desert.",
+                    "It was used to build trading towns."
+                  ],
+                  "answer": 1,
+                  "skill": "reading.detail",
+                  "explanation": "Paragraph 1: before refrigeration, salt 'was the main way to preserve meat and fish'."
+                },
+                {
+                  "id": "q2",
+                  "prompt": "The word \"scarce\" in paragraph 2 is closest in meaning to",
+                  "options": [
+                    "highly valued",
+                    "freshly cut",
+                    "in short supply",
+                    "widely sold"
+                  ],
+                  "answer": 2,
+                  "skill": "reading.vocabulary",
+                  "explanation": "Salt had to be carried to towns like Timbuktu because there was little of it there, so 'scarce' means in short supply."
+                },
+                {
+                  "id": "q3",
+                  "prompt": "What can be inferred about the rulers mentioned in paragraph 3?",
+                  "options": [
+                    "Their power depended partly on trade.",
+                    "They kept scholars out of their cities.",
+                    "They worked as merchants in salt mines.",
+                    "They refused to tax caravans of gold."
+                  ],
+                  "answer": 0,
+                  "skill": "reading.inference",
+                  "explanation": "Paragraph 3 says rulers 'who controlled the routes became powerful', so their power was linked to the caravan trade."
+                },
+                {
+                  "id": "q4",
+                  "prompt": "Why does the author mention Timbuktu in paragraph 2?",
+                  "options": [
+                    "To show where salt was cut from dry lake beds",
+                    "To explain why camels were used in the desert",
+                    "To name the place where gold was mined",
+                    "To give an example of a town where salt was traded"
+                  ],
+                  "answer": 3,
+                  "skill": "reading.purpose",
+                  "explanation": "Timbuktu is introduced with 'such as' as an example of the trading towns where caravans exchanged salt for other goods."
+                },
+                {
+                  "id": "q5",
+                  "prompt": "According to paragraph 2, salt was exchanged for all of the following EXCEPT",
+                  "options": [
+                    "gold",
+                    "horses",
+                    "ivory",
+                    "cloth"
+                  ],
+                  "answer": 1,
+                  "skill": "reading.negative_factual",
+                  "explanation": "Paragraph 2 lists gold, ivory and cloth; horses are not mentioned."
+                }
+              ]
+            }
+          ]
+        },
+        "m2_easy": {
+          "time_sec": 540,
+          "tasks": [
+            {
+              "id": "r2e-ctw",
+              "type": "complete_the_words",
+              "title": "Fill in the missing letters in the paragraph.",
+              "text": "Sea otters live along the rocky coasts of the North Pacific Ocean. They spe[nd] most o[f] their liv[es] in th[e] water an[d] often flo[at] on the[ir] backs whi[le] they ea[t]. Their favou[rite] foods include crabs, clams and sea urchins. By eating urchins, otters help to protect kelp forests, because urchins feed on kelp. Where otters disappear, urchins can multiply quickly and destroy large areas of these underwater forests. Scientists therefore call the sea otter a keystone species."
+            },
+            {
+              "id": "r2e-daily1",
+              "type": "daily_life",
+              "text": {
+                "genre": "text_message",
+                "title": "Text message from Dev",
+                "body": "Hi Sam! A parcel for me is waiting at the post office on Elm Street, but I'm stuck at work until 7 and they close at 6. Could you pick it up for me? You'll need to show the card I left on the kitchen table. Thanks!"
+              },
+              "questions": [
+                {
+                  "id": "q1",
+                  "prompt": "What does Dev ask Sam to do?",
+                  "options": [
+                    "Send a parcel from the post office",
+                    "Meet him at work after 7 o'clock",
+                    "Collect a parcel for him",
+                    "Bring a card to his office"
+                  ],
+                  "answer": 2,
+                  "skill": "reading.purpose",
+                  "explanation": "Dev writes that a parcel is waiting and asks, 'Could you pick it up for me?'"
+                },
+                {
+                  "id": "q2",
+                  "prompt": "What will Sam need at the post office?",
+                  "options": [
+                    "The card on the kitchen table",
+                    "A letter from Dev's workplace",
+                    "Some money to pay for the parcel",
+                    "A photo of the parcel"
+                  ],
+                  "answer": 0,
+                  "skill": "reading.detail",
+                  "explanation": "Dev says, 'You'll need to show the card I left on the kitchen table.'"
+                }
+              ]
+            },
+            {
+              "id": "r2e-daily2",
+              "type": "daily_life",
+              "text": {
+                "genre": "menu",
+                "title": "Lantern Cafe: Lunch Menu (11 a.m. to 3 p.m.)",
+                "body": "Soup of the day, with bread: $5.50\nChicken and avocado sandwich: $8.00\nVegetable rice bowl (vegan): $7.50\nCheese and tomato toastie: $4.50\n\nAdd a drink to any main dish for $1.50.\nSandwiches can be made with gluten-free bread on request.\nSorry, we cannot take card payments for orders under $5."
+              },
+              "questions": [
+                {
+                  "id": "q1",
+                  "prompt": "Which dish is suitable for a customer who eats no animal products?",
+                  "options": [
+                    "Soup of the day",
+                    "Cheese and tomato toastie",
+                    "Chicken and avocado sandwich",
+                    "Vegetable rice bowl"
+                  ],
+                  "answer": 3,
+                  "skill": "reading.detail",
+                  "explanation": "Only the vegetable rice bowl is marked '(vegan)'."
+                },
+                {
+                  "id": "q2",
+                  "prompt": "How much does a chicken and avocado sandwich with a drink cost?",
+                  "options": [
+                    "$8.00",
+                    "$9.50",
+                    "$7.50",
+                    "$10.00"
+                  ],
+                  "answer": 1,
+                  "skill": "reading.detail",
+                  "explanation": "The sandwich costs $8.00 and a drink with a main dish adds $1.50, so the total is $9.50."
+                },
+                {
+                  "id": "q3",
+                  "prompt": "What can be inferred about a customer who orders only a cheese and tomato toastie?",
+                  "options": [
+                    "They will get a free drink.",
+                    "They must order before 11 a.m.",
+                    "They will have to pay in cash.",
+                    "They cannot add a drink to the order."
+                  ],
+                  "answer": 2,
+                  "skill": "reading.inference",
+                  "explanation": "The toastie costs $4.50, and the cafe does not take card payments for orders under $5."
+                }
+              ]
+            },
+            {
+              "id": "r2e-acad",
+              "type": "academic_passage",
+              "text": {
+                "title": "Building with Adobe",
+                "body": "Adobe is one of the oldest building materials in the world. It is made by mixing clay-rich soil with water and a little straw or grass, pressing the mixture into wooden moulds, and leaving the bricks to dry in the sun. Because the ingredients are found almost everywhere and no fuel is needed to bake the bricks, adobe is cheap and easy to produce.\n\nAdobe buildings are especially common in hot, dry regions, such as parts of North Africa, the Middle East and the southwestern United States. Their thick walls absorb heat slowly during the day, so the rooms inside stay cool. At night, the walls release the stored heat, which keeps the inside warm when the desert air turns cold.\n\nAdobe also has weaknesses. Heavy rain can wash away unprotected walls, so builders often cover them with a layer of plaster, and the walls must be repaired regularly. Even so, many adobe buildings have survived for hundreds of years."
+              },
+              "questions": [
+                {
+                  "id": "q1",
+                  "prompt": "According to paragraph 1, how are adobe bricks dried?",
+                  "options": [
+                    "They are left in the sun.",
+                    "They are baked in a fire.",
+                    "They are kept in wooden moulds.",
+                    "They are covered with straw."
+                  ],
+                  "answer": 0,
+                  "skill": "reading.detail",
+                  "explanation": "Paragraph 1 says the bricks are left 'to dry in the sun'."
+                },
+                {
+                  "id": "q2",
+                  "prompt": "According to paragraph 1, why is adobe cheap to produce?",
+                  "options": [
+                    "Builders buy the clay in large amounts.",
+                    "The bricks last for hundreds of years.",
+                    "The mixture needs very little water.",
+                    "The materials are common and need no baking."
+                  ],
+                  "answer": 3,
+                  "skill": "reading.cause_effect",
+                  "explanation": "Paragraph 1: the ingredients 'are found almost everywhere and no fuel is needed to bake the bricks'."
+                },
+                {
+                  "id": "q3",
+                  "prompt": "According to paragraph 2, what do adobe walls do at night?",
+                  "options": [
+                    "They absorb heat from the cold air.",
+                    "They give off heat stored during the day.",
+                    "They let cool air into the rooms.",
+                    "They become wet and need repairs."
+                  ],
+                  "answer": 1,
+                  "skill": "reading.detail",
+                  "explanation": "Paragraph 2: 'At night, the walls release the stored heat', which keeps the inside warm."
+                },
+                {
+                  "id": "q4",
+                  "prompt": "The word \"regularly\" in paragraph 3 is closest in meaning to",
+                  "options": [
+                    "quickly",
+                    "carefully",
+                    "often",
+                    "completely"
+                  ],
+                  "answer": 2,
+                  "skill": "reading.vocabulary",
+                  "explanation": "Rain keeps damaging the walls, so they must be repaired again and again, that is, often."
+                },
+                {
+                  "id": "q5",
+                  "prompt": "Which of the following regions is NOT mentioned in paragraph 2?",
+                  "options": [
+                    "North Africa",
+                    "The Middle East",
+                    "The southwestern United States",
+                    "South America"
+                  ],
+                  "answer": 3,
+                  "skill": "reading.negative_factual",
+                  "explanation": "Paragraph 2 names North Africa, the Middle East and the southwestern United States, but not South America."
+                }
+              ]
+            }
+          ]
+        },
+        "m2_hard": {
+          "time_sec": 540,
+          "tasks": [
+            {
+              "id": "r2h-ctw",
+              "type": "complete_the_words",
+              "title": "Fill in the missing letters in the paragraph.",
+              "text": "Soil is far more than crushed rock: it is a slowly assembled mixture of minerals, organic matter, water and air. Its forma[tion] begins wh[en] weathering bre[aks] parent ro[ck] into progres[sively] smaller fragm[ents]. Lichens, fun[gi] and bact[eria] then set[tle] on th[e] surface, releasing acids that speed up the breakdown. As plants and animals decompose, they add humus, which binds mineral particles into crumbs and helps the soil retain moisture. In temperate climates, producing a single centimetre of topsoil can take a century or more."
+            },
+            {
+              "id": "r2h-daily1",
+              "type": "daily_life",
+              "text": {
+                "genre": "advertisement",
+                "title": "Second Chapter Books: The Reader's Pass",
+                "body": "Tired of paying full price for books you only read once? For $12 a month, the Reader's Pass lets you take home up to three used books at a time from our shop on Quay Street. Finished with one? Bring it back in any condition short of waterlogged and swap it for another, as often as you like. Passholders also get 15% off anything they decide to keep, plus early entry to our quarterly warehouse sale. There is no minimum term: cancel online whenever you wish, though any books still out on loan at that point will be charged at half the cover price. New releases and signed editions are excluded from the scheme. Sign up in store this month and your first month is on us."
+              },
+              "questions": [
+                {
+                  "id": "q1",
+                  "prompt": "What does the shop mean by \"your first month is on us\"?",
+                  "options": [
+                    "Joining in store this month makes the first month free.",
+                    "The first book borrowed may be kept at no cost.",
+                    "Members must keep the pass for at least a month.",
+                    "The first sale of the month is open to members only."
+                  ],
+                  "answer": 0,
+                  "skill": "reading.inference",
+                  "explanation": "The offer is tied to signing up 'in store this month', and 'on us' means the shop pays, so the first month costs nothing."
+                },
+                {
+                  "id": "q2",
+                  "prompt": "What happens if a member cancels while still holding two borrowed books?",
+                  "options": [
+                    "They must return the books within a month.",
+                    "They lose the right to cancel online.",
+                    "They are charged half the cover price of each book.",
+                    "They pay the full price of both books."
+                  ],
+                  "answer": 2,
+                  "skill": "reading.detail",
+                  "explanation": "Books 'still out on loan' at cancellation 'will be charged at half the cover price'."
+                },
+                {
+                  "id": "q3",
+                  "prompt": "Which of the following is NOT a benefit of the Reader's Pass?",
+                  "options": [
+                    "A discount on books members choose to keep",
+                    "Free borrowing of signed and newly released titles",
+                    "Early entry to a sale held four times a year",
+                    "Unlimited exchanges of borrowed books"
+                  ],
+                  "answer": 1,
+                  "skill": "reading.negative_factual",
+                  "explanation": "The advertisement states that 'New releases and signed editions are excluded from the scheme'."
+                }
+              ]
+            },
+            {
+              "id": "r2h-daily2",
+              "type": "daily_life",
+              "text": {
+                "genre": "social_post",
+                "title": "Post in the Northfield Photography Circle group",
+                "body": "Quick update on the winter exhibition, since several of you have messaged me with the same questions. Yes, the theme is still 'Light in Small Places', and no, it doesn't have to be literal: last year's winner was a portrait lit only by a phone screen. Each member can submit up to two prints, A4 or larger, mounted but not framed (the gallery hangs everything in its own frames so the walls look consistent). The deadline has moved from 30 November to 7 December because the print shop most of us use is running behind, so there's no excuse now! Drop entries at the library front desk with your name on the back. Any more questions? Ask here rather than messaging me, so everyone sees the answer.\nPriya"
+              },
+              "questions": [
+                {
+                  "id": "q1",
+                  "prompt": "Why did Priya write the post?",
+                  "options": [
+                    "To announce the winner of last year's exhibition",
+                    "To ask members to vote on a new theme",
+                    "To complain about delays at the print shop",
+                    "To clarify entry rules and announce a later deadline"
+                  ],
+                  "answer": 3,
+                  "skill": "reading.purpose",
+                  "explanation": "Priya answers repeated questions about the theme and prints and says 'The deadline has moved' to 7 December."
+                },
+                {
+                  "id": "q2",
+                  "prompt": "Why does Priya mention last year's winning portrait?",
+                  "options": [
+                    "To show that the theme can be interpreted loosely",
+                    "To suggest that portraits are likely to win again",
+                    "To explain why phone photos are not accepted",
+                    "To remind members how high the standard was"
+                  ],
+                  "answer": 0,
+                  "skill": "reading.purpose",
+                  "explanation": "The portrait follows 'it doesn't have to be literal', so it illustrates a loose reading of the theme."
+                },
+                {
+                  "id": "q3",
+                  "prompt": "Why should prints be submitted without frames?",
+                  "options": [
+                    "Frames are too heavy for the gallery walls.",
+                    "Framed prints are easily damaged in transport.",
+                    "The gallery uses its own frames for a uniform look.",
+                    "Framing would delay printing past the deadline."
+                  ],
+                  "answer": 2,
+                  "skill": "reading.cause_effect",
+                  "explanation": "The gallery 'hangs everything in its own frames so the walls look consistent'."
+                }
+              ]
+            },
+            {
+              "id": "r2h-acad",
+              "type": "academic_passage",
+              "text": {
+                "title": "The Testing Effect",
+                "body": "Most students regard tests purely as a means of measuring what they have learned. A substantial body of research in cognitive psychology, however, suggests that the act of retrieving information from memory is itself a powerful way of learning it. This phenomenon, known as the testing effect, has been replicated with materials ranging from vocabulary lists to complex scientific texts.\n\nIn a typical experiment, participants study a passage and then either reread it or attempt to recall its content without looking. On a test given a few minutes later, rereaders often perform as well as, or slightly better than, the recall group. After a delay of several days, though, the pattern reverses: those who practised retrieval remember considerably more. Rereading, it seems, produces a sense of familiarity that learners mistake for durable knowledge.\n\nResearchers attribute the benefit partly to effort. Retrieval that is difficult, but ultimately successful, appears to strengthen memory traces more than retrieval that is easy. This helps explain why spacing practice sessions apart, which makes recall harder, tends to enhance long-term retention."
+              },
+              "questions": [
+                {
+                  "id": "q1",
+                  "prompt": "The word \"durable\" in paragraph 2 is closest in meaning to",
+                  "options": [
+                    "detailed",
+                    "long-lasting",
+                    "practical",
+                    "accurate"
+                  ],
+                  "answer": 1,
+                  "skill": "reading.vocabulary",
+                  "explanation": "Rereaders' knowledge fades after several days, so the knowledge they think they have is not 'durable', that is, long-lasting."
+                },
+                {
+                  "id": "q2",
+                  "prompt": "According to paragraph 2, how do rereaders perform on a test given a few minutes after studying?",
+                  "options": [
+                    "Much worse than participants who recalled the text",
+                    "Worse than they themselves had expected to perform",
+                    "About as well as, or a little better than, the recall group",
+                    "Better on scientific texts than on vocabulary lists"
+                  ],
+                  "answer": 2,
+                  "skill": "reading.detail",
+                  "explanation": "Paragraph 2: on an early test, 'rereaders often perform as well as, or slightly better than, the recall group'."
+                },
+                {
+                  "id": "q3",
+                  "prompt": "What can be inferred about learners who rely on rereading?",
+                  "options": [
+                    "They may overestimate how much they will remember.",
+                    "They usually forget material within a few minutes.",
+                    "They find retrieval practice too easy to be useful.",
+                    "They remember more after a delay than at first."
+                  ],
+                  "answer": 0,
+                  "skill": "reading.inference",
+                  "explanation": "Rereading creates 'a sense of familiarity that learners mistake for durable knowledge', so they think they know more than they will retain."
+                },
+                {
+                  "id": "q4",
+                  "prompt": "Why does the author mention spacing practice sessions apart in paragraph 3?",
+                  "options": [
+                    "To recommend a method that reduces the effort of studying",
+                    "To describe a weakness in the experiments in paragraph 2",
+                    "To contrast retrieval practice with a more effective technique",
+                    "To show that the role of effort explains another finding"
+                  ],
+                  "answer": 3,
+                  "skill": "reading.purpose",
+                  "explanation": "Spacing is introduced with 'This helps explain why', as a further result accounted for by the idea that harder retrieval strengthens memory."
+                },
+                {
+                  "id": "q5",
+                  "prompt": "Which of the following best expresses the main idea of the passage?",
+                  "options": [
+                    "Tests are an unreliable way of measuring what students know.",
+                    "Recalling information strengthens memory, especially over time.",
+                    "Rereading is the best strategy for a test soon after studying.",
+                    "Any learning task that feels difficult improves long-term memory."
+                  ],
+                  "answer": 1,
+                  "skill": "reading.main_idea",
+                  "explanation": "The passage argues that retrieving information 'is itself a powerful way of learning it', with the advantage appearing after a delay."
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "listening",
+      "modules": {
+        "m1": {
+          "time_sec": 1080,
+          "tasks": [
+            {
+              "id": "l1-cr1",
+              "type": "choose_response",
+              "audio": [
+                {
+                  "speaker": "Woman",
+                  "voice": "female_3",
+                  "text": "Would you mind keeping an eye on my bag for a minute?"
+                }
+              ],
+              "questions": [
+                {
+                  "id": "q1",
+                  "prompt": "Choose the best response.",
+                  "options": [
+                    "It's a really nice bag.",
+                    "Yes, I can see it from here.",
+                    "No problem, take your time.",
+                    "I keep mine under the desk."
+                  ],
+                  "answer": 2,
+                  "skill": "listening.response",
+                  "explanation": "She is asking a favour, so agreeing with 'No problem, take your time' is the natural reply."
+                }
+              ]
+            },
+            {
+              "id": "l1-cr2",
+              "type": "choose_response",
+              "audio": [
+                {
+                  "speaker": "Man",
+                  "voice": "male_2",
+                  "text": "Did you end up going to the career fair?"
+                }
+              ],
+              "questions": [
+                {
+                  "id": "q1",
+                  "prompt": "Choose the best response.",
+                  "options": [
+                    "No, something came up at work.",
+                    "It ends at four o'clock.",
+                    "I'd rather go by bus.",
+                    "Yes, the fare was quite cheap."
+                  ],
+                  "answer": 0,
+                  "skill": "listening.response",
+                  "explanation": "He asks whether she went, and only 'No, something came up at work' answers that and gives a reason."
+                }
+              ]
+            },
+            {
+              "id": "l1-cr3",
+              "type": "choose_response",
+              "audio": [
+                {
+                  "speaker": "Woman",
+                  "voice": "female_4",
+                  "text": "Isn't the seminar room usually booked on Thursdays?"
+                }
+              ],
+              "questions": [
+                {
+                  "id": "q1",
+                  "prompt": "Choose the best response.",
+                  "options": [
+                    "No, I didn't read that book.",
+                    "The seminar was really useful.",
+                    "I usually work on Thursdays.",
+                    "It is, but this week it's free."
+                  ],
+                  "answer": 3,
+                  "skill": "listening.response",
+                  "explanation": "The negative question checks a belief about the booking, and 'It is, but this week it's free' confirms it and adds new information."
+                }
+              ]
+            },
+            {
+              "id": "l1-cr4",
+              "type": "choose_response",
+              "audio": [
+                {
+                  "speaker": "Man",
+                  "voice": "male_1",
+                  "text": "I'm thinking of dropping my statistics class."
+                }
+              ],
+              "questions": [
+                {
+                  "id": "q1",
+                  "prompt": "Choose the best response.",
+                  "options": [
+                    "I dropped it on the floor.",
+                    "Really? Is it that difficult?",
+                    "The class starts at nine.",
+                    "Statistics show it's true."
+                  ],
+                  "answer": 1,
+                  "skill": "listening.response",
+                  "explanation": "He shares a plan to quit a course, so asking about the reason ('Is it that difficult?') is the natural follow-up."
+                }
+              ]
+            },
+            {
+              "id": "l1-cr5",
+              "type": "choose_response",
+              "audio": [
+                {
+                  "speaker": "Woman",
+                  "voice": "female_1",
+                  "text": "How come you weren't at practice yesterday?"
+                }
+              ],
+              "questions": [
+                {
+                  "id": "q1",
+                  "prompt": "Choose the best response.",
+                  "options": [
+                    "I came by car, actually.",
+                    "I had a bad cold, sorry.",
+                    "Practice makes perfect.",
+                    "It was yesterday afternoon."
+                  ],
+                  "answer": 1,
+                  "skill": "listening.response",
+                  "explanation": "'How come' asks for a reason, and only 'I had a bad cold' gives one."
+                }
+              ]
+            },
+            {
+              "id": "l1-cr6",
+              "type": "choose_response",
+              "audio": [
+                {
+                  "speaker": "Man",
+                  "voice": "male_5",
+                  "text": "Shall we grab lunch before the meeting?"
+                }
+              ],
+              "questions": [
+                {
+                  "id": "q1",
+                  "prompt": "Choose the best response.",
+                  "options": [
+                    "The meeting went very well.",
+                    "I grabbed it from the shelf.",
+                    "We met before, I think.",
+                    "Good idea, I'm starving."
+                  ],
+                  "answer": 3,
+                  "skill": "listening.response",
+                  "explanation": "It is a suggestion, and 'Good idea, I'm starving' accepts it."
+                }
+              ]
+            },
+            {
+              "id": "l1-cr7",
+              "type": "choose_response",
+              "audio": [
+                {
+                  "speaker": "Woman",
+                  "voice": "female_2",
+                  "text": "I could do with a hand moving these chairs."
+                }
+              ],
+              "questions": [
+                {
+                  "id": "q1",
+                  "prompt": "Choose the best response.",
+                  "options": [
+                    "Sure, where do they need to go?",
+                    "Those chairs look comfortable.",
+                    "My hands are quite cold.",
+                    "I moved here last year."
+                  ],
+                  "answer": 0,
+                  "skill": "listening.response",
+                  "explanation": "'I could do with a hand' is an indirect request for help, so offering to help and asking where the chairs go fits."
+                }
+              ]
+            },
+            {
+              "id": "l1-cr8",
+              "type": "choose_response",
+              "audio": [
+                {
+                  "speaker": "Man",
+                  "voice": "male_4",
+                  "text": "You've already submitted the report, haven't you?"
+                }
+              ],
+              "questions": [
+                {
+                  "id": "q1",
+                  "prompt": "Choose the best response.",
+                  "options": [
+                    "Yes, it's a monthly report.",
+                    "I'll report it to the manager.",
+                    "Not yet, I'm checking the figures.",
+                    "I submitted my application online."
+                  ],
+                  "answer": 2,
+                  "skill": "listening.response",
+                  "explanation": "The tag question checks whether the report was sent, and 'Not yet, I'm checking the figures' answers that directly."
+                }
+              ]
+            },
+            {
+              "id": "l1-conv1",
+              "type": "conversation",
+              "context": "Listen to a conversation between a customer and an employee at a bike rental shop.",
+              "audio": [
+                {
+                  "speaker": "Customer",
+                  "voice": "female_3",
+                  "text": "Hi, I rented this bike an hour ago, but the gears keep slipping on hills."
+                },
+                {
+                  "speaker": "Employee",
+                  "voice": "male_1",
+                  "text": "Oh, sorry about that. Which number is it?"
+                },
+                {
+                  "speaker": "Customer",
+                  "voice": "female_3",
+                  "text": "Um, forty-two. I've got it booked until six."
+                },
+                {
+                  "speaker": "Employee",
+                  "voice": "male_1",
+                  "text": "Right. Forty-two's chain probably needs adjusting, and that takes a while. I'll swap it for a newer one instead."
+                },
+                {
+                  "speaker": "Customer",
+                  "voice": "female_3",
+                  "text": "Great. Will that cost extra? The new ones look nicer."
+                },
+                {
+                  "speaker": "Employee",
+                  "voice": "male_1",
+                  "text": "No, same price. And I'll add thirty minutes to your booking for the trouble."
+                }
+              ],
+              "questions": [
+                {
+                  "id": "q1",
+                  "prompt": "What is the customer's problem?",
+                  "options": [
+                    "The bike's lock will not open.",
+                    "Her booking was cancelled.",
+                    "The bike has a flat tyre.",
+                    "The gears do not work properly."
+                  ],
+                  "answer": 3,
+                  "skill": "listening.main_idea",
+                  "explanation": "She says 'the gears keep slipping on hills'."
+                },
+                {
+                  "id": "q2",
+                  "prompt": "Why does the employee give the customer a different bike?",
+                  "options": [
+                    "Repairing her bike would take too long.",
+                    "Her bike was booked by someone else.",
+                    "She asked for a more modern bike.",
+                    "The newer bikes are cheaper to rent."
+                  ],
+                  "answer": 0,
+                  "skill": "listening.inference",
+                  "explanation": "He says the chain needs adjusting 'and that takes a while', so he offers a newer bike 'instead'."
+                }
+              ]
+            },
+            {
+              "id": "l1-conv2",
+              "type": "conversation",
+              "context": "Listen to a conversation between a student and an employee at the registrar's office.",
+              "audio": [
+                {
+                  "speaker": "Student",
+                  "voice": "male_2",
+                  "text": "Hello, I need an official transcript for a scholarship application. It's due on Friday."
+                },
+                {
+                  "speaker": "Employee",
+                  "voice": "female_4",
+                  "text": "Paper copies take about five working days, I'm afraid."
+                },
+                {
+                  "speaker": "Student",
+                  "voice": "male_2",
+                  "text": "Five days? That's too late. Is there a faster option?"
+                },
+                {
+                  "speaker": "Employee",
+                  "voice": "female_4",
+                  "text": "We can send an electronic one straight to the scholarship office. It usually arrives within a day."
+                },
+                {
+                  "speaker": "Student",
+                  "voice": "male_2",
+                  "text": "Perfect. So do I just give you their email address?"
+                },
+                {
+                  "speaker": "Employee",
+                  "voice": "female_4",
+                  "text": "Actually, you'll need to fill in the request online. I'll write down the link for you."
+                }
+              ],
+              "questions": [
+                {
+                  "id": "q1",
+                  "prompt": "Why does the student need a transcript?",
+                  "options": [
+                    "To transfer to another university",
+                    "To apply for a scholarship",
+                    "To register for next term's classes",
+                    "To show to a new employer"
+                  ],
+                  "answer": 1,
+                  "skill": "listening.detail",
+                  "explanation": "He says he needs it 'for a scholarship application'."
+                },
+                {
+                  "id": "q2",
+                  "prompt": "What will the student probably do next?",
+                  "options": [
+                    "Wait five days for a paper copy",
+                    "Email the scholarship office himself",
+                    "Submit a request online",
+                    "Ask for a later deadline"
+                  ],
+                  "answer": 2,
+                  "skill": "listening.inference",
+                  "explanation": "The employee tells him he'll 'need to fill in the request online' and gives him the link."
+                }
+              ]
+            },
+            {
+              "id": "l1-conv3",
+              "type": "conversation",
+              "context": "Listen to a conversation between a gym member and a receptionist.",
+              "audio": [
+                {
+                  "speaker": "Member",
+                  "voice": "female_1",
+                  "text": "Hi, I'm going abroad for two months for work. Can I cancel my membership and rejoin later?"
+                },
+                {
+                  "speaker": "Receptionist",
+                  "voice": "male_5",
+                  "text": "You could, but you'd pay the joining fee again. Have you thought about freezing it instead?"
+                },
+                {
+                  "speaker": "Member",
+                  "voice": "female_1",
+                  "text": "Freezing it? How does that work?"
+                },
+                {
+                  "speaker": "Receptionist",
+                  "voice": "male_5",
+                  "text": "You pay five dollars a month, and you keep your current rate. Lots of people do it over the summer."
+                },
+                {
+                  "speaker": "Member",
+                  "voice": "female_1",
+                  "text": "Oh, that's much better. My rate's lower than the new prices, isn't it?"
+                },
+                {
+                  "speaker": "Receptionist",
+                  "voice": "male_5",
+                  "text": "Yeah, by about ten dollars a month."
+                }
+              ],
+              "questions": [
+                {
+                  "id": "q1",
+                  "prompt": "What does the receptionist suggest?",
+                  "options": [
+                    "Freezing the membership",
+                    "Cancelling the membership",
+                    "Paying for two months in advance",
+                    "Switching to a summer plan"
+                  ],
+                  "answer": 0,
+                  "skill": "listening.detail",
+                  "explanation": "He asks, 'Have you thought about freezing it instead?'"
+                },
+                {
+                  "id": "q2",
+                  "prompt": "Why does the woman prefer the receptionist's suggestion?",
+                  "options": [
+                    "She can use the gym while abroad.",
+                    "She will not have to pay anything.",
+                    "Her employer will cover the cost.",
+                    "She can keep her cheaper monthly rate."
+                  ],
+                  "answer": 3,
+                  "skill": "listening.inference",
+                  "explanation": "Freezing lets her 'keep your current rate', which is about ten dollars lower than the new prices."
+                }
+              ]
+            },
+            {
+              "id": "l1-ann1",
+              "type": "announcement",
+              "context": "Listen to an announcement at a ferry terminal.",
+              "audio": [
+                {
+                  "speaker": "Announcer",
+                  "voice": "male_2",
+                  "text": "Good morning, passengers. Because of strong winds, the ten-thirty ferry to Gull Island will leave from the sheltered berth at the north end of the terminal, not from Gate B. Departure is also delayed by about forty minutes. Foot passengers can wait in the café, where free hot drinks are being served. Drivers should stay with their vehicles and follow the staff in yellow jackets. We'll update you again at ten-fifty."
+                }
+              ],
+              "questions": [
+                {
+                  "id": "q1",
+                  "prompt": "What is the reason for the changes?",
+                  "options": [
+                    "A vehicle has broken down.",
+                    "Too few staff are working.",
+                    "The weather is very windy.",
+                    "The ferry needs repairs."
+                  ],
+                  "answer": 2,
+                  "skill": "listening.detail",
+                  "explanation": "The announcer says the changes are 'because of strong winds'."
+                },
+                {
+                  "id": "q2",
+                  "prompt": "What are drivers asked to do?",
+                  "options": [
+                    "Go to the café for a drink",
+                    "Remain with their vehicles",
+                    "Move their cars to Gate B",
+                    "Buy a ticket for a later ferry"
+                  ],
+                  "answer": 1,
+                  "skill": "listening.detail",
+                  "explanation": "'Drivers should stay with their vehicles and follow the staff in yellow jackets.'"
+                }
+              ]
+            },
+            {
+              "id": "l1-ann2",
+              "type": "announcement",
+              "context": "Listen to an announcement at the start of a staff meeting.",
+              "audio": [
+                {
+                  "speaker": "Manager",
+                  "voice": "female_3",
+                  "text": "Before we start, a quick note from the IT team. This Saturday, from eight a.m. to noon, they're moving all our email accounts to a new system. You won't be able to send or receive messages during that time. On Monday, the first time you log in, you'll be asked to create a new password, so please have your phone nearby for the security code. And if anything goes wrong, contact IT by phone, not by email."
+                }
+              ],
+              "questions": [
+                {
+                  "id": "q1",
+                  "prompt": "What will happen on Saturday morning?",
+                  "options": [
+                    "Staff will receive new phones.",
+                    "The office will close for repairs.",
+                    "Staff will attend a training session.",
+                    "The email system will be unavailable."
+                  ],
+                  "answer": 3,
+                  "skill": "listening.main_idea",
+                  "explanation": "Accounts are being moved to a new system, so staff 'won't be able to send or receive messages'."
+                },
+                {
+                  "id": "q2",
+                  "prompt": "Why does the speaker tell staff to contact IT by phone?",
+                  "options": [
+                    "Email may not be working properly.",
+                    "The IT team rarely reads its email.",
+                    "Phone calls are answered more quickly.",
+                    "The IT office has a new number."
+                  ],
+                  "answer": 0,
+                  "skill": "listening.inference",
+                  "explanation": "Problems will involve the new email system, so an email to IT might not get through."
+                }
+              ]
+            },
+            {
+              "id": "l1-talk1",
+              "type": "academic_talk",
+              "context": "Listen to part of a talk in an astronomy class.",
+              "audio": [
+                {
+                  "speaker": "Professor",
+                  "voice": "male_4",
+                  "text": "Okay, so last week a few of you asked why stars twinkle. It's a good question, and the answer actually has very little to do with the stars themselves. It's about our atmosphere. Astronomers call twinkling scintillation. Starlight travels through space in a straight line, but in the last tiny part of its journey it passes through layers of air with different temperatures. Warm air and cool air bend light slightly differently, and these layers are constantly moving. So the light gets pushed around, just a little, many times a second. Now, a star is so far away that it's basically a single point of light. When that one point gets pushed around, its brightness and position seem to flicker. Planets are different. Take Jupiter. It's much closer, so it appears as a tiny disc, not a point. Light from different parts of the disc is disturbed in different ways, and the flickers average out. That's why planets usually shine steadily. By the way, this is also why big modern telescopes are built on high mountains, above much of that moving air. Honestly, for astronomers, twinkling is mostly a nuisance. It's pretty, sure, but it blurs every image we take."
+                }
+              ],
+              "questions": [
+                {
+                  "id": "q1",
+                  "prompt": "What is the talk mainly about?",
+                  "options": [
+                    "How stars produce their own light",
+                    "Why stars appear to twinkle",
+                    "How astronomers measure distances to stars",
+                    "Why planets are brighter than stars"
+                  ],
+                  "answer": 1,
+                  "skill": "listening.main_idea",
+                  "explanation": "The professor opens with the question 'why stars twinkle' and spends the talk explaining it."
+                },
+                {
+                  "id": "q2",
+                  "prompt": "According to the professor, what causes twinkling?",
+                  "options": [
+                    "Changes in a star's temperature",
+                    "Light reflecting off nearby planets",
+                    "Moving layers of air at different temperatures",
+                    "Clouds of dust between the stars"
+                  ],
+                  "answer": 2,
+                  "skill": "listening.detail",
+                  "explanation": "Light passes through 'layers of air with different temperatures' that are 'constantly moving'."
+                },
+                {
+                  "id": "q3",
+                  "prompt": "Why does the professor mention Jupiter?",
+                  "options": [
+                    "To show why planets usually do not twinkle",
+                    "To give an example of a very distant object",
+                    "To explain where telescopes should be built",
+                    "To show that planets reflect starlight"
+                  ],
+                  "answer": 0,
+                  "skill": "listening.purpose",
+                  "explanation": "Jupiter illustrates that a planet appears as a disc, so 'the flickers average out' and it shines steadily."
+                },
+                {
+                  "id": "q4",
+                  "prompt": "What is the professor's attitude toward twinkling?",
+                  "options": [
+                    "He thinks it mainly helps people find planets.",
+                    "He finds it too complicated for the class.",
+                    "He believes it is caused by the stars themselves.",
+                    "He sees it as a problem in astronomers' work."
+                  ],
+                  "answer": 3,
+                  "skill": "listening.attitude",
+                  "explanation": "He calls it 'mostly a nuisance' because 'it blurs every image we take'."
+                }
+              ]
+            },
+            {
+              "id": "l1-talk2",
+              "type": "academic_talk",
+              "context": "Listen to part of a talk in a linguistics class.",
+              "audio": [
+                {
+                  "speaker": "Professor",
+                  "voice": "female_2",
+                  "text": "Today let's look at borrowing, which is when one language takes a word from another. English is a huge borrower. Think of 'piano' from Italian, 'yoghurt' from Turkish, or 'tsunami' from Japanese. But why do languages borrow? Usually for one of two reasons. The first is need. When speakers meet a new object or idea, they often just take the name that comes with it. English didn't have a word for that kind of wave, so 'tsunami' filled a gap. The second reason is prestige. Sometimes a language borrows words even when it already has perfectly good ones, because the other language is seen as fashionable or powerful. After the Norman Conquest, French was the language of the ruling class in England for centuries. That's why we have pairs like 'cow' and 'beef'. The animal kept its old English name, because the farmers who looked after it spoke English. But the meat on the table got a French name, because the people eating it spoke French. Now, borrowed words don't stay the same. They usually get adapted to the sounds and grammar of the new language, and after a few generations, most speakers simply don't notice they were ever foreign."
+                }
+              ],
+              "questions": [
+                {
+                  "id": "q1",
+                  "prompt": "What is the talk mainly about?",
+                  "options": [
+                    "How English grammar changed after the Norman Conquest",
+                    "Why some words become old-fashioned over time",
+                    "Why and how languages take words from each other",
+                    "How farmers in England named their animals"
+                  ],
+                  "answer": 2,
+                  "skill": "listening.main_idea",
+                  "explanation": "The professor defines borrowing, gives two reasons for it and describes how borrowed words change."
+                },
+                {
+                  "id": "q2",
+                  "prompt": "According to the professor, what is one reason languages borrow words?",
+                  "options": [
+                    "To name things that are new to their speakers",
+                    "To make their own grammar simpler",
+                    "To replace words that are hard to pronounce",
+                    "To help children learn to read"
+                  ],
+                  "answer": 0,
+                  "skill": "listening.detail",
+                  "explanation": "The first reason is need: speakers meeting 'a new object or idea' take the name that comes with it."
+                },
+                {
+                  "id": "q3",
+                  "prompt": "Why does the professor mention 'cow' and 'beef'?",
+                  "options": [
+                    "To show that borrowed words change their sounds",
+                    "To give an example of borrowing out of need",
+                    "To explain why English farmers learned French",
+                    "To illustrate borrowing based on prestige"
+                  ],
+                  "answer": 3,
+                  "skill": "listening.purpose",
+                  "explanation": "The pair follows her point that French was the powerful language of the ruling class, which is borrowing for prestige."
+                },
+                {
+                  "id": "q4",
+                  "prompt": "What can be inferred about borrowed words in English?",
+                  "options": [
+                    "Most of them are less than a hundred years old.",
+                    "Many speakers use them without knowing their origin.",
+                    "They usually keep their original pronunciation.",
+                    "They are mainly used by highly educated speakers."
+                  ],
+                  "answer": 1,
+                  "skill": "listening.inference",
+                  "explanation": "She says that after a few generations 'most speakers simply don't notice they were ever foreign'."
+                }
+              ]
+            }
+          ]
+        },
+        "m2_easy": {
+          "time_sec": 420,
+          "tasks": [
+            {
+              "id": "l2e-cr1",
+              "type": "choose_response",
+              "audio": [
+                {
+                  "speaker": "Woman",
+                  "voice": "female_4",
+                  "text": "What time does the bus leave?"
+                }
+              ],
+              "questions": [
+                {
+                  "id": "q1",
+                  "prompt": "Choose the best response.",
+                  "options": [
+                    "It's a long way.",
+                    "In about ten minutes.",
+                    "I'll take the train.",
+                    "Yes, it's leaving."
+                  ],
+                  "answer": 1,
+                  "skill": "listening.response",
+                  "explanation": "'What time' asks about time, and only 'In about ten minutes' gives one."
+                }
+              ]
+            },
+            {
+              "id": "l2e-cr2",
+              "type": "choose_response",
+              "audio": [
+                {
+                  "speaker": "Man",
+                  "voice": "male_1",
+                  "text": "Can I borrow your pen?"
+                }
+              ],
+              "questions": [
+                {
+                  "id": "q1",
+                  "prompt": "Choose the best response.",
+                  "options": [
+                    "I bought it yesterday.",
+                    "Yes, I can write.",
+                    "It's a blue pen.",
+                    "Sure, here you go."
+                  ],
+                  "answer": 3,
+                  "skill": "listening.response",
+                  "explanation": "It is a request, and 'Sure, here you go' agrees and hands over the pen."
+                }
+              ]
+            },
+            {
+              "id": "l2e-cr3",
+              "type": "choose_response",
+              "audio": [
+                {
+                  "speaker": "Woman",
+                  "voice": "female_3",
+                  "text": "Where did you put the keys?"
+                }
+              ],
+              "questions": [
+                {
+                  "id": "q1",
+                  "prompt": "Choose the best response.",
+                  "options": [
+                    "On the kitchen table.",
+                    "Yes, I put them.",
+                    "They're my car keys.",
+                    "Around six o'clock."
+                  ],
+                  "answer": 0,
+                  "skill": "listening.response",
+                  "explanation": "'Where' asks for a place, and only 'On the kitchen table' names one."
+                }
+              ]
+            },
+            {
+              "id": "l2e-cr4",
+              "type": "choose_response",
+              "audio": [
+                {
+                  "speaker": "Man",
+                  "voice": "male_2",
+                  "text": "How was your weekend?"
+                }
+              ],
+              "questions": [
+                {
+                  "id": "q1",
+                  "prompt": "Choose the best response.",
+                  "options": [
+                    "It's next weekend.",
+                    "Every Saturday.",
+                    "Great, thanks. Very relaxing.",
+                    "I'll be at home."
+                  ],
+                  "answer": 2,
+                  "skill": "listening.response",
+                  "explanation": "'How was' asks for an opinion about the past, and 'Great, thanks. Very relaxing' gives one."
+                }
+              ]
+            },
+            {
+              "id": "l2e-cr5",
+              "type": "choose_response",
+              "audio": [
+                {
+                  "speaker": "Woman",
+                  "voice": "female_1",
+                  "text": "Would you like some more coffee?"
+                }
+              ],
+              "questions": [
+                {
+                  "id": "q1",
+                  "prompt": "Choose the best response.",
+                  "options": [
+                    "I like the café downstairs.",
+                    "I had coffee with Sam.",
+                    "No thanks, I'm fine.",
+                    "It's more expensive now."
+                  ],
+                  "answer": 2,
+                  "skill": "listening.response",
+                  "explanation": "It is an offer, and 'No thanks, I'm fine' politely declines it."
+                }
+              ]
+            },
+            {
+              "id": "l2e-cr6",
+              "type": "choose_response",
+              "audio": [
+                {
+                  "speaker": "Man",
+                  "voice": "male_5",
+                  "text": "Is this seat taken?"
+                }
+              ],
+              "questions": [
+                {
+                  "id": "q1",
+                  "prompt": "Choose the best response.",
+                  "options": [
+                    "No, go ahead.",
+                    "I took it yesterday.",
+                    "It's a comfortable seat.",
+                    "Yes, please sit down."
+                  ],
+                  "answer": 0,
+                  "skill": "listening.response",
+                  "explanation": "'No, go ahead' means the seat is free and he can sit; 'Yes' would mean it is taken."
+                }
+              ]
+            },
+            {
+              "id": "l2e-cr7",
+              "type": "choose_response",
+              "audio": [
+                {
+                  "speaker": "Woman",
+                  "voice": "female_2",
+                  "text": "Why are you so late?"
+                }
+              ],
+              "questions": [
+                {
+                  "id": "q1",
+                  "prompt": "Choose the best response.",
+                  "options": [
+                    "At half past nine.",
+                    "Sorry, I missed my bus.",
+                    "I'll come later.",
+                    "It's very late now."
+                  ],
+                  "answer": 1,
+                  "skill": "listening.response",
+                  "explanation": "'Why' asks for a reason, and 'I missed my bus' gives one with an apology."
+                }
+              ]
+            },
+            {
+              "id": "l2e-cr8",
+              "type": "choose_response",
+              "audio": [
+                {
+                  "speaker": "Man",
+                  "voice": "male_4",
+                  "text": "Which floor is the travel agency on?"
+                }
+              ],
+              "questions": [
+                {
+                  "id": "q1",
+                  "prompt": "Choose the best response.",
+                  "options": [
+                    "I'm travelling next week.",
+                    "The floor is wet.",
+                    "Yes, it's in this building.",
+                    "The third, I think."
+                  ],
+                  "answer": 3,
+                  "skill": "listening.response",
+                  "explanation": "'Which floor' asks for a floor number, and only 'The third' gives one."
+                }
+              ]
+            },
+            {
+              "id": "l2e-conv1",
+              "type": "conversation",
+              "context": "Listen to a conversation between a student and an assistant in a bookshop.",
+              "audio": [
+                {
+                  "speaker": "Student",
+                  "voice": "male_3",
+                  "text": "Hi. Do you have the book 'Introduction to Economics'? It's for my class."
+                },
+                {
+                  "speaker": "Assistant",
+                  "voice": "female_2",
+                  "text": "Let me check. Sorry, we sold the last copy this morning."
+                },
+                {
+                  "speaker": "Student",
+                  "voice": "male_3",
+                  "text": "Oh no. My class starts next week."
+                },
+                {
+                  "speaker": "Assistant",
+                  "voice": "female_2",
+                  "text": "I can order one for you. It'll be here on Thursday."
+                },
+                {
+                  "speaker": "Student",
+                  "voice": "male_3",
+                  "text": "Great, please do. Do I pay now?"
+                },
+                {
+                  "speaker": "Assistant",
+                  "voice": "female_2",
+                  "text": "You can pay when you pick it up. I just need your phone number."
+                }
+              ],
+              "questions": [
+                {
+                  "id": "q1",
+                  "prompt": "What does the student want?",
+                  "options": [
+                    "To sell an old book",
+                    "To find a part-time job",
+                    "To buy a book for a class",
+                    "To return a book"
+                  ],
+                  "answer": 2,
+                  "skill": "listening.main_idea",
+                  "explanation": "He asks for 'Introduction to Economics' and says 'It's for my class'."
+                },
+                {
+                  "id": "q2",
+                  "prompt": "When will the book arrive?",
+                  "options": [
+                    "This morning",
+                    "On Thursday",
+                    "Next week",
+                    "Tomorrow"
+                  ],
+                  "answer": 1,
+                  "skill": "listening.detail",
+                  "explanation": "The assistant says 'It'll be here on Thursday'."
+                }
+              ]
+            },
+            {
+              "id": "l2e-conv2",
+              "type": "conversation",
+              "context": "Listen to a conversation between a student and an adviser at the study abroad office.",
+              "audio": [
+                {
+                  "speaker": "Student",
+                  "voice": "female_3",
+                  "text": "Hi, I want to study in Spain next year. When is the application deadline?"
+                },
+                {
+                  "speaker": "Adviser",
+                  "voice": "male_4",
+                  "text": "It's March the first. So you still have about six weeks."
+                },
+                {
+                  "speaker": "Student",
+                  "voice": "female_3",
+                  "text": "Good. What do I need to send?"
+                },
+                {
+                  "speaker": "Adviser",
+                  "voice": "male_4",
+                  "text": "A form, your grades, and one letter from a teacher."
+                },
+                {
+                  "speaker": "Student",
+                  "voice": "female_3",
+                  "text": "Um, I don't speak much Spanish yet. Is that a problem?"
+                },
+                {
+                  "speaker": "Adviser",
+                  "voice": "male_4",
+                  "text": "Not for this programme. All the classes are in English. But you'll take a free Spanish course there."
+                }
+              ],
+              "questions": [
+                {
+                  "id": "q1",
+                  "prompt": "When is the application deadline?",
+                  "options": [
+                    "March the first",
+                    "In two weeks",
+                    "Next year",
+                    "At the end of May"
+                  ],
+                  "answer": 0,
+                  "skill": "listening.detail",
+                  "explanation": "The adviser says 'It's March the first'."
+                },
+                {
+                  "id": "q2",
+                  "prompt": "Why is the student's Spanish not a problem?",
+                  "options": [
+                    "She will take a test first.",
+                    "She can study Spanish before she leaves.",
+                    "Her teacher will help her.",
+                    "The classes are taught in English."
+                  ],
+                  "answer": 3,
+                  "skill": "listening.detail",
+                  "explanation": "The adviser says 'All the classes are in English'."
+                }
+              ]
+            },
+            {
+              "id": "l2e-ann1",
+              "type": "announcement",
+              "context": "Listen to an announcement in a museum.",
+              "audio": [
+                {
+                  "speaker": "Announcer",
+                  "voice": "male_3",
+                  "text": "Hello, visitors. The museum shop will close early today, at four o'clock instead of five, because of a staff training session. If you'd like to buy postcards, books or gifts, please visit the shop before four. The rest of the museum will stay open until six as usual. Also, all calendars in the shop are half price today. Thank you, and enjoy your visit."
+                }
+              ],
+              "questions": [
+                {
+                  "id": "q1",
+                  "prompt": "What is changing today?",
+                  "options": [
+                    "The museum opens later.",
+                    "The shop closes earlier.",
+                    "The shop has new gifts.",
+                    "The museum closes at four."
+                  ],
+                  "answer": 1,
+                  "skill": "listening.main_idea",
+                  "explanation": "The shop will close 'at four o'clock instead of five'."
+                },
+                {
+                  "id": "q2",
+                  "prompt": "What is half price today?",
+                  "options": [
+                    "Postcards",
+                    "Books",
+                    "Calendars",
+                    "Tickets"
+                  ],
+                  "answer": 2,
+                  "skill": "listening.detail",
+                  "explanation": "'All calendars in the shop are half price today.'"
+                }
+              ]
+            },
+            {
+              "id": "l2e-talk1",
+              "type": "academic_talk",
+              "context": "Listen to part of a talk in a biology class.",
+              "audio": [
+                {
+                  "speaker": "Professor",
+                  "voice": "female_4",
+                  "text": "Today I want to talk about how young songbirds learn to sing. Many people think birds are born knowing their songs. For some birds, that's true. But for songbirds like the zebra finch, singing is learned, a bit like a child learning to talk. In zebra finches, it's the males that sing, and learning happens in two stages. First, the young male listens. He hears an adult male, usually his father, and he remembers the song. At this stage, he doesn't sing much at all. Second, the young bird practises. His first attempts sound quiet and messy, so scientists sometimes call this stage babbling, just like a baby. Over many weeks, the bird compares his own singing with the song he remembers, and slowly the song gets better. Scientists have tested this. When a young zebra finch grows up without hearing any adult birds, he still sings, but his song sounds strange and incomplete. So listening early in life is very important. I think this is one of the clearest examples of learning in the animal world."
+                }
+              ],
+              "questions": [
+                {
+                  "id": "q1",
+                  "prompt": "What is the talk mainly about?",
+                  "options": [
+                    "Why birds sing early in the morning",
+                    "How adult birds find a partner",
+                    "Which birds have the longest songs",
+                    "How young songbirds learn their songs"
+                  ],
+                  "answer": 3,
+                  "skill": "listening.main_idea",
+                  "explanation": "The professor begins, 'Today I want to talk about how young songbirds learn to sing'."
+                },
+                {
+                  "id": "q2",
+                  "prompt": "What does the young bird do in the first stage?",
+                  "options": [
+                    "He listens to an adult's song.",
+                    "He sings very loudly.",
+                    "He copies other young birds.",
+                    "He practises every morning."
+                  ],
+                  "answer": 0,
+                  "skill": "listening.detail",
+                  "explanation": "'First, the young male listens' to an adult male and remembers the song."
+                },
+                {
+                  "id": "q3",
+                  "prompt": "Why does the professor mention babies?",
+                  "options": [
+                    "To show that birds learn faster than babies",
+                    "To explain why parents sing to children",
+                    "To compare early bird songs to early human speech",
+                    "To describe a bird's first weeks of life"
+                  ],
+                  "answer": 2,
+                  "skill": "listening.purpose",
+                  "explanation": "The messy first songs are called babbling, 'just like a baby', comparing them to early speech."
+                },
+                {
+                  "id": "q4",
+                  "prompt": "What can be inferred from the experiment the professor describes?",
+                  "options": [
+                    "Young birds cannot sing at all on their own.",
+                    "Hearing adults is necessary for a normal song.",
+                    "Zebra finches learn songs from other species.",
+                    "Adult birds stop singing when they are alone."
+                  ],
+                  "answer": 1,
+                  "skill": "listening.inference",
+                  "explanation": "Birds raised without hearing adults sing a 'strange and incomplete' song, so hearing adults is needed for a normal one."
+                }
+              ]
+            }
+          ]
+        },
+        "m2_hard": {
+          "time_sec": 660,
+          "tasks": [
+            {
+              "id": "l2h-cr1",
+              "type": "choose_response",
+              "audio": [
+                {
+                  "speaker": "Man",
+                  "voice": "male_2",
+                  "text": "I don't suppose you've seen my umbrella anywhere?"
+                }
+              ],
+              "questions": [
+                {
+                  "id": "q1",
+                  "prompt": "Choose the best response.",
+                  "options": [
+                    "I suppose it might rain later.",
+                    "No, I haven't been anywhere.",
+                    "I've never really liked umbrellas.",
+                    "Isn't that it by the door?"
+                  ],
+                  "answer": 3,
+                  "skill": "listening.response",
+                  "explanation": "'I don't suppose you've seen...' is a polite question, and pointing to the umbrella by the door answers it."
+                }
+              ]
+            },
+            {
+              "id": "l2h-cr2",
+              "type": "choose_response",
+              "audio": [
+                {
+                  "speaker": "Woman",
+                  "voice": "female_3",
+                  "text": "That presentation could've gone better, couldn't it?"
+                }
+              ],
+              "questions": [
+                {
+                  "id": "q1",
+                  "prompt": "Choose the best response.",
+                  "options": [
+                    "Yes, it went to the next room.",
+                    "Don't be so hard on yourself.",
+                    "It could start a bit earlier.",
+                    "I'll present it on Tuesday."
+                  ],
+                  "answer": 1,
+                  "skill": "listening.response",
+                  "explanation": "She is criticising her own presentation, so reassuring her ('Don't be so hard on yourself') is the natural reply."
+                }
+              ]
+            },
+            {
+              "id": "l2h-cr3",
+              "type": "choose_response",
+              "audio": [
+                {
+                  "speaker": "Man",
+                  "voice": "male_3",
+                  "text": "Mind if I tag along to the gallery?"
+                }
+              ],
+              "questions": [
+                {
+                  "id": "q1",
+                  "prompt": "Choose the best response.",
+                  "options": [
+                    "I don't mind modern art at all.",
+                    "The tags are on the paintings.",
+                    "The more the merrier.",
+                    "It's a long way from the gallery."
+                  ],
+                  "answer": 2,
+                  "skill": "listening.response",
+                  "explanation": "'Tag along' means come with someone, and 'The more the merrier' welcomes him."
+                }
+              ]
+            },
+            {
+              "id": "l2h-cr4",
+              "type": "choose_response",
+              "audio": [
+                {
+                  "speaker": "Woman",
+                  "voice": "female_1",
+                  "text": "I'm totally swamped this week."
+                }
+              ],
+              "questions": [
+                {
+                  "id": "q1",
+                  "prompt": "Choose the best response.",
+                  "options": [
+                    "Want me to take something off your plate?",
+                    "Was it raining a lot this week, then?",
+                    "Really? The week went fast for me.",
+                    "I'll swap weeks with you next month."
+                  ],
+                  "answer": 0,
+                  "skill": "listening.response",
+                  "explanation": "'Swamped' means having too much work, so offering to take some of it over is the appropriate reply."
+                }
+              ]
+            },
+            {
+              "id": "l2h-cr5",
+              "type": "choose_response",
+              "audio": [
+                {
+                  "speaker": "Man",
+                  "voice": "male_5",
+                  "text": "Fancy giving the new Thai place a go?"
+                }
+              ],
+              "questions": [
+                {
+                  "id": "q1",
+                  "prompt": "Choose the best response.",
+                  "options": [
+                    "Sure, I've heard it's pretty good.",
+                    "I fancy that the place is new.",
+                    "I'll give it to you later.",
+                    "Thailand's on my list for next year."
+                  ],
+                  "answer": 0,
+                  "skill": "listening.response",
+                  "explanation": "'Fancy giving it a go?' invites her to try the restaurant, and 'Sure, I've heard it's pretty good' accepts."
+                }
+              ]
+            },
+            {
+              "id": "l2h-cr6",
+              "type": "choose_response",
+              "audio": [
+                {
+                  "speaker": "Woman",
+                  "voice": "female_2",
+                  "text": "You couldn't have picked a worse time to call."
+                }
+              ],
+              "questions": [
+                {
+                  "id": "q1",
+                  "prompt": "Choose the best response.",
+                  "options": [
+                    "I picked it up at the shop.",
+                    "Great, glad I caught you, then.",
+                    "Oh, sorry. Shall I call back later?",
+                    "It's a quarter past two, actually."
+                  ],
+                  "answer": 2,
+                  "skill": "listening.response",
+                  "explanation": "She means this is a very bad moment, so apologising and offering to call back is appropriate."
+                }
+              ]
+            },
+            {
+              "id": "l2h-cr7",
+              "type": "choose_response",
+              "audio": [
+                {
+                  "speaker": "Man",
+                  "voice": "male_1",
+                  "text": "Let's not get ahead of ourselves here."
+                }
+              ],
+              "questions": [
+                {
+                  "id": "q1",
+                  "prompt": "Choose the best response.",
+                  "options": [
+                    "Okay, I'll go ahead first, then.",
+                    "Sure, let's beat the crowds.",
+                    "I'd rather stay here, thanks.",
+                    "Fair point, we haven't got funding yet."
+                  ],
+                  "answer": 3,
+                  "skill": "listening.response",
+                  "explanation": "He is warning against planning too early, and 'Fair point, we haven't got funding yet' accepts the warning."
+                }
+              ]
+            },
+            {
+              "id": "l2h-cr8",
+              "type": "choose_response",
+              "audio": [
+                {
+                  "speaker": "Woman",
+                  "voice": "female_4",
+                  "text": "Funny, I thought the deadline was next week."
+                }
+              ],
+              "questions": [
+                {
+                  "id": "q1",
+                  "prompt": "Choose the best response.",
+                  "options": [
+                    "Yes, it was a very funny joke.",
+                    "It was, but they brought it forward.",
+                    "I'll think about it next week.",
+                    "The line was really long today."
+                  ],
+                  "answer": 1,
+                  "skill": "listening.response",
+                  "explanation": "'Funny' here means strange, and explaining that the deadline was moved earlier resolves her confusion."
+                }
+              ]
+            },
+            {
+              "id": "l2h-conv1",
+              "type": "conversation",
+              "context": "Listen to a conversation between a passenger and an airline employee at an airport.",
+              "audio": [
+                {
+                  "speaker": "Passenger",
+                  "voice": "male_5",
+                  "text": "Hi. My flight from Denver landed late, and I've missed my connection to Toronto. Not the best start to the trip."
+                },
+                {
+                  "speaker": "Employee",
+                  "voice": "female_1",
+                  "text": "Let me see what I can do. The next direct flight's full, I'm afraid, but there's one via Chicago leaving at seven."
+                },
+                {
+                  "speaker": "Passenger",
+                  "voice": "male_5",
+                  "text": "Seven tonight? I'd be getting in well after midnight."
+                },
+                {
+                  "speaker": "Employee",
+                  "voice": "female_1",
+                  "text": "There's also a direct one at eight tomorrow morning. And since the delay was on our side, we'd cover your hotel."
+                },
+                {
+                  "speaker": "Passenger",
+                  "voice": "male_5",
+                  "text": "Hmm. I'd rather not spend all night hopping between airports. I'll take the morning one."
+                }
+              ],
+              "questions": [
+                {
+                  "id": "q1",
+                  "prompt": "Why will the airline pay for a hotel?",
+                  "options": [
+                    "The passenger is a frequent flyer.",
+                    "The airline caused the delay.",
+                    "The Chicago flight was cancelled.",
+                    "All flights tonight are full."
+                  ],
+                  "answer": 1,
+                  "skill": "listening.detail",
+                  "explanation": "The employee says 'since the delay was on our side, we'd cover your hotel'."
+                },
+                {
+                  "id": "q2",
+                  "prompt": "Why does the passenger choose the morning flight?",
+                  "options": [
+                    "It is cheaper than the evening flight.",
+                    "He has a meeting in Chicago.",
+                    "The evening flight is already full.",
+                    "He wants to avoid a tiring night of travel."
+                  ],
+                  "answer": 3,
+                  "skill": "listening.inference",
+                  "explanation": "He says he'd 'rather not spend all night hopping between airports', which the Chicago route would involve."
+                }
+              ]
+            },
+            {
+              "id": "l2h-conv2",
+              "type": "conversation",
+              "context": "Listen to a conversation between a student and an adviser at the campus career centre.",
+              "audio": [
+                {
+                  "speaker": "Student",
+                  "voice": "female_4",
+                  "text": "So, I've got an interview at an engineering firm on Monday, and, well, I'm a bit out of my depth. It's my first real one."
+                },
+                {
+                  "speaker": "Adviser",
+                  "voice": "male_3",
+                  "text": "Okay. Have you looked into what the company actually does?"
+                },
+                {
+                  "speaker": "Student",
+                  "voice": "female_4",
+                  "text": "Sort of. I skimmed their website. Mostly bridges, I think. Or was it tunnels?"
+                },
+                {
+                  "speaker": "Adviser",
+                  "voice": "male_3",
+                  "text": "Right, so that's your homework. Interviewers can tell straight away who's done their research. Then come back on Thursday and we'll run a practice interview."
+                },
+                {
+                  "speaker": "Student",
+                  "voice": "female_4",
+                  "text": "A mock one? Sounds terrifying, but, fair enough."
+                }
+              ],
+              "questions": [
+                {
+                  "id": "q1",
+                  "prompt": "What does the adviser imply about the student's preparation?",
+                  "options": [
+                    "It is already more than enough.",
+                    "She should focus more on her clothes.",
+                    "She needs to learn more about the company.",
+                    "She should apply to a different firm."
+                  ],
+                  "answer": 2,
+                  "skill": "listening.inference",
+                  "explanation": "After she admits she only skimmed the website, he says 'that's your homework' and stresses research."
+                },
+                {
+                  "id": "q2",
+                  "prompt": "What is the student's attitude toward the practice interview?",
+                  "options": [
+                    "She is nervous but willing to do it.",
+                    "She thinks it is unnecessary for her.",
+                    "She would prefer to do it on Monday.",
+                    "She is excited and confident about it."
+                  ],
+                  "answer": 0,
+                  "skill": "listening.attitude",
+                  "explanation": "She calls it 'terrifying' but then accepts with 'fair enough'."
+                }
+              ]
+            },
+            {
+              "id": "l2h-ann1",
+              "type": "announcement",
+              "context": "Listen to an instructor talking to a class the day before a field trip.",
+              "audio": [
+                {
+                  "speaker": "Instructor",
+                  "voice": "male_4",
+                  "text": "Right, everyone, before we head off tomorrow, a couple of things. The forecast says it'll be dry, but the marsh trail is still waterlogged after last week, so trainers really won't cut it. Proper boots, please. We'll leave from the car park at seven sharp, and the coach won't wait. If you're not on it, that's your one chance to collect data for the assignment gone. Oh, and the visitor centre café is closed on Tuesdays, so bring your own lunch."
+                }
+              ],
+              "questions": [
+                {
+                  "id": "q1",
+                  "prompt": "Why does the instructor mention the marsh trail?",
+                  "options": [
+                    "To explain why students need suitable footwear",
+                    "To warn that the trip may be cancelled",
+                    "To describe where the coach will park",
+                    "To suggest a good place to eat lunch"
+                  ],
+                  "answer": 0,
+                  "skill": "listening.purpose",
+                  "explanation": "The trail is 'still waterlogged', so 'trainers really won't cut it. Proper boots, please.'"
+                },
+                {
+                  "id": "q2",
+                  "prompt": "What can be inferred about students who miss the coach?",
+                  "options": [
+                    "They can travel to the marsh by train.",
+                    "They will be given a different assignment.",
+                    "They should meet the class at the café.",
+                    "They will be unable to gather their data."
+                  ],
+                  "answer": 3,
+                  "skill": "listening.inference",
+                  "explanation": "The coach won't wait, and missing it means the 'one chance to collect data' is gone."
+                }
+              ]
+            },
+            {
+              "id": "l2h-talk1",
+              "type": "academic_talk",
+              "context": "Listen to part of a talk in an art history class.",
+              "audio": [
+                {
+                  "speaker": "Professor",
+                  "voice": "male_4",
+                  "text": "Let's turn to something we tend to overlook in old paintings: the colours themselves, or rather, the pigments. Today you can pick a tube of blue paint off a shelf without a second thought. But for a Renaissance painter, blue was a serious business decision. The finest blue, ultramarine, was made by grinding up lapis lazuli, a stone mined mainly in what's now Afghanistan. It had to travel thousands of kilometres, and extracting the pigment was slow and wasteful. Weight for weight, ultramarine could cost more than gold. So what did that mean in practice? Well, contracts between painters and the people paying for the work sometimes specified exactly how much ultramarine had to be used, and where. It was saved for the most important figure in the picture, while cheaper blues, like azurite, went into skies and backgrounds. In other words, if you know what to look for, the pigment tells you what the patron valued most. Then, in the 1820s, a French chemist found a way to make ultramarine artificially, and the price collapsed. Painters could suddenly be generous with blue. I'd argue that's not a footnote: it quietly changed what painters felt free to do."
+                }
+              ],
+              "questions": [
+                {
+                  "id": "q1",
+                  "prompt": "What is the talk mainly about?",
+                  "options": [
+                    "How Renaissance painters mixed their colours",
+                    "Why skies in old paintings often look faded",
+                    "How the cost of a pigment shaped its use in painting",
+                    "Where lapis lazuli is mined and traded today"
+                  ],
+                  "answer": 2,
+                  "skill": "listening.main_idea",
+                  "explanation": "The talk explains how ultramarine's high price decided where it was used, and what changed when it became cheap."
+                },
+                {
+                  "id": "q2",
+                  "prompt": "According to the professor, what did some painting contracts state?",
+                  "options": [
+                    "The date the painting had to be finished",
+                    "How much ultramarine had to be used",
+                    "Which colour the sky should be painted",
+                    "Where the painter had to buy pigments"
+                  ],
+                  "answer": 1,
+                  "skill": "listening.detail",
+                  "explanation": "Contracts 'specified exactly how much ultramarine had to be used, and where'."
+                },
+                {
+                  "id": "q3",
+                  "prompt": "Why does the professor mention azurite?",
+                  "options": [
+                    "To name the stone ultramarine was made from",
+                    "To explain why ultramarine became cheaper",
+                    "To show that blue was rarely used in skies",
+                    "To contrast a less valued blue with ultramarine"
+                  ],
+                  "answer": 3,
+                  "skill": "listening.purpose",
+                  "explanation": "Azurite is a 'cheaper' blue used for skies and backgrounds, in contrast to ultramarine saved for the main figure."
+                },
+                {
+                  "id": "q4",
+                  "prompt": "What is the professor's opinion of the invention of artificial ultramarine?",
+                  "options": [
+                    "It had a significant effect on painting.",
+                    "It is only a minor detail in art history.",
+                    "It lowered the quality of later paintings.",
+                    "It mattered more to chemists than to painters."
+                  ],
+                  "answer": 0,
+                  "skill": "listening.attitude",
+                  "explanation": "He says 'that's not a footnote: it quietly changed what painters felt free to do'."
+                }
+              ]
+            },
+            {
+              "id": "l2h-talk2",
+              "type": "academic_talk",
+              "context": "Listen to part of a talk in a sociology class.",
+              "audio": [
+                {
+                  "speaker": "Professor",
+                  "voice": "female_3",
+                  "text": "So, here's a question. If you're looking for a job, who's most likely to help you find one: your close friends, or people you barely know? Most of you would say close friends. They care about you, after all. But in the 1970s, the sociologist Mark Granovetter interviewed people who'd recently changed jobs, and he found something counterintuitive. Many of them had heard about the job through acquaintances, people they saw only occasionally. He called these relationships weak ties."
+                },
+                {
+                  "speaker": "Student",
+                  "voice": "male_1",
+                  "text": "But wouldn't your close friends be more motivated to help?"
+                },
+                {
+                  "speaker": "Professor",
+                  "voice": "female_3",
+                  "text": "They might be, yes. The catch is what they know. Your close friends tend to know each other, move in the same circles and hear the same news. So by the time something reaches you through them, you've probably heard it already. An acquaintance, on the other hand, is a bridge to a whole different network, with information you'd never come across otherwise. Now, I don't want to oversell this. Later studies suggest strong ties still matter a great deal, for emotional support, say, or when jobs are scarce. But the core insight has held up remarkably well: the people on the edges of your life may be the ones who open new doors."
+                }
+              ],
+              "questions": [
+                {
+                  "id": "q1",
+                  "prompt": "What is the main topic of the talk?",
+                  "options": [
+                    "The value of distant acquaintances in finding opportunities",
+                    "Why close friendships are difficult to maintain",
+                    "How employers choose between job applicants",
+                    "Methods sociologists use when interviewing people"
+                  ],
+                  "answer": 0,
+                  "skill": "listening.main_idea",
+                  "explanation": "The talk presents Granovetter's finding that 'weak ties' often lead people to jobs and explains why."
+                },
+                {
+                  "id": "q2",
+                  "prompt": "According to the professor, why are close friends less useful as a source of job information?",
+                  "options": [
+                    "They are often too busy to help.",
+                    "They prefer not to discuss work.",
+                    "They usually hear the same news as you.",
+                    "They tend to work in other cities."
+                  ],
+                  "answer": 2,
+                  "skill": "listening.detail",
+                  "explanation": "Close friends 'move in the same circles and hear the same news', so you've probably heard it already."
+                },
+                {
+                  "id": "q3",
+                  "prompt": "Why does the professor describe an acquaintance as 'a bridge'?",
+                  "options": [
+                    "To suggest that acquaintances are hard to reach",
+                    "To show how acquaintances link people to new networks",
+                    "To explain how Granovetter found his participants",
+                    "To argue that friendships need constant effort"
+                  ],
+                  "answer": 1,
+                  "skill": "listening.purpose",
+                  "explanation": "The bridge image explains that an acquaintance connects you to 'a whole different network' with new information."
+                },
+                {
+                  "id": "q4",
+                  "prompt": "What is the professor's attitude toward Granovetter's finding?",
+                  "options": [
+                    "She thinks later research has disproved it.",
+                    "She believes it applies only to the 1970s.",
+                    "She considers it too obvious to be interesting.",
+                    "She accepts it but warns against exaggerating it."
+                  ],
+                  "answer": 3,
+                  "skill": "listening.attitude",
+                  "explanation": "She says 'I don't want to oversell this' yet adds that 'the core insight has held up remarkably well'."
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "writing",
+      "modules": {
+        "m1": {
+          "tasks": [
+            {
+              "id": "w-build",
+              "type": "build_sentence",
+              "time_sec": 360,
+              "items": [
+                {
+                  "id": "b1",
+                  "prompt": "What do you usually do on weekends?",
+                  "start": "I",
+                  "chunks": [
+                    "football",
+                    "on Saturdays",
+                    "play",
+                    "always"
+                  ],
+                  "answer": [
+                    "always",
+                    "play",
+                    "football",
+                    "on Saturdays"
+                  ],
+                  "end": ".",
+                  "skill": "grammar.word_order",
+                  "explanation": "Frequency adverbs go before the main verb: I always play football on Saturdays."
+                },
+                {
+                  "id": "b2",
+                  "prompt": "Excuse me, where is the campus bookstore?",
+                  "start": "It's",
+                  "chunks": [
+                    "the cafeteria",
+                    "to",
+                    "right",
+                    "next"
+                  ],
+                  "answer": [
+                    "right",
+                    "next",
+                    "to",
+                    "the cafeteria"
+                  ],
+                  "end": ".",
+                  "skill": "grammar.preposition",
+                  "explanation": "'Right' intensifies the preposition 'next to': It's right next to the cafeteria."
+                },
+                {
+                  "id": "b3",
+                  "prompt": "Is the pharmacy on Hill Street still open?",
+                  "start": "Sorry, I",
+                  "chunks": [
+                    "closes",
+                    "what time",
+                    "it",
+                    "don't know"
+                  ],
+                  "answer": [
+                    "don't know",
+                    "what time",
+                    "it",
+                    "closes"
+                  ],
+                  "end": ".",
+                  "skill": "grammar.questions",
+                  "explanation": "An indirect question uses statement order (subject before verb): Sorry, I don't know what time it closes."
+                },
+                {
+                  "id": "b4",
+                  "prompt": "How long have you lived in this city?",
+                  "start": "I",
+                  "chunks": [
+                    "started university",
+                    "here",
+                    "since I",
+                    "have lived"
+                  ],
+                  "answer": [
+                    "have lived",
+                    "here",
+                    "since I",
+                    "started university"
+                  ],
+                  "end": ".",
+                  "skill": "grammar.tense",
+                  "explanation": "Present perfect with 'since' plus a past-tense clause: I have lived here since I started university."
+                },
+                {
+                  "id": "b5",
+                  "prompt": "Do you like your new laptop?",
+                  "start": "Yes, it's",
+                  "chunks": [
+                    "than",
+                    "and faster",
+                    "much",
+                    "my old one",
+                    "lighter"
+                  ],
+                  "answer": [
+                    "much",
+                    "lighter",
+                    "and faster",
+                    "than",
+                    "my old one"
+                  ],
+                  "end": ".",
+                  "skill": "grammar.comparatives",
+                  "explanation": "'Much' modifies the comparatives, and 'than' introduces the thing compared: Yes, it's much lighter and faster than my old one."
+                },
+                {
+                  "id": "b6",
+                  "prompt": "Have you handed in your lab report yet?",
+                  "start": "Not yet. It",
+                  "chunks": [
+                    "until Friday",
+                    "have to",
+                    "be submitted",
+                    "doesn't"
+                  ],
+                  "answer": [
+                    "doesn't",
+                    "have to",
+                    "be submitted",
+                    "until Friday"
+                  ],
+                  "end": ".",
+                  "skill": "grammar.verb_form",
+                  "explanation": "Negative auxiliary + 'have to' + passive infinitive: Not yet. It doesn't have to be submitted until Friday."
+                },
+                {
+                  "id": "b7",
+                  "prompt": "What happened to the old sofa in the student lounge?",
+                  "start": "The staff",
+                  "chunks": [
+                    "it",
+                    "decided",
+                    "broken",
+                    "away",
+                    "to throw",
+                    "because it was"
+                  ],
+                  "answer": [
+                    "decided",
+                    "to throw",
+                    "it",
+                    "away",
+                    "because it was",
+                    "broken"
+                  ],
+                  "end": ".",
+                  "skill": "grammar.word_order",
+                  "explanation": "With a pronoun object, a phrasal verb is separated ('throw it away', not 'throw away it'): The staff decided to throw it away because it was broken."
+                },
+                {
+                  "id": "b8",
+                  "prompt": "Who is that woman talking to the dean?",
+                  "start": "She's the professor",
+                  "chunks": [
+                    "read",
+                    "last semester",
+                    "book",
+                    "we",
+                    "whose"
+                  ],
+                  "answer": [
+                    "whose",
+                    "book",
+                    "we",
+                    "read",
+                    "last semester"
+                  ],
+                  "end": ".",
+                  "skill": "grammar.clauses",
+                  "explanation": "'Whose' + noun opens the relative clause, followed by subject and verb: She's the professor whose book we read last semester."
+                },
+                {
+                  "id": "b9",
+                  "prompt": "Have the research groups sent you their survey results?",
+                  "start": "No,",
+                  "chunks": [
+                    "its results",
+                    "has sent",
+                    "yet",
+                    "neither",
+                    "of the groups"
+                  ],
+                  "answer": [
+                    "neither",
+                    "of the groups",
+                    "has sent",
+                    "its results",
+                    "yet"
+                  ],
+                  "end": ".",
+                  "skill": "grammar.agreement",
+                  "explanation": "'Neither of' takes a singular verb and pronoun in formal English: No, neither of the groups has sent its results yet."
+                },
+                {
+                  "id": "b10",
+                  "prompt": "Why didn't you come to the review session this afternoon?",
+                  "start": "Had I",
+                  "chunks": [
+                    "I",
+                    "the session",
+                    "would have come",
+                    "known",
+                    "today,",
+                    "was being held"
+                  ],
+                  "answer": [
+                    "known",
+                    "the session",
+                    "was being held",
+                    "today,",
+                    "I",
+                    "would have come"
+                  ],
+                  "end": ".",
+                  "skill": "grammar.clauses",
+                  "explanation": "An inverted third conditional replaces 'if': Had I known the session was being held today, I would have come."
+                }
+              ]
+            },
+            {
+              "id": "w-email",
+              "type": "email",
+              "time_sec": 420,
+              "scenario": "You live in an apartment building with a shared laundry room in the basement. For the past two weeks, two of the three washing machines have been out of order, and residents often wait a long time or leave their clothes in the machines overnight. Write an email to the building manager.",
+              "to": "Mr. Daniel Reyes, Building Manager",
+              "subject": "Problems in the basement laundry room",
+              "bullets": [
+                "Describe the problem with the laundry room",
+                "Explain how the problem is affecting you and other residents",
+                "Suggest what could be done until the machines are repaired"
+              ]
+            },
+            {
+              "id": "w-disc",
+              "type": "academic_discussion",
+              "time_sec": 600,
+              "course": "Urban Planning",
+              "professor": {
+                "name": "Dr. Okafor",
+                "post": "Several cities around the world have experimented with making buses and trains free for everyone. Supporters say this reduces traffic and helps lower-income residents, while critics argue that the money would be better spent elsewhere. Should cities make public transport free? Why or why not?"
+              },
+              "students": [
+                {
+                  "name": "Priya",
+                  "post": "I think free transport is a great idea. If people don't have to pay, many of them will leave their cars at home, which means less traffic and cleaner air. It also makes it easier for students and low-income workers to get to school and work."
+                },
+                {
+                  "name": "Mateo",
+                  "post": "I'm not convinced. Running buses and trains is expensive, and if tickets are free, the city loses money it needs for maintenance. In my view, the bigger problem is that service is slow and unreliable, so people would still drive even if it cost nothing."
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "speaking",
+      "modules": {
+        "m1": {
+          "tasks": [
+            {
+              "id": "s-repeat",
+              "type": "listen_and_repeat",
+              "setting": "You are a new volunteer at a botanical garden. Listen to the volunteer coordinator and repeat exactly what you hear.",
+              "items": [
+                {
+                  "id": "i1",
+                  "text": "Welcome to the botanical garden.",
+                  "voice": "male_2",
+                  "response_sec": 6
+                },
+                {
+                  "id": "i2",
+                  "text": "Please stay on the marked paths.",
+                  "voice": "male_2",
+                  "response_sec": 7
+                },
+                {
+                  "id": "i3",
+                  "text": "The greenhouse opens at nine each morning.",
+                  "voice": "male_2",
+                  "response_sec": 8
+                },
+                {
+                  "id": "i4",
+                  "text": "We water the herb beds early, before it gets hot.",
+                  "voice": "male_2",
+                  "response_sec": 9
+                },
+                {
+                  "id": "i5",
+                  "text": "If visitors ask about a plant, you can check its label.",
+                  "voice": "male_2",
+                  "response_sec": 10
+                },
+                {
+                  "id": "i6",
+                  "text": "Volunteers who lead the morning tours usually meet by the old stone fountain at eight.",
+                  "voice": "male_2",
+                  "response_sec": 11
+                },
+                {
+                  "id": "i7",
+                  "text": "Once you've finished, return your tools to the shed and sign the sheet that's hanging by the door.",
+                  "voice": "male_2",
+                  "response_sec": 12
+                }
+              ]
+            },
+            {
+              "id": "s-interview",
+              "type": "interview",
+              "topic": "Food and cooking habits",
+              "voice": "interviewer",
+              "intro": "Hello, and thanks for joining me today. I'd like to ask you a few questions about food and the way people cook and eat.",
+              "answer_sec": 45,
+              "questions": [
+                {
+                  "id": "q1",
+                  "text": "To begin, could you describe a meal that you often prepare or eat at home, and what goes into it?"
+                },
+                {
+                  "id": "q2",
+                  "text": "Tell me about a time when you cooked for other people or shared a special meal with them. What happened?"
+                },
+                {
+                  "id": "q3",
+                  "text": "Do you think people will cook at home more or less often in the future than they do today? Why?"
+                },
+                {
+                  "id": "q4",
+                  "text": "Some people believe that every school should teach students basic cooking skills. Do you agree? Why or why not?"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

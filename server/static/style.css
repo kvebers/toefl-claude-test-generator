@@ -141,9 +141,14 @@ tbody tr:hover { background: var(--accent-soft); }
 .option:has(input:focus-visible) { outline: 3px solid color-mix(in srgb, var(--accent) 55%, transparent); outline-offset: 2px; }
 
 .ctw { line-height: 2.5; font-size: 1.05rem; }
-.ctw input { border: none; border-bottom: 2px solid var(--accent); background: var(--accent-soft); padding: 0 3px; margin: 0 1px;
-             font-family: ui-monospace, Consolas, monospace; letter-spacing: .14em; border-radius: 4px 4px 0 0; transition: background .15s; }
-.ctw input:focus { outline: none; background: color-mix(in srgb, var(--accent) 22%, var(--panel)); }
+.ctw-word { white-space: nowrap; }
+/* one underscore slot per missing letter, no box: each slot is 1ch for the letter plus .2ch letter-spacing */
+.ctw input { --slot: var(--muted); --w: calc(var(--len) * 1.2ch); width: calc(var(--w) + 2px); height: 1.3em; line-height: 1.3em;
+             padding: 0; margin: 0; border: none; border-radius: 0; vertical-align: baseline;
+             font-family: ui-monospace, Consolas, monospace; font-size: 1em; letter-spacing: .2ch; color: var(--ink);
+             background: repeating-linear-gradient(90deg, var(--slot) 0 1ch, transparent 1ch 1.2ch) left bottom / var(--w) 1.5px no-repeat; }
+.ctw input:focus { --slot: var(--ink); outline: none; background-size: var(--w) 2px; }
+.passage mark.vocab { background: color-mix(in srgb, #f5c400 45%, var(--panel)); color: inherit; padding: 0 2px; border-radius: 3px; font-weight: 600; }
 
 /* ---------- writing ---------- */
 .bubble { background: var(--sel); padding: 12px 16px; border-radius: 16px 16px 16px 4px; display: inline-block; font-weight: 500; }

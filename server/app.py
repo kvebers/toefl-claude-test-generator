@@ -273,6 +273,19 @@ class Handler(SimpleHTTPRequestHandler):
         raise ValueError(f"unknown action {action}")
 
 
+def render_missing_audio(first: str | None) -> None:
+    """Library tests are committed without audio. Render the test being opened now, the rest in the background."""
+    missing = [t["id"] for t in list_tests() if not t["audio_ready"]]
+    if first in missing:
+        print(f"Rendering voices for {first} (first time only, about a minute)…", flush=True)
+        subprocess.run([sys.executable, "tools/tts.py", first], cwd=ROOT, check=False)
+        missing.remove(first)
+    if missing:
+        threading.Thread(target=lambda: [subprocess.run([sys.executable, "tools/tts.py", t], cwd=ROOT, check=False,
+                                                        stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
+                                         for t in missing], daemon=True).start()
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--test", default=None, help="test id to preselect, 'latest', or 'next' (oldest untaken)")
@@ -285,6 +298,7 @@ def main():
     default = {"latest": latest_test_id, "next": next_untaken_test_id}.get(a.test, lambda: a.test)()
     if default:
         find_test_dir(default)
+    render_missing_audio(default)
     srv = ThreadingHTTPServer(("127.0.0.1", a.port), Handler)
     srv.default_test, srv.home_edition = default, a.home_edition
     url = f"http://127.0.0.1:{a.port}/" + (f"?test={default}" if default else "")

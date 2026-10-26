@@ -2430,13 +2430,13 @@
                   "id": "i1",
                   "text": "Welcome to the botanical garden.",
                   "voice": "male_2",
-                  "response_sec": 6
+                  "response_sec": 8
                 },
                 {
                   "id": "i2",
                   "text": "Please stay on the marked paths.",
                   "voice": "male_2",
-                  "response_sec": 7
+                  "response_sec": 8
                 },
                 {
                   "id": "i3",

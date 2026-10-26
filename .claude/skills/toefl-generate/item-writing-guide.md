@@ -72,8 +72,8 @@ student posts (2–3 sentences each) taking different positions so the learner c
 ## Speaking
 **listen_and_repeat**: one `setting` (guide training, new-employee orientation, lab assistant...).
 7 sentences, all said by the same voice, growing from one simple clause (4–5 words) to sentences with
-compound verbs, dependent or relative clauses and complex noun phrases (16–20 words). Use natural contractions. `response_sec`: 6 for
-the shortest rising to 12 for the longest. Natural, useful sentences, no tongue twisters or rare names.
+compound verbs, dependent or relative clauses and complex noun phrases (16–20 words). Use natural contractions. `response_sec`: the
+spec's `listen_and_repeat.response_sec` range, the low end for the shortest rising to the high end for the longest. Natural, useful sentences, no tongue twisters or rare names.
 
 **interview**: one topic, a friendly `intro` (1–2 sentences), 4 questions that go from brief factual answers to
 opinion, explanation, prediction and narration (e.g. describe -> tell about a time -> compare/predict -> opinion

@@ -17,8 +17,9 @@ from concurrent.futures import ThreadPoolExecutor
 
 from common import ROOT, TESTS_DIR, usage_limit_message
 
+# On Windows Claude Code may run commands through its PowerShell tool instead of Bash, so allow both.
 FLAGS = ["--permission-mode", "acceptEdits", "--allowedTools", "Read", "Write", "Edit", "Glob", "Grep", "Agent", "Skill",
-         "Bash(python tools/*)", "Bash(python3 tools/*)"]
+         "Bash(python tools/*)", "Bash(python3 tools/*)", "PowerShell(python tools/*)", "PowerShell(python3 tools/*)"]
 
 
 def run_generation(prompt: str, log, claude: str | None = None) -> list[str]:

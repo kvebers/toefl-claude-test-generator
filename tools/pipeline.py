@@ -99,7 +99,8 @@ def run_claude(d: Path) -> None:
     folder = d.resolve().relative_to(ROOT).as_posix() if inside else str(d.resolve())
     cmd = [claude, "-p", f"/toefl-grade {folder}", "--permission-mode", "acceptEdits",
            *([] if inside else ["--add-dir", str(d.resolve())]),
-           "--allowedTools", "Read", "Write", "Edit", "Glob", "Grep", "Bash(python tools/check_grading.py:*)"]
+           "--allowedTools", "Read", "Write", "Edit", "Glob", "Grep", "Bash(python tools/check_grading.py:*)",
+           "PowerShell(python tools/check_grading.py:*)"]   # Windows may use the PowerShell tool instead of Bash
     if os.environ.get("CLAUDE_MODEL"):
         cmd += ["--model", os.environ["CLAUDE_MODEL"]]
     with open(d / "claude.log", "w", encoding="utf-8") as log:

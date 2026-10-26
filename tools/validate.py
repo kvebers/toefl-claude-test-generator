@@ -71,6 +71,11 @@ def validate(test: dict) -> tuple[list[str], list[str]]:
                     errors.append(f"{where}/{it['id']}: answer must be a permutation of chunks")
                 elif it["chunks"] == it["answer"]:
                     errors.append(f"{where}/{it['id']}: chunks are already in answer order, shuffle them")
+        if task["type"] == "listen_and_repeat":
+            lo, hi = spec["sections"]["speaking"]["tasks"]["listen_and_repeat"]["response_sec"]
+            for it in task["items"]:
+                if "response_sec" in it and not lo <= it["response_sec"] <= hi:
+                    warnings.append(f"{where}/{it['id']}: response_sec {it['response_sec']}, spec says {lo} to {hi}")
         if task["type"] == "interview" and task.get("voice") and task["voice"] not in voices:
             errors.append(f"{where}: unknown voice '{task['voice']}'")
         if task["type"] == "complete_the_words":

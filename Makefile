@@ -13,7 +13,9 @@ COUNT  ?=
 ID     ?= latest
 HOME_FLAG := $(if $(filter 1 yes true,$(HE)),--home-edition,)
 # Tools Claude may use non-interactively while generating / grading (no prompts in -p mode).
-CLAUDE_FLAGS ?= --permission-mode acceptEdits --allowedTools Read Write Edit Glob Grep Agent Skill "Bash(python tools/*)" "Bash(python3 tools/*)"
+# On Windows Claude Code may run commands through its PowerShell tool instead of Bash, so both are allowed.
+CLAUDE_FLAGS ?= --permission-mode acceptEdits --allowedTools Read Write Edit Glob Grep Agent Skill \
+	"Bash(python tools/*)" "Bash(python3 tools/*)" "PowerShell(python tools/*)" "PowerShell(python3 tools/*)"
 
 .PHONY: help setup setup-speech sample test bank next practice weakest take serve audio validate grade regrade report trends list publish import export check
 

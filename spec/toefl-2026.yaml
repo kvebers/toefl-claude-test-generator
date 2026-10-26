@@ -19,7 +19,7 @@ voices:            # logical voice -> edge-tts voice. ETS balances US/Canadian, 
   male_2:    en-GB-RyanNeural
   male_3:    en-US-ChristopherNeural
   male_4:    en-CA-LiamNeural
-  male_5:    en-AU-WilliamMultilingualNeural
+  male_5:    en-NZ-MitchellNeural            # was en-AU-WilliamMultilingualNeural; edge-tts stopped returning audio for it (2026-10)
   interviewer: en-US-EricNeural
 
 sections:

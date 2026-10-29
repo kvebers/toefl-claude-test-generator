@@ -582,8 +582,50 @@ async function home() {
           h('td', {}, a.est_total_120 ?? '-'),
           h('td', {}, h('a', { href: `/results/${a.attempt_id}/report.pdf`, target: '_blank' }, 'PDF'), ' · ',
             h('a', { href: `/results/${a.attempt_id}/report.html`, target: '_blank' }, 'HTML')))))))
-        : h('div', { class: 'panel empty' }, 'No graded attempts yet. Your results will appear here.')));
+        : h('div', { class: 'panel empty' }, 'No graded attempts yet. Your results will appear here.'),
+      attempts.length ? studyPanel() : null));
   });
+}
+
+// ------------------------------------------------------------------ study guide (/toefl-study)
+let studyPoll;
+
+function studyPanel() {
+  const section = h('select', { 'aria-label': 'Sections to analyse' },
+    h('option', { value: '' }, 'Writing and speaking'), h('option', { value: 'writing' }, 'Writing only'),
+    h('option', { value: 'speaking' }, 'Speaking only'));
+  const status = h('div', { class: 'jobs' });
+  const links = h('div', { class: 'study-links' });
+  const go = h('button', { class: 'btn primary', onclick: async () => {
+    go.disabled = true;
+    try { await api.post('/api/study', { section: section.value }); }
+    catch (e) { alertBox(e); }
+    refreshStudy(go, links, status);
+  } }, 'Create guide');
+  refreshStudy(go, links, status);
+  return h('div', { class: 'panel generate' },
+    h('div', { class: 'generate-head' }, h('b', {}, 'Study guide'),
+      h('span', { class: 'muted' }, 'Claude reads all your past writing and speaking: how your structure changed, a blueprint per task, linking words, key phrases, core errors and a spelling list · ~5–10 min')),
+    h('div', { class: 'study-form' }, section, go, links), status);
+}
+
+async function refreshStudy(go, links, status) {
+  clearTimeout(studyPoll);
+  const s = await api.get('/api/study').catch(() => null);
+  if (!s) return;
+  const fmt = n => `${Math.floor(n / 60)}:${String(n % 60).padStart(2, '0')}`;
+  const j = s.job, active = j && (j.state === 'queued' || j.state === 'running');
+  go.disabled = active;
+  go.textContent = s.pdf || s.html ? 'Update guide' : 'Create guide';
+  links.replaceChildren(...(s.pdf || s.html ? [
+    s.pdf && h('a', { class: 'btn', href: `/results/study/study.pdf?t=${Date.now()}`, target: '_blank' }, 'Open PDF'),
+    s.html && h('a', { class: 'btn', href: `/results/study/study.html?t=${Date.now()}`, target: '_blank' }, 'HTML'),
+    h('span', { class: 'muted' }, `updated ${s.updated}`)] : [h('span', { class: 'muted' }, 'No study guide yet')]).filter(Boolean));
+  status.replaceChildren(...(j ? [h('div', { class: `job ${j.state}` }, h('span', { class: 'job-dot' }),
+    h('span', {}, `Study guide · ${j.section === 'all' ? 'writing and speaking' : j.section}`),
+    h('span', { class: 'muted' }, j.state === 'queued' ? 'waiting for other Claude jobs' : j.state === 'running' ? `writing… ${fmt(j.elapsed)}`
+      : j.state === 'done' ? `ready in ${fmt(j.elapsed)}` : (j.error || 'failed')))] : []));
+  if (active && go.isConnected) studyPoll = setTimeout(() => refreshStudy(go, links, status), 3000);
 }
 
 // ------------------------------------------------------------------ test list with filters

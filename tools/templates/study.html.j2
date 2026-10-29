@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>TOEFL study guide</title>
+<style>
+  body { font-family: "Segoe UI", system-ui, Arial, sans-serif; color: #1d2433; font-size: 10.5pt; line-height: 1.5; margin: 0; padding: 24px; background: #fff; }
+  h1 { color: #12355b; margin: 0 0 4px; }
+  h2 { color: #fff; background: #12355b; padding: 6px 12px; border-radius: 6px; margin: 28px 0 10px; break-before: page; }
+  h2.first { break-before: auto; }
+  h3 { color: #12355b; margin: 18px 0 6px; font-size: 11.5pt; }
+  table { width: 100%; border-collapse: collapse; margin: 4px 0; } th, td { border-bottom: 1px solid #dde2ea; padding: 5px 7px; text-align: left; vertical-align: top; }
+  th { background: #f3f6fa; font-weight: 600; } tr { break-inside: avoid; }
+  .muted { color: #5d6779; } .small { font-size: 9pt; }
+  .lead { font-size: 11pt; border-left: 4px solid #12355b; padding: 4px 12px; margin: 8px 0; }
+  .box { background: #f6f8fb; border-radius: 6px; padding: 8px 12px; margin: 8px 0; break-inside: avoid; }
+  .tpl { font-family: Georgia, serif; color: #12355b; }
+  .chip { display: inline-block; padding: 1px 8px; margin: 2px 3px 2px 0; border-radius: 99px; font-size: 9pt; background: #eef2f7; }
+  .chip.have { background: #dcf3e4; color: #135c2b; } .chip.new { background: #e3edfb; color: #12355b; font-weight: 600; }
+  .chip.avoid { background: #fde8e8; color: #9b1c1c; text-decoration: line-through; }
+  .score { display: inline-block; min-width: 26px; text-align: center; padding: 1px 6px; margin-right: 3px; border-radius: 4px; background: #eef2f7; font-weight: 600; font-size: 9pt; }
+  .wrong { color: #b42318; text-decoration: line-through; text-decoration-color: #e8a3a3; } .right { color: #1a7f37; font-weight: 600; }
+  .tag { font-family: Consolas, monospace; font-size: 8.5pt; background: #f3f6fa; padding: 1px 5px; border-radius: 4px; }
+  .err { border: 1px solid #dde2ea; border-radius: 6px; padding: 8px 12px; margin: 8px 0; break-inside: avoid; }
+  .err .n { float: right; font-size: 9pt; color: #5d6779; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 18px; }
+  ol.steps li, ul.tight li { margin: 2px 0; }
+  .model p { margin: 4px 0; } .model .lbl { display: inline-block; min-width: 92px; font-size: 8.5pt; font-weight: 600; color: #5d6779; text-transform: uppercase; }
+  .check li { list-style: none; } .check li::before { content: "\2610  "; color: #12355b; }
+  @page { size: A4; margin: 14mm 12mm; } @media print { body { padding: 0; } }
+</style>
+</head>
+<body>
+<h1>TOEFL study guide: structure, phrases and core errors</h1>
+<div class="muted">{{ d.section|capitalize if d.section != 'all' else 'Writing and speaking' }} · {{ d.entries|length }} responses from {{ d.attempts }} graded attempts{% if s and s.generated %} · {{ s.generated }}{% endif %}</div>
+
+{% if not s %}
+<p class="lead">No study analysis yet. Run <code>make study</code> to have Claude write it. The statistics below come straight from your responses.</p>
+{% else %}
+<p class="lead">{{ s.summary }}</p>
+{% if s.top_three %}<div class="box"><b>Focus on these three things first</b><ol class="steps">{% for x in s.top_three %}<li>{{ x }}</li>{% endfor %}</ol></div>{% endif %}
+
+{% for t in s.types %}
+{% set st = d.per_type.get(t.type, {}) %}
+<h2{% if loop.first %} class="first"{% endif %}>{{ t.title or t.type|label }}</h2>
+<div class="muted small">{{ st.responses or 0 }} responses · scores oldest to newest:
+{% for sc in st.scores or [] %}<span class="score">{{ sc }}</span>{% endfor %}</div>
+
+<h3>How you build it now</h3>
+<p>{{ t.structure_now }}</p>
+{% if t.structural_changes %}
+<h3>What changed from earlier tests</h3>
+<table><tr><th style="width:22%">When</th><th>Change</th><th style="width:14%">Effect</th></tr>
+{% for c in t.structural_changes %}<tr><td>{{ c.when }}</td><td>{{ c.change }}</td><td>{{ c.effect or '' }}</td></tr>{% endfor %}
+</table>
+{% endif %}
+
+<h3>Blueprint: the structure to use every time</h3>
+<table><tr><th style="width:18%">Part</th><th style="width:26%">Job</th><th>Sentence frame</th><th style="width:10%">Length</th></tr>
+{% for b in t.blueprint %}<tr><td><b>{{ b.part }}</b></td><td>{{ b.purpose or '' }}</td><td class="tpl">{{ b.template }}</td><td>{{ b.length or '' }}</td></tr>{% endfor %}
+</table>
+
+<h3>Strategy</h3>
+<ol class="steps">{% for x in t.strategy %}<li>{{ x }}</li>{% endfor %}</ol>
+
+<h3>Linking words</h3>
+<p class="muted small"><span class="chip have">green</span> you already use it · <span class="chip new">blue</span> add it next · <span class="chip avoid">red</span> overused or wrong for this task</p>
+<table><tr><th style="width:18%">Function</th><th>Words</th><th style="width:32%">Example</th></tr>
+{% for l in t.linking_words %}<tr><td><b>{{ l.function }}</b></td>
+<td>{% for w in l.you_use or [] %}<span class="chip have">{{ w }}</span>{% endfor %}{% for w in l.add or [] %}<span class="chip new">{{ w }}</span>{% endfor %}{% for w in l.avoid or [] %}<span class="chip avoid">{{ w }}</span>{% endfor %}</td>
+<td class="tpl small">{{ l.example or '' }}</td></tr>{% endfor %}
+</table>
+
+<h3>Key phrases</h3>
+<table><tr><th style="width:50%">Phrase</th><th>Use it when</th></tr>
+{% for k in t.key_phrases %}<tr><td class="tpl">{{ k.phrase }}</td><td>{{ k.when }}</td></tr>{% endfor %}
+</table>
+
+<h3>Core errors</h3>
+{% for e in t.core_errors %}<div class="err"><span class="n">{% if e.count %}{{ e.count }}× · {% endif %}<span class="tag">{{ e.tag }}</span></span>
+<b>{{ loop.index }}. {{ e.pattern }}</b>
+<table>{% for x in e.examples %}<tr><td style="width:50%" class="wrong">{{ x.wrong }}</td><td class="right">{{ x.right }}</td></tr>{% endfor %}</table>
+<div><b>Rule:</b> {{ e.rule }}</div>{% if e.drill %}<div><b>Drill:</b> {{ e.drill }}</div>{% endif %}</div>{% endfor %}
+
+{% if t.spelling %}
+<h3>Spelling list</h3>
+<table><tr><th>You wrote</th><th>Correct</th><th>How to remember</th></tr>
+{% for x in t.spelling %}<tr><td class="wrong">{{ x.wrong }}</td><td class="right">{{ x.right }}</td><td>{{ x.tip or '' }}</td></tr>{% endfor %}
+</table>
+{% endif %}
+
+{% if t.model %}
+<h3>Model built on the blueprint</h3>
+<div class="box model">{% if t.model.prompt %}<p class="muted small">{{ t.model.prompt }}</p>{% endif %}
+{% for p in t.model.parts %}<p><span class="lbl">{{ p.part }}</span> {{ p.text }}</p>{% endfor %}</div>
+{% endif %}
+{% endfor %}
+
+{% if s.checklist %}
+<h2>Checklist before you finish a response</h2>
+<ul class="check">{% for x in s.checklist %}<li>{{ x }}</li>{% endfor %}</ul>
+{% endif %}
+{% endif %}
+
+<h2{% if not s %} class="first"{% endif %}>Your responses in numbers</h2>
+{% set writing = d.entries|selectattr('section', 'equalto', 'writing')|list %}
+{% if writing %}
+<h3>Writing</h3>
+<table><tr><th>Date</th><th>Task</th><th>Score</th><th>Words</th><th>Paragraphs</th><th>Sentences</th><th>Words / sentence</th><th>Linking words used</th></tr>
+{% for e in writing %}<tr><td>{{ e.date }}</td><td>{{ e.type|label }}</td><td>{{ e.score }}</td><td>{{ e.words }}</td><td>{{ e.paragraphs }}</td><td>{{ e.sentences }}</td><td>{{ e.avg_sentence_words }}</td>
+<td class="small">{% for f, ws in e.linkers.items() %}{{ ws|join(', ') }}{% if not loop.last %}, {% endif %}{% endfor %}</td></tr>{% endfor %}
+</table>
+{% endif %}
+{% set speaking = d.entries|selectattr('section', 'equalto', 'speaking')|list %}
+{% if speaking %}
+<h3>Speaking</h3>
+<table><tr><th>Date</th><th>Topic</th><th>Score</th><th>Avg words</th><th>Avg wpm</th><th>Fillers</th><th>Long pauses</th><th>Linking words used</th></tr>
+{% for e in speaking %}{% set qs = e.questions %}<tr><td>{{ e.date }}</td><td>{{ e.topic or e.task_id }}</td><td>{{ e.score }}</td>
+<td>{{ ((qs|map(attribute='words')|sum) / (qs|length or 1))|round|int }}</td>
+<td>{{ ((qs|map(attribute='wpm')|select|sum) / (qs|map(attribute='wpm')|select|list|length or 1))|round|int }}</td>
+<td>{{ qs|map(attribute='fillers')|select|sum }}</td><td>{{ qs|map(attribute='long_pauses')|select|sum }}</td>
+<td class="small">{% set ns = namespace(w=[]) %}{% for q in qs %}{% for f, ws in q.linkers.items() %}{% for w in ws %}{% if w not in ns.w %}{% set ns.w = ns.w + [w] %}{% endif %}{% endfor %}{% endfor %}{% endfor %}{{ ns.w|join(', ') }}</td></tr>{% endfor %}
+</table>
+{% endif %}
+<p class="muted">Unofficial practice data; not affiliated with ETS.</p>
+</body>
+</html>

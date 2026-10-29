@@ -1,0 +1,78 @@
+{
+  "id": "20261027-1640-interview-weather-and-inventions",
+  "title": "Interview practice (hard): Weather and the seasons, inventions and new ideas",
+  "format": "toefl-ibt-2026",
+  "mode": "practice",
+  "created": "2026-10-27",
+  "author": "toefl-claude-test-generator",
+  "difficulty": "hard",
+  "description": "Two hard speaking interviews: how weather and the seasons shape daily life; where inventions come from and how they change us. Every question has two parts to answer, with comparing, cause and effect, and hypotheticals.",
+  "tags": [
+    "practice",
+    "speaking",
+    "interview"
+  ],
+  "sections": [
+    {
+      "id": "speaking",
+      "modules": {
+        "m1": {
+          "tasks": [
+            {
+              "id": "s-interview1",
+              "type": "interview",
+              "topic": "Weather and the seasons",
+              "voice": "interviewer",
+              "intro": "Hello, and thanks for joining me. I'm talking with people about the weather and the seasons, and how they affect the way we live, work and feel.",
+              "answer_sec": 45,
+              "questions": [
+                {
+                  "id": "q1",
+                  "text": "To begin, which season of the year do you enjoy the least? What is it about that season that makes it difficult for you?"
+                },
+                {
+                  "id": "q2",
+                  "text": "Tell me about a time when the weather forced you to change your plans. What had you planned to do, and how did you deal with the situation?"
+                },
+                {
+                  "id": "q3",
+                  "text": "Some people believe that the climate of a place has a strong influence on the character and habits of the people who live there. Others think it makes very little difference. Which view is closer to your own, and what evidence from your own experience supports it?"
+                },
+                {
+                  "id": "q4",
+                  "text": "Weather forecasts are now available on our phones at any moment, often hour by hour. Has this made people better prepared, or has it made them less able to cope with surprises? Explain your view, and say how you think this might change in the future."
+                }
+              ]
+            },
+            {
+              "id": "s-interview2",
+              "type": "interview",
+              "topic": "Inventions and new ideas",
+              "voice": "interviewer",
+              "intro": "Hi, and welcome. Today's conversation is about inventions and new ideas: where they come from, and how they change the way people live.",
+              "answer_sec": 45,
+              "questions": [
+                {
+                  "id": "q1",
+                  "text": "First, think of an everyday object that you could not easily live without. What is it, and what do you mainly use it for?"
+                },
+                {
+                  "id": "q2",
+                  "text": "Describe a time when you came up with a new or unusual way of solving a practical problem. What was the problem, and how well did your solution work?"
+                },
+                {
+                  "id": "q3",
+                  "text": "Many important inventions have come from large companies with big research budgets, while others have come from individuals working alone. In your opinion, which is more likely to produce truly original ideas, and why does it have an advantage over the other?"
+                },
+                {
+                  "id": "q4",
+                  "text": "If you could make sure that one invention had never been created, which one would you choose? How would daily life be different without it, and would that change be mostly positive or mostly negative?"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

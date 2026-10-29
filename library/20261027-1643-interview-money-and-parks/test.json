@@ -1,0 +1,78 @@
+{
+  "id": "20261027-1643-interview-money-and-parks",
+  "title": "Interview practice (hard): Money and spending, parks and green spaces",
+  "format": "toefl-ibt-2026",
+  "mode": "practice",
+  "created": "2026-10-27",
+  "author": "toefl-claude-test-generator",
+  "difficulty": "hard",
+  "description": "Two hard speaking interviews: how people decide what to spend and save; parks and green spaces in cities. Every question has two parts to answer, with comparing, justifying and hypotheticals.",
+  "tags": [
+    "practice",
+    "speaking",
+    "interview"
+  ],
+  "sections": [
+    {
+      "id": "speaking",
+      "modules": {
+        "m1": {
+          "tasks": [
+            {
+              "id": "s-interview1",
+              "type": "interview",
+              "topic": "Money and spending",
+              "voice": "interviewer",
+              "intro": "Hello, and thanks for taking part. I'm talking to people about money: how they decide what to buy, and how they feel about saving.",
+              "answer_sec": 45,
+              "questions": [
+                {
+                  "id": "q1",
+                  "text": "To start, what do you usually spend the largest part of your money on each month, apart from rent or bills? Why is that thing so important to you?"
+                },
+                {
+                  "id": "q2",
+                  "text": "Tell me about a purchase that you later regretted. What made you buy it at the time, and what would you do differently now?"
+                },
+                {
+                  "id": "q3",
+                  "text": "Some people pay for almost everything by card or phone, while others still prefer cash. Which do you prefer, and what is one disadvantage of your choice compared with the other one?"
+                },
+                {
+                  "id": "q4",
+                  "text": "Some people believe schools should teach students how to manage money, for example how to make a budget. Do you agree? Explain what difference it would make if every student took such a course."
+                }
+              ]
+            },
+            {
+              "id": "s-interview2",
+              "type": "interview",
+              "topic": "Parks and green spaces in cities",
+              "voice": "interviewer",
+              "intro": "Hi, and welcome. Today I'm asking people about parks and other green spaces in towns and cities, and how they use them.",
+              "answer_sec": 45,
+              "questions": [
+                {
+                  "id": "q1",
+                  "text": "First, is there a park or green space near where you live? How often do you go there, and what do you usually do?"
+                },
+                {
+                  "id": "q2",
+                  "text": "Describe a memorable day you spent outdoors in a park, a garden or the countryside. What happened, and why do you still remember it?"
+                },
+                {
+                  "id": "q3",
+                  "text": "Imagine your city had a large empty piece of land. Would you rather turn it into a park or use it for new housing? Explain your choice, and say who might disagree with you and why."
+                },
+                {
+                  "id": "q4",
+                  "text": "In the future, more and more people will live in large cities. How important will green spaces be for those people, and what should city governments do now to prepare?"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

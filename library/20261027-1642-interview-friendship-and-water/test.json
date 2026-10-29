@@ -1,0 +1,78 @@
+{
+  "id": "20261027-1642-interview-friendship-and-water",
+  "title": "Interview practice (hard): Friendship over time, water and how we use it",
+  "format": "toefl-ibt-2026",
+  "mode": "practice",
+  "created": "2026-10-27",
+  "author": "toefl-claude-test-generator",
+  "difficulty": "hard",
+  "description": "Two hard speaking interviews: how friendships form and change; water use, saving water and who should pay for it. Every question has two parts to answer, with comparing, justifying and hypotheticals.",
+  "tags": [
+    "practice",
+    "speaking",
+    "interview"
+  ],
+  "sections": [
+    {
+      "id": "speaking",
+      "modules": {
+        "m1": {
+          "tasks": [
+            {
+              "id": "s-interview1",
+              "type": "interview",
+              "topic": "Friendship over time",
+              "voice": "interviewer",
+              "intro": "Hello, and thanks for joining me. I'm interviewing people about friendship, and about how our friendships change as we get older.",
+              "answer_sec": 45,
+              "questions": [
+                {
+                  "id": "q1",
+                  "text": "To begin, where did you meet most of your close friends: at school, at work, or somewhere else? Why do you think that place made it easy to form friendships?"
+                },
+                {
+                  "id": "q2",
+                  "text": "Tell me about a friendship that became weaker or ended. What caused the change, and looking back, could either of you have done something differently?"
+                },
+                {
+                  "id": "q3",
+                  "text": "Some people prefer to have a large group of friends, while others would rather have one or two very close friends. Which do you prefer, and what can the other type of friendship offer that yours cannot?"
+                },
+                {
+                  "id": "q4",
+                  "text": "Many people now keep in touch with friends mainly through messages rather than by meeting in person. In twenty years, do you think friendships will be stronger or weaker than they are today? Give the most important reason for your view."
+                }
+              ]
+            },
+            {
+              "id": "s-interview2",
+              "type": "interview",
+              "topic": "Water and how we use it",
+              "voice": "interviewer",
+              "intro": "Hi, and welcome. Today I'm asking people about water: how much we use, where it comes from, and how we might protect it.",
+              "answer_sec": 45,
+              "questions": [
+                {
+                  "id": "q1",
+                  "text": "First, in what ways does your household use the most water during a normal week? Is there anything you do to use less of it?"
+                },
+                {
+                  "id": "q2",
+                  "text": "Describe a time when you had no running water, or when water was limited, for example during a trip or a repair. How did you manage, and what did the experience teach you?"
+                },
+                {
+                  "id": "q3",
+                  "text": "To reduce water use, some cities raise the price of water, while others run campaigns that ask people to save it voluntarily. Which method is more effective, in your view, and why does it work better than the other one?"
+                },
+                {
+                  "id": "q4",
+                  "text": "Imagine that your region had only half as much water as it has now. Which group would be affected most: farmers, factories or ordinary households? Explain your choice and say how that group should adapt."
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

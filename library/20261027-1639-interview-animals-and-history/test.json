@@ -1,0 +1,78 @@
+{
+  "id": "20261027-1639-interview-animals-and-history",
+  "title": "Interview practice (hard): Animals and people, remembering the past",
+  "format": "toefl-ibt-2026",
+  "mode": "practice",
+  "created": "2026-10-27",
+  "author": "toefl-claude-test-generator",
+  "difficulty": "hard",
+  "description": "Two hard speaking interviews: how people live alongside animals; how we learn about and remember the past. Questions demand comparing, hypothesising and justifying.",
+  "tags": [
+    "practice",
+    "speaking",
+    "interview"
+  ],
+  "sections": [
+    {
+      "id": "speaking",
+      "modules": {
+        "m1": {
+          "tasks": [
+            {
+              "id": "s-interview1",
+              "type": "interview",
+              "topic": "Animals and people",
+              "voice": "interviewer",
+              "intro": "Hello, and thank you for taking the time to talk with me. I'm collecting views on the relationship between people and animals, both at home and in the wider world.",
+              "answer_sec": 45,
+              "questions": [
+                {
+                  "id": "q1",
+                  "text": "To start, which animal, wild or domestic, do you find the most interesting? What is it about this animal that you find so fascinating?"
+                },
+                {
+                  "id": "q2",
+                  "text": "Tell me about a time when an animal, whether a pet, a farm animal or a wild one, surprised you or changed the way you thought about it. What happened, and what did you learn?"
+                },
+                {
+                  "id": "q3",
+                  "text": "Some people say that keeping animals in zoos helps protect endangered species, while others believe animals should only be observed in the wild. If you were in charge of protecting a rare species, which approach would you choose, and what makes it better than the other?"
+                },
+                {
+                  "id": "q4",
+                  "text": "As cities keep growing, wild animals such as foxes, birds and deer are increasingly living alongside people. Over the next twenty years, do you think this will create more benefits or more problems? Please explain your prediction."
+                }
+              ]
+            },
+            {
+              "id": "s-interview2",
+              "type": "interview",
+              "topic": "Remembering the past",
+              "voice": "interviewer",
+              "intro": "Hi, and welcome. Today I'm speaking with people about history: how we learn about the past, and why it does or doesn't matter to us now.",
+              "answer_sec": 45,
+              "questions": [
+                {
+                  "id": "q1",
+                  "text": "First, what period of history, or which historical event, do you know the most about? How did you first become interested in it?"
+                },
+                {
+                  "id": "q2",
+                  "text": "Many families pass down stories from older generations. Describe a story you have heard from a relative or an older person about life in the past, and explain why it stayed with you."
+                },
+                {
+                  "id": "q3",
+                  "text": "People can learn about history from textbooks, from documentaries and films, or by visiting historical sites in person. Which of these do you think gives the most accurate understanding of the past, and why is it more reliable than the others?"
+                },
+                {
+                  "id": "q4",
+                  "text": "Some people argue that schools should spend less time teaching history and more time on practical subjects like technology or personal finance. To what extent do you agree with this view? Give reasons to support your position."
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

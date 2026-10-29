@@ -23,7 +23,7 @@ CLAUDE_LEAN ?= --setting-sources project,local --strict-mcp-config --tools Read,
 GEN_EFFORT  ?= medium
 export ENABLE_CLAUDEAI_MCP_SERVERS = false
 
-.PHONY: help setup setup-speech sample test bank next practice weakest take serve audio validate grade regrade report trends list publish import export check
+.PHONY: help setup setup-speech sample test bank next practice weakest take serve audio validate grade regrade report trends study list publish import export check
 
 help:            ## show this help
 	@$(PY) -c "import re;[print(f'  make {m[0]:<14} {m[1]}') for m in re.findall(r'^([a-z-]+):.*?## (.*)$$', open('Makefile').read(), re.M)]"
@@ -79,6 +79,9 @@ report:          ## re-render the PDF for an attempt
 
 trends:          ## progress PDF: score history, error trends, predicted band, study plan
 	$(CLAUDE) -p "/toefl-trends" $(CLAUDE_FLAGS)
+
+study:           ## study guide: structure, linking words, key phrases, core errors   [SECTION=writing|speaking]
+	$(CLAUDE) -p "/toefl-study $(SECTION)" $(CLAUDE_FLAGS)
 
 list:            ## list local + library tests
 	$(PY) tools/library.py list

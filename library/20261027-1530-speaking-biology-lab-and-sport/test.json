@@ -1,0 +1,102 @@
+{
+  "id": "20261027-1530-speaking-biology-lab-and-sport",
+  "title": "Speaking practice (hard): Biology lab orientation and sport in everyday life",
+  "format": "toefl-ibt-2026",
+  "mode": "practice",
+  "created": "2026-10-27",
+  "author": "toefl-claude-test-generator",
+  "difficulty": "hard",
+  "description": "Listen and repeat in a university biology lab (long sentences full of articles, past perfect and relative clauses); an interview on sport and staying active that requires narrating in the past, comparing, hypothesising and justifying.",
+  "tags": [
+    "practice",
+    "speaking",
+    "listen_and_repeat",
+    "interview"
+  ],
+  "sections": [
+    {
+      "id": "speaking",
+      "modules": {
+        "m1": {
+          "tasks": [
+            {
+              "id": "s-repeat",
+              "type": "listen_and_repeat",
+              "setting": "You are starting work as a lab assistant in a university biology department. Listen to the lab manager and repeat exactly what you hear.",
+              "items": [
+                {
+                  "id": "i1",
+                  "text": "The lab closes at six.",
+                  "voice": "female_3",
+                  "response_sec": 8
+                },
+                {
+                  "id": "i2",
+                  "text": "Please wear a lab coat and safety glasses at all times.",
+                  "voice": "female_3",
+                  "response_sec": 8
+                },
+                {
+                  "id": "i3",
+                  "text": "Each sample has to be labelled with the date and the name of the student.",
+                  "voice": "female_3",
+                  "response_sec": 9
+                },
+                {
+                  "id": "i4",
+                  "text": "If the freezer alarm goes off, you should call the technician before you open the door.",
+                  "voice": "female_3",
+                  "response_sec": 10
+                },
+                {
+                  "id": "i5",
+                  "text": "The microscopes we bought last year are more sensitive than the old ones, so they need to be cleaned carefully.",
+                  "voice": "female_3",
+                  "response_sec": 11
+                },
+                {
+                  "id": "i6",
+                  "text": "By the time the students arrive, the equipment that they'll need for the experiment should already be on the benches.",
+                  "voice": "female_3",
+                  "response_sec": 12
+                },
+                {
+                  "id": "i7",
+                  "text": "Last week a student who hadn't read the instructions mixed the wrong chemicals, which is why we've changed the rules.",
+                  "voice": "female_3",
+                  "response_sec": 12
+                }
+              ]
+            },
+            {
+              "id": "s-interview",
+              "type": "interview",
+              "topic": "Sport and staying active",
+              "voice": "interviewer",
+              "intro": "Hi, thanks for joining me. I'm talking to people about sport, exercise and how they stay active in their daily lives.",
+              "answer_sec": 45,
+              "questions": [
+                {
+                  "id": "q1",
+                  "text": "First, what do you usually do to stay active during a normal week, and how much time do you spend on it?"
+                },
+                {
+                  "id": "q2",
+                  "text": "Tell me about a sport or physical activity you tried for the first time. What happened, and how did you feel about it afterwards?"
+                },
+                {
+                  "id": "q3",
+                  "text": "Some people prefer team sports, while others prefer exercising on their own. Compare the advantages of each, and say which suits you better and why."
+                },
+                {
+                  "id": "q4",
+                  "text": "Imagine your city had money for only one project: a new sports stadium for professional teams, or several small parks where anyone can exercise for free. Which would you choose, and what effect would it have on the people who live there?"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

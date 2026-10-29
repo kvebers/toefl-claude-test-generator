@@ -1,0 +1,102 @@
+{
+  "id": "20261027-1600-speaking-museum-and-technology",
+  "title": "Speaking practice (hard): Natural history museum guide and keeping in touch",
+  "format": "toefl-ibt-2026",
+  "mode": "practice",
+  "created": "2026-10-27",
+  "author": "toefl-claude-test-generator",
+  "difficulty": "hard",
+  "description": "Listen and repeat with a natural history museum supervisor (long sentences packed with articles, passives, present and past perfect and relative clauses); an interview on technology and keeping in touch that requires past narration, comparing, weighing a trade-off and predicting.",
+  "tags": [
+    "practice",
+    "speaking",
+    "listen_and_repeat",
+    "interview"
+  ],
+  "sections": [
+    {
+      "id": "speaking",
+      "modules": {
+        "m1": {
+          "tasks": [
+            {
+              "id": "s-repeat",
+              "type": "listen_and_repeat",
+              "setting": "You are training as a volunteer guide at a natural history museum. Listen to the volunteer supervisor and repeat exactly what you hear.",
+              "items": [
+                {
+                  "id": "i1",
+                  "text": "The tours start at ten.",
+                  "voice": "male_2",
+                  "response_sec": 8
+                },
+                {
+                  "id": "i2",
+                  "text": "Visitors can't touch the fossils in the main hall.",
+                  "voice": "male_2",
+                  "response_sec": 8
+                },
+                {
+                  "id": "i3",
+                  "text": "The dinosaur skeleton in the entrance was found by a farmer in the nineteen thirties.",
+                  "voice": "male_2",
+                  "response_sec": 9
+                },
+                {
+                  "id": "i4",
+                  "text": "If a school group arrives early, you should take the children to the cloakroom before the tour begins.",
+                  "voice": "male_2",
+                  "response_sec": 10
+                },
+                {
+                  "id": "i5",
+                  "text": "The insect collection, which has been closed since the spring, will reopen once the new cases have been installed.",
+                  "voice": "male_2",
+                  "response_sec": 11
+                },
+                {
+                  "id": "i6",
+                  "text": "Most of the guides who've worked here for a few years say the questions children ask are the hardest.",
+                  "voice": "male_2",
+                  "response_sec": 12
+                },
+                {
+                  "id": "i7",
+                  "text": "The meteorite that had been stored in the basement for decades turned out to be older than the experts expected.",
+                  "voice": "male_2",
+                  "response_sec": 12
+                }
+              ]
+            },
+            {
+              "id": "s-interview",
+              "type": "interview",
+              "topic": "Technology and keeping in touch",
+              "voice": "interviewer",
+              "intro": "Hello, and thanks for taking part. I'm interviewing people about how technology affects the way we communicate with friends and family.",
+              "answer_sec": 45,
+              "questions": [
+                {
+                  "id": "q1",
+                  "text": "To begin, how do you usually stay in contact with the people who are important to you, and how often do you talk to them?"
+                },
+                {
+                  "id": "q2",
+                  "text": "Tell me about a time when a message, a call or a video chat made a real difference to you or to someone you know. What happened?"
+                },
+                {
+                  "id": "q3",
+                  "text": "Some people say that sending short messages every day keeps friendships stronger than meeting in person once a month. Compare the two, and explain which you think matters more."
+                },
+                {
+                  "id": "q4",
+                  "text": "Many schools now ban mobile phones during the school day. Do you think this is a good policy, and how might it change the way young people communicate in the future?"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

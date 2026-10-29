@@ -1,0 +1,52 @@
+{
+  "id": "20261028-1700-email-bikeshare-and-reference",
+  "title": "Email practice: bike-share billing and a reference letter",
+  "format": "toefl-ibt-2026",
+  "mode": "practice",
+  "created": "2026-10-28",
+  "author": "toefl-claude-test-generator",
+  "difficulty": "medium",
+  "description": "Two emails (a company and a professor) where every point needs a clear request or suggestion and accurate details from the scenario.",
+  "tags": [
+    "practice",
+    "writing",
+    "email"
+  ],
+  "sections": [
+    {
+      "id": "writing",
+      "modules": {
+        "m1": {
+          "tasks": [
+            {
+              "id": "w-email1",
+              "type": "email",
+              "time_sec": 420,
+              "scenario": "You use CityCycle, the bike-share service in your town, to ride to work every weekday. On 3 October you paid 25 dollars for a monthly pass, but your bank statement shows that you were charged twice. In the same week, CityCycle removed the docking station outside your apartment building, and the nearest station is now a 15-minute walk away. Write an email to the customer service manager.",
+              "to": "Ms. Priya Nair, Customer Service Manager, CityCycle",
+              "subject": "Double charge for my October pass and a removed station",
+              "bullets": [
+                "Explain the problem with your payment, including the date and the amount",
+                "Describe how the removal of the docking station affects your daily routine",
+                "Request a specific action for the payment and suggest one solution for the station"
+              ]
+            },
+            {
+              "id": "w-email2",
+              "type": "email",
+              "time_sec": 420,
+              "scenario": "Last spring you took Professor Hughes's course Introduction to Environmental Science and received one of the highest marks in the class. You now want to apply for a paid summer research assistant position at the National Wetlands Institute. The application requires a reference letter from a university teacher, and the deadline is 15 November. You have not spoken to Professor Hughes since the course ended. Write an email to Professor Hughes.",
+              "to": "Professor Alan Hughes, Department of Environmental Science",
+              "subject": "Request for a reference letter for a summer research position",
+              "bullets": [
+                "Remind the professor who you are and what you did well in the course",
+                "Explain the position you are applying for and why it interests you",
+                "Politely ask for the letter, give the deadline and offer something that would make writing it easier"
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

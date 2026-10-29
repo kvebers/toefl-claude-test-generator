@@ -1,0 +1,66 @@
+{
+  "id": "20261028-1628-discussion-repair-and-languages",
+  "title": "Academic discussion practice: repairable products and language requirements",
+  "format": "toefl-ibt-2026",
+  "mode": "practice",
+  "created": "2026-10-28",
+  "author": "toefl-claude-test-generator",
+  "difficulty": "medium",
+  "description": "Two academic discussion tasks (Engineering, Linguistics) that reward a concrete example and a new idea.",
+  "tags": [
+    "practice",
+    "writing",
+    "academic_discussion"
+  ],
+  "sections": [
+    {
+      "id": "writing",
+      "modules": {
+        "m1": {
+          "tasks": [
+            {
+              "id": "w-disc1",
+              "type": "academic_discussion",
+              "time_sec": 600,
+              "course": "Engineering and Society",
+              "professor": {
+                "name": "Dr. Okafor",
+                "post": "This week we are looking at product design and waste. Many phones, laptops and household appliances are hard to open, and spare parts are often unavailable, so people replace them instead of fixing them. Some engineers argue that manufacturers should be required to design products that ordinary users can repair. Do you think such a requirement is a good idea? Explain your view with a specific example."
+              },
+              "students": [
+                {
+                  "name": "Marta",
+                  "post": "I support the requirement. If people could change a battery or a screen themselves, they would keep their devices for many more years, and far less electronic waste would end up in landfills."
+                },
+                {
+                  "name": "Daniel",
+                  "post": "I'm not sure it is realistic. Making products easy to open usually makes them bigger and less waterproof, and most customers care more about a thin, light design than about repairs. Companies should be free to decide."
+                }
+              ]
+            },
+            {
+              "id": "w-disc2",
+              "type": "academic_discussion",
+              "time_sec": 600,
+              "course": "Linguistics",
+              "professor": {
+                "name": "Professor Lindqvist",
+                "post": "Some universities require every undergraduate to complete at least two semesters of a foreign language, whatever their major. Others have dropped this rule so that students can spend more time on courses directly related to their future careers. Which policy do you think is better for students, and why?"
+              },
+              "students": [
+                {
+                  "name": "Priya",
+                  "post": "I think the requirement should stay. Learning another language helps you understand other cultures, and in a global job market employers value people who can communicate with international clients."
+                },
+                {
+                  "name": "Tom",
+                  "post": "I'd remove it. Two semesters are not enough to become fluent, so most students forget the language soon after the exam. That time would be more useful for an internship or an extra course in their field."
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

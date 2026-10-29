@@ -1,0 +1,102 @@
+{
+  "id": "20261027-1444-speaking-theatre-and-news",
+  "title": "Speaking practice (hard): Theatre backstage crew and staying informed",
+  "format": "toefl-ibt-2026",
+  "mode": "practice",
+  "created": "2026-10-27",
+  "author": "toefl-claude-test-generator",
+  "difficulty": "hard",
+  "description": "Listen and repeat with a theatre stage manager (long sentences packed with articles, passives, perfect tenses and relative clauses); an interview on news and staying informed that requires past narration, comparing sources, justifying a choice and making a prediction.",
+  "tags": [
+    "practice",
+    "speaking",
+    "listen_and_repeat",
+    "interview"
+  ],
+  "sections": [
+    {
+      "id": "speaking",
+      "modules": {
+        "m1": {
+          "tasks": [
+            {
+              "id": "s-repeat",
+              "type": "listen_and_repeat",
+              "setting": "You are joining the backstage crew of a community theatre. Listen to the stage manager and repeat exactly what you hear.",
+              "items": [
+                {
+                  "id": "i1",
+                  "text": "Rehearsal starts at seven.",
+                  "voice": "male_2",
+                  "response_sec": 8
+                },
+                {
+                  "id": "i2",
+                  "text": "Please sign in at the stage door when you arrive.",
+                  "voice": "male_2",
+                  "response_sec": 8
+                },
+                {
+                  "id": "i3",
+                  "text": "The props for the second act are kept on a table behind the curtain.",
+                  "voice": "male_2",
+                  "response_sec": 9
+                },
+                {
+                  "id": "i4",
+                  "text": "If you can't find your costume, ask someone from the wardrobe team before you take another one.",
+                  "voice": "male_2",
+                  "response_sec": 10
+                },
+                {
+                  "id": "i5",
+                  "text": "The lights we installed last month are brighter than the old ones, so the crew must wear dark clothes.",
+                  "voice": "male_2",
+                  "response_sec": 11
+                },
+                {
+                  "id": "i6",
+                  "text": "By the time the audience has been seated, all the scenery for the opening scene should have been checked twice.",
+                  "voice": "male_2",
+                  "response_sec": 12
+                },
+                {
+                  "id": "i7",
+                  "text": "The volunteer who'd run the curtain last season left detailed notes, which you'll find in the drawer under the sound desk.",
+                  "voice": "male_2",
+                  "response_sec": 12
+                }
+              ]
+            },
+            {
+              "id": "s-interview",
+              "type": "interview",
+              "topic": "News and staying informed",
+              "voice": "interviewer",
+              "intro": "Hello, and thanks for taking the time to talk with me. I'm interviewing people about the news and how they keep up with what's happening around them.",
+              "answer_sec": 45,
+              "questions": [
+                {
+                  "id": "q1",
+                  "text": "To start, how do you usually find out what's happening in the world, and how often do you check the news?"
+                },
+                {
+                  "id": "q2",
+                  "text": "Tell me about a time when you heard a story that later turned out to be false or exaggerated. How did you find out, and what did you learn from it?"
+                },
+                {
+                  "id": "q3",
+                  "text": "Some people get most of their news from social media, while others rely on newspapers or professional news websites. Compare the two, and explain which you trust more and why."
+                },
+                {
+                  "id": "q4",
+                  "text": "Twenty years from now, do you think people will still pay for news, or will almost all news be free? What difference would that make to the quality of information people receive?"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

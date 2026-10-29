@@ -90,6 +90,10 @@ select { font: inherit; color: inherit; background: var(--panel); border: 1px so
          padding: 8px 10px; min-width: 0; transition: border-color .15s, box-shadow .15s; }
 select:hover { border-color: var(--accent); }
 @media (max-width: 720px) { .generate-form { grid-template-columns: 1fr 1fr; } }
+.study-form { display: grid; grid-template-columns: minmax(0, 1fr) 160px minmax(0, 1.4fr); gap: 10px; align-items: center; }
+.study-form > .btn { justify-content: center; }
+.study-links { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+@media (max-width: 720px) { .study-form { grid-template-columns: 1fr 1fr; } .study-links { grid-column: 1 / -1; } }
 .jobs:empty { display: none; }
 .jobs { display: flex; flex-direction: column; gap: 6px; border-top: 1px solid var(--line); padding-top: 10px; }
 .job { display: grid; grid-template-columns: 14px minmax(0, 1fr) auto; gap: 10px; align-items: center; font-size: .92rem; }

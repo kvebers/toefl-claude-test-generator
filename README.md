@@ -55,6 +55,7 @@ used, plus Listen and Repeat accuracy word by word. Reports are saved as `report
 | `make serve` | Start page: pick, load or import a test, and see past results |
 | `make grade ID=<attempt>` / `make regrade ID=…` | Grade (again); `ID=latest` works too |
 | `make trends` | Progress PDF: band history, error trends, predicted score, 2-week study plan |
+| `make study` | Study guide for writing and speaking: how your structure changed, a blueprint per task, linking words, key phrases, core errors, spelling list (`SECTION=writing` or `speaking` to narrow it) |
 | `make list` | List your own and library tests |
 | `make publish ID=<test> AUTHOR=you` | Copy a test into `library/` so others can use it (commit it or open a PR) |
 | `make import FILE=x.json` / `make export ID=<test>` | Load or send a single test file |
@@ -98,6 +99,7 @@ rules and score conversions. If ETS changes something, edit the spec.
 - `toefl-grade`: rater with project rubrics and a **fixed error taxonomy**, so trends can be compared over time.
 - `toefl-practice`: targeted sets based on your history.
 - `toefl-trends`: level prediction and a study plan.
+- `toefl-study`: structure and phrase study guide for writing and speaking, built from all past responses.
 
 They run headless through `claude -p` from the Makefile. You can also run them inside an interactive Claude Code session,
 e.g. `/toefl-practice email`.
@@ -125,6 +127,7 @@ results/
                             objective.json  grading.json  score.json  report.html  report.pdf
   index.jsonl               one line per graded attempt (bands, error-tag counts) → trends
   trends/                   trends.json  analysis.json  bands.png  errors.png  trends.pdf
+  study/                    study_data.json  study.json  study.pdf  (make study)
 ```
 
 ## Development

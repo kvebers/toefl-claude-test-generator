@@ -1,0 +1,78 @@
+{
+  "id": "20261027-1641-interview-volunteering-and-sleep",
+  "title": "Interview practice (hard): Volunteering and helping others, sleep and rest",
+  "format": "toefl-ibt-2026",
+  "mode": "practice",
+  "created": "2026-10-27",
+  "author": "toefl-claude-test-generator",
+  "difficulty": "hard",
+  "description": "Two hard speaking interviews: volunteering and helping others in the community; sleep, rest and how modern life affects them. Every question has two parts to answer, with comparing, justifying and hypotheticals.",
+  "tags": [
+    "practice",
+    "speaking",
+    "interview"
+  ],
+  "sections": [
+    {
+      "id": "speaking",
+      "modules": {
+        "m1": {
+          "tasks": [
+            {
+              "id": "s-interview1",
+              "type": "interview",
+              "topic": "Volunteering and helping others",
+              "voice": "interviewer",
+              "intro": "Hello, and thanks for taking part. I'm interviewing people about volunteering, and about the different ways we help others in our communities.",
+              "answer_sec": 45,
+              "questions": [
+                {
+                  "id": "q1",
+                  "text": "To start, what kind of volunteer work or community help is common where you live? Who usually takes part in it?"
+                },
+                {
+                  "id": "q2",
+                  "text": "Tell me about a time when you helped someone without being asked or paid. What exactly did you do, and how did the experience affect you afterwards?"
+                },
+                {
+                  "id": "q3",
+                  "text": "Some schools require students to complete a certain number of volunteer hours before they can graduate. Others believe that helping should always be a free choice. Which approach do you think leads to better results, and why is it more effective than the other?"
+                },
+                {
+                  "id": "q4",
+                  "text": "Imagine that every employer gave its staff one paid day each month to volunteer. How would this change local communities over the next ten years, and would the benefits be greater for the volunteers or for the people they help?"
+                }
+              ]
+            },
+            {
+              "id": "s-interview2",
+              "type": "interview",
+              "topic": "Sleep and rest",
+              "voice": "interviewer",
+              "intro": "Hi, and welcome. Today I'm talking with people about sleep and rest, and how the way we live now affects them.",
+              "answer_sec": 45,
+              "questions": [
+                {
+                  "id": "q1",
+                  "text": "First, how do you usually spend the last hour before you go to sleep? Is that a good habit for you, in your opinion?"
+                },
+                {
+                  "id": "q2",
+                  "text": "Describe a period when you were not getting enough sleep. What was the reason, and how did it affect your work, your studies or your relationships with other people?"
+                },
+                {
+                  "id": "q3",
+                  "text": "Some people say that rest means doing nothing at all, while others feel most rested after an active hobby, such as sport or cooking. Which kind of rest works better for you, and how is it different from the other kind?"
+                },
+                {
+                  "id": "q4",
+                  "text": "Some experts suggest that schools and workplaces should start their day an hour later so that people can sleep longer. Do you think this would be a good idea? Explain what the main advantages and disadvantages would be, and which matter more."
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

@@ -7,6 +7,8 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
+import shutil
 import subprocess
 import sys
 import threading
@@ -21,16 +23,19 @@ from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "tools"))
-from common import (RESULTS_DIR, ROOT, TESTS_DIR, find_test_dir, latest_test_id, list_tests,  # noqa: E402
-                    load_json, load_spec, next_untaken_test_id, sanitize, save_json, score_module)
+from common import (RESULTS_DIR, ROOT, TESTS_DIR, claude_env, find_test_dir, latest_test_id,  # noqa: E402
+                    list_tests, load_json, load_spec, next_untaken_test_id, sanitize, save_json, score_module,
+                    usage_limit_message)
 from validate import validate  # noqa: E402
-from bank import run_generation  # noqa: E402
+from bank import FLAGS, run_generation  # noqa: E402
 
 STATIC = Path(__file__).resolve().parent / "static"
 MAX_UPLOAD = 25 * 1024 * 1024
 LEVELS = {"", "easy", "medium", "hard", "mixed"}
 JOBS: dict[str, dict] = {}                       # generation jobs started from the browser
 JOB_QUEUE = ThreadPoolExecutor(max_workers=1)    # one Claude generation at a time
+STUDY_DIR = RESULTS_DIR / "study"
+STUDY: dict = {}                                 # latest study-guide run (/toefl-study), shares the Claude queue
 
 
 def run_job(job: dict) -> None:
@@ -40,6 +45,30 @@ def run_job(job: dict) -> None:
         job["state"] = "done" if job["tests"] else "failed"
         if not job["tests"]:
             job["error"] = f"No test was created. See tests/.jobs/{job['id']}.log"
+    except Exception as e:  # CLI missing etc.
+        job.update(state="failed", error=str(e))
+    job["finished"] = time.time()
+
+
+def run_study(job: dict) -> None:
+    job.update(state="running", started=time.time())
+    try:
+        claude = os.environ.get("CLAUDE_BIN") or shutil.which("claude")
+        if not claude:
+            raise RuntimeError("Claude Code CLI not found (install it or set CLAUDE_BIN)")
+        STUDY_DIR.mkdir(parents=True, exist_ok=True)
+        log = STUDY_DIR / "claude.log"
+        with open(log, "w", encoding="utf-8") as out:
+            subprocess.run([claude, "-p", job["prompt"], *FLAGS], cwd=ROOT, env=claude_env(), stdout=out,
+                           stderr=subprocess.STDOUT, check=False)
+        made = [p for p in (STUDY_DIR / "study.pdf", STUDY_DIR / "study.html")
+                if p.exists() and p.stat().st_mtime >= job["started"]]
+        if made:
+            job["state"] = "done"
+        else:
+            limit = usage_limit_message(log.read_text(encoding="utf-8", errors="replace"))
+            job.update(state="failed", error=f"Claude usage limit reached ({limit})" if limit
+                       else "No study guide was written. See results/study/claude.log")
     except Exception as e:  # CLI missing etc.
         job.update(state="failed", error=str(e))
     job["finished"] = time.time()
@@ -198,6 +227,29 @@ class Handler(SimpleHTTPRequestHandler):
             JOB_QUEUE.submit(run_job, job)
             made.append(job["id"])
         self.send_json({"jobs": made})
+
+    # ------------------------------------------------------------ study guide
+    def GET_api_study(self, parts, q):
+        pdf, html = STUDY_DIR / "study.pdf", STUDY_DIR / "study.html"
+        latest = max((p.stat().st_mtime for p in (pdf, html) if p.exists()), default=None)
+        job = None
+        if STUDY:
+            now = time.time()
+            job = {k: STUDY.get(k) for k in ("state", "section", "error")}
+            job["elapsed"] = round((STUDY.get("finished") or now) - (STUDY.get("started") or now))
+        self.send_json({"pdf": pdf.exists(), "html": html.exists(), "job": job,
+                        "updated": datetime.fromtimestamp(latest).strftime("%Y-%m-%d %H:%M") if latest else None})
+
+    def POST_api_study(self, parts, q):
+        section = json.loads(self.body() or b"{}").get("section", "")
+        if section not in ("", "writing", "speaking"):
+            raise ValueError("section must be writing, speaking or empty")
+        if STUDY.get("state") in ("queued", "running"):
+            raise ValueError("a study guide is already being written")
+        STUDY.clear()
+        STUDY.update(state="queued", section=section or "all", prompt=f"/toefl-study {section}".strip())
+        JOB_QUEUE.submit(run_study, STUDY)
+        self.send_json({"state": "queued"})
 
     # ------------------------------------------------------------ attempts
     def GET_api_attempts(self, parts, q):

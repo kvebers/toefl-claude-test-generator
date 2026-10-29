@@ -71,7 +71,7 @@ def main() -> int:
             tr = {}
             for i, it in enumerate(task["items"]):
                 words = it["text"].split()
-                tr[f"{task['id']}__{it['id']}"] = {"text": " ".join(words if i < len(task["items"]) - 3 else words[: len(words) // 2])}
+                tr[f"{task['id']}__{it['id']}"] = {"text": " ".join(words if i < len(task["items"]) - 3 else words[: (len(words) - 1) // 2])}
             res = status_map(goal_checks(test, {}, objective_results(test, {}, {}, tr), None))
             checks += 1
             if res.get(("listen_and_repeat", "long_sentences")) != "not_met":

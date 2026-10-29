@@ -81,6 +81,7 @@ def charts(data: list[dict]) -> list[str]:
     labels = [r["date"][5:] if r.get("date") else str(i) for i, r in zip(x, data)]
 
     fig, ax = plt.subplots(figsize=(8, 3.6), dpi=150)
+    taken = Counter()       # end labels sharing a band are stacked instead of overprinted
     for s in SECTIONS + ["overall"]:
         ys = [r.get("bands", {}).get(s) if s != "overall" else r.get("overall_band") for r in data]
         pts = [(xi, y) for xi, y in zip(x, ys) if y is not None]
@@ -88,7 +89,9 @@ def charts(data: list[dict]) -> list[str]:
             continue
         ax.plot(*zip(*pts), color=COLORS[s], lw=2.6 if s == "overall" else 2, ls="--" if s == "overall" else "-",
                 marker="o", ms=5, label=s.capitalize(), solid_capstyle="round")
-        ax.annotate(f"{s.capitalize()} {pts[-1][1]}", pts[-1], xytext=(6, 0), textcoords="offset points",
+        dy = -11 * taken[pts[-1]]
+        taken[pts[-1]] += 1
+        ax.annotate(f"{s.capitalize()} {pts[-1][1]}", pts[-1], xytext=(6, dy), textcoords="offset points",
                     va="center", color=INK, fontsize=8.5)
     ax.set_ylim(1, 6.2)
     ax.set_yticks([1, 2, 3, 4, 5, 6])

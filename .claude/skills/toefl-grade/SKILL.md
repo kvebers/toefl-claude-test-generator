@@ -62,6 +62,8 @@ already scored deterministically.
   An `error` transcript means no usable recording -> score 0 for that question and say so.
 - An empty or near-empty written response scores 0–1.
 - Never inflate. A 5 is rare and near-flawless.
+- Score each response on its own against the rubric, as an official rater would: `history` holds only
+  past error tags, for feedback. Never carry a score over from an earlier attempt or nudge toward one.
 - When finished, run `python tools/check_grading.py <folder>` and fix every problem it reports until it prints OK.
 - Reply with one line only: the overall writing/speaking impression.
 

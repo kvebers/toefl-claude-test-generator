@@ -4,8 +4,11 @@ from __future__ import annotations
 import copy
 import difflib
 import json
+import math
 import os
 import re
+import threading
+import time
 from pathlib import Path
 
 import yaml
@@ -25,6 +28,18 @@ GAP_RE = re.compile(r"([A-Za-z'-]*)\[([A-Za-z'-]+)\]")
 LIMIT_MARKERS = ("hit your session limit", "usage limit", "rate limit")
 
 
+# Headless runs load only this project's settings, no MCP servers and only the tools the skills use. Without
+# this every turn of every run (and every subagent) carries ~45k tokens of user plugins, MCP tools and unused
+# built-in tools instead of ~19k. Keep in sync with CLAUDE_LEAN in the Makefile.
+CLAUDE_LEAN = ["--setting-sources", "project,local", "--strict-mcp-config",
+               "--tools", "Read,Write,Edit,Glob,Grep,Agent,Skill,Bash,PowerShell"]
+
+
+def claude_env() -> dict:
+    """Environment for headless Claude runs: no claude.ai connectors (Gmail, Drive, Docs...)."""
+    return {**os.environ, "ENABLE_CLAUDEAI_MCP_SERVERS": "false"}
+
+
 def usage_limit_message(log_text: str) -> str | None:
     """The Claude Code line that says the plan's usage limit was reached, if any."""
     for line in log_text.splitlines():
@@ -38,9 +53,18 @@ def load_json(path: Path):
 
 
 def save_json(path: Path, data) -> None:
+    """Write atomically (temp file + rename) so a concurrent reader never sees a half-written file."""
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
+    tmp = path.with_name(f".{path.name}.{os.getpid()}.{threading.get_ident()}.tmp")
+    tmp.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
+    for attempt in range(20):
+        try:
+            return os.replace(tmp, path)
+        except PermissionError:     # Windows: the target is open in another process for a moment
+            if attempt == 19:
+                raise
+            time.sleep(0.05)
 
 
 def load_spec() -> dict:
@@ -83,8 +107,16 @@ def attempt_counts(test: dict) -> dict:
     return {"attempts": full, "section_attempts": partial}
 
 
+def last_attempts() -> dict:
+    """test_id -> its most recent graded attempt from results/index.jsonl (date, overall and section bands)."""
+    index = RESULTS_DIR / "index.jsonl"
+    rows = [json.loads(l) for l in index.read_text(encoding="utf-8").splitlines() if l.strip()] if index.exists() else []
+    return {r["test_id"]: {"date": r.get("date"), "overall_band": r.get("overall_band"), "bands": r.get("bands", {})}
+            for r in rows}     # later rows overwrite earlier ones
+
+
 def list_tests() -> list[dict]:
-    out, seen = [], set()
+    out, seen, last = [], set(), last_attempts()
     for source, base in (("local", TESTS_DIR), ("library", LIBRARY_DIR)):
         for f in sorted(base.glob("*/test.json"), key=lambda f: f.stat().st_mtime):
             try:
@@ -99,7 +131,9 @@ def list_tests() -> list[dict]:
                 "created": t.get("created"), "author": t.get("author"), "difficulty": t.get("difficulty"),
                 "description": t.get("description", ""),
                 "sections": [s["id"] for s in t.get("sections", [])],
+                "task_types": list(dict.fromkeys(task["type"] for _, _, task in iter_tasks(t))),
                 "audio_ready": (f.parent / "audio" / "manifest.json").exists(),
+                "last": last.get(t["id"]),
                 **attempt_counts(t),
             })
     return out
@@ -158,40 +192,78 @@ def _num_words(n: int) -> list[str]:
         return [_ONES[n]]
     if n < 100:
         return [_TENS[n // 10]] + ([_ONES[n % 10]] if n % 10 else [])
+    if 1100 <= n <= 2099 and not 2000 <= n <= 2009:      # years are read in pairs: 1930 -> nineteen thirty
+        lo = n % 100
+        return _num_words(n // 100) + (["hundred"] if lo == 0 else ["oh", _ONES[lo]] if lo < 10 else _num_words(lo))
     return [str(n)]
 
 
+_NEG_STEMS = {"wo": "will", "ca": "can", "sha": "shall"}
+_CONTRACTIONS = {"'ll": "will", "'re": "are", "'ve": "have", "'m": "am"}   # 's and 'd are ambiguous, kept as is
+
+
 def norm_words(s: str) -> list[str]:
-    """Lower-case words with digits spelled out, so Whisper's "10" matches a spoken "ten"."""
+    """Lower-case words with digits spelled out and contractions expanded, so Whisper's "10" matches a
+    spoken "ten" and its "has not" / "we will" match "hasn't" / "we'll" (it writes the same audio either way)."""
     out = []
-    for w in re.findall(r"[a-z0-9']+", s.lower()):
-        out += _num_words(int(w)) if w.isdigit() else [w]
+    for w in re.findall(r"[a-z0-9']+", s.lower().replace("’", "'")):
+        if w.isdigit():
+            out += _num_words(int(w))
+        elif w[:-1].isdigit() and w[-1] == "s":             # decades: 1930s -> nineteen thirties
+            *head, last = _num_words(int(w[:-1]))
+            out += head + [last[:-1] + "ies" if last.endswith("y") else last + "s"]
+        elif w.endswith("n't"):
+            out += [_NEG_STEMS.get(w[:-3], w[:-3]), "not"]
+        elif w == "cannot":
+            out += ["can", "not"]
+        elif (c := next((c for c in _CONTRACTIONS if w.endswith(c) and len(w) > len(c)), None)):
+            out += [w[:-len(c)], _CONTRACTIONS[c]]
+        else:
+            out.append(w)
     return out
 
 
-def repeat_accuracy(target: str, said: str, unclear: set[str] | None = None) -> float:
-    """Share of target words reproduced in order (Listen & Repeat).
+FILLERS = {"uh", "um", "er", "erm", "ah", "eh", "hmm", "mm", "uhm"}
 
-    Words Whisper was unsure of (`unclear`) count half: Whisper tends to "clean up" unclear speech
-    into the expected word, so full credit would flatter the speaker.
+
+def repeat_errors(target: str, said: str, unclear: set[str] | None = None) -> float:
+    """Word errors in a Listen & Repeat answer: missing, changed and added words, as the official task
+    asks for a word-for-word repetition. Fillers and restarts ("twice, uh, twice") are not counted.
+
+    Words Whisper was unsure of (`unclear`) count as half an error: Whisper tends to "clean up" unclear
+    speech into the expected word, so full credit would flatter the speaker.
     """
-    t, s = norm_words(target), norm_words(said)
-    if not t:
-        return 0.0
+    t = norm_words(target)
+    s = []
+    for w in norm_words(said):
+        if w in FILLERS or (s and s[-1] == w and f"{w} {w}" not in " ".join(t)):
+            continue
+        s.append(w)
     unclear = {w for u in (unclear or ()) for w in norm_words(u)}
-    credit = 0.0
-    for b in difflib.SequenceMatcher(None, t, s, autojunk=False).get_matching_blocks():
-        credit += sum(0.5 if w in unclear else 1.0 for w in t[b.a:b.a + b.size])
-    return credit / len(t)
+    errors = 0.0
+    for op, i1, i2, j1, j2 in difflib.SequenceMatcher(None, t, s, autojunk=False).get_opcodes():
+        if op == "equal":
+            errors += sum(0.5 for w in t[i1:i2] if w in unclear)
+        else:   # replace / delete / insert: each target word lost or extra word said is one error
+            errors += max(i2 - i1, j2 - j1)
+    return errors
 
 
-def repeat_points(accuracy: float | None, n_words: int) -> int:
+def repeat_accuracy(target: str, said: str, unclear: set[str] | None = None) -> float:
+    """Share of the sentence repeated correctly (1 - errors per target word, floored at 0)."""
+    n = len(norm_words(target))
+    return max(0.0, 1 - repeat_errors(target, said, unclear) / n) if n else 0.0
+
+
+def repeat_points(errors: float | None, n_words: int) -> int:
     """Per-sentence rating 0-5 from the number of word errors, so short and long sentences are judged alike:
-    word-perfect 5, one slip 4, two or three 3, more but at least half right 2, any attempt 1."""
-    if not accuracy:
+    word-perfect 5, one slip 4, two or three 3, more but at least half right 2, any attempt 1.
+    `errors` is None when there is no recording; half errors (unclear words) round down, so a single
+    word Whisper was unsure of does not cost a point but two of them do."""
+    if errors is None or not n_words:
         return 0
-    errors = round((1 - accuracy) * n_words)
-    return 5 if errors == 0 else 4 if errors == 1 else 3 if errors <= 3 else 2 if accuracy >= 0.5 else 1
+    e = math.ceil(errors - 0.5)
+    return 5 if e == 0 else 4 if e == 1 else 3 if e <= 3 else 2 if e <= n_words / 2 else 1
 
 
 def score_task(section: str, module: str, task: dict, resp: dict | None) -> list[dict]:

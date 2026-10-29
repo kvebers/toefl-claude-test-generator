@@ -6,7 +6,7 @@ from __future__ import annotations
 
 from collections import Counter, defaultdict
 
-from common import iter_tasks, load_spec, norm_words, repeat_accuracy, repeat_points, score_task
+from common import iter_tasks, load_spec, norm_words, repeat_accuracy, repeat_errors, repeat_points, score_task
 
 
 def half(x: float) -> float:
@@ -23,9 +23,11 @@ def objective_results(test: dict, responses: dict, routes: dict, transcripts: di
                 key = f"{task['id']}__{it['id']}"
                 tr = transcripts.get(key, {})
                 said = tr.get("text")
-                acc = None if said is None else round(repeat_accuracy(it["text"], said, set(tr.get("low_confidence_words", []))), 3)
+                unclear = set(tr.get("low_confidence_words", []))
+                err = None if said is None else repeat_errors(it["text"], said, unclear)
+                acc = None if said is None else round(repeat_accuracy(it["text"], said, unclear), 3)
                 repeats.append({"task_id": task["id"], "item_id": it["id"], "key": key, "target": it["text"],
-                                "said": said, "accuracy": acc, "points": repeat_points(acc, len(norm_words(it["text"]))),
+                                "said": said, "accuracy": acc, "points": repeat_points(err, len(norm_words(it["text"]))),
                                 "clarity": tr.get("mean_word_prob"), "unclear": tr.get("low_confidence_words", [])})
     return {"items": items, "repeats": repeats}
 

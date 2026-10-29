@@ -15,11 +15,12 @@ import sys
 import time
 from concurrent.futures import ThreadPoolExecutor
 
-from common import ROOT, TESTS_DIR, usage_limit_message
+from common import CLAUDE_LEAN, ROOT, TESTS_DIR, claude_env, usage_limit_message
 
 # On Windows Claude Code may run commands through its PowerShell tool instead of Bash, so allow both.
 FLAGS = ["--permission-mode", "acceptEdits", "--allowedTools", "Read", "Write", "Edit", "Glob", "Grep", "Agent", "Skill",
-         "Bash(python tools/*)", "Bash(python3 tools/*)", "PowerShell(python tools/*)", "PowerShell(python3 tools/*)"]
+         "Bash(python tools/*)", "Bash(python3 tools/*)", "PowerShell(python tools/*)", "PowerShell(python3 tools/*)",
+         *CLAUDE_LEAN, "--effort", os.environ.get("GEN_EFFORT", "medium")]
 
 
 def run_generation(prompt: str, log, claude: str | None = None) -> list[str]:
@@ -30,7 +31,8 @@ def run_generation(prompt: str, log, claude: str | None = None) -> list[str]:
     before = {p.parent.name for p in TESTS_DIR.glob("*/test.json")}
     log.parent.mkdir(parents=True, exist_ok=True)
     with open(log, "w", encoding="utf-8") as out:
-        subprocess.run([claude, "-p", prompt, *FLAGS], cwd=ROOT, stdout=out, stderr=subprocess.STDOUT, check=False)
+        subprocess.run([claude, "-p", prompt, *FLAGS], cwd=ROOT, env=claude_env(), stdout=out, stderr=subprocess.STDOUT,
+                       check=False)
     new = sorted({p.parent.name for p in TESTS_DIR.glob("*/test.json")} - before)
     if not new and (limit := usage_limit_message(log.read_text(encoding="utf-8", errors="replace"))):
         raise RuntimeError(f"Claude usage limit reached ({limit}). Run it again after the reset; finished sections are kept.")

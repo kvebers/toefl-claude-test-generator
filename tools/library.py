@@ -42,9 +42,18 @@ def main() -> int:
     a = ap.parse_args()
 
     if a.cmd == "list":
-        for t in list_tests():
-            print(f"{t['source']:8} {t['id']:42} {t['mode']:9} {','.join(s[0].upper() for s in t['sections']):8} "
-                  f"{'audio' if t['audio_ready'] else 'no-audio':9} taken {t['attempts']}x  {t['title']}")
+        tests = sorted(list_tests(), key=lambda t: (t["created"] or "", t["id"]), reverse=True)
+        for mode in ("full", "practice"):
+            group = [t for t in tests if (t["mode"] == "full") == (mode == "full")]
+            if not group:
+                continue
+            print(f"\n{'FULL TESTS' if mode == 'full' else 'PRACTICE SETS'} ({len(group)}, newest first)")
+            for t in group:
+                last = t["last"] or {}
+                band = last.get("overall_band") or next(iter(last.get("bands", {}).values()), None)
+                status = f"taken {t['attempts']}x, last {band}" if t["attempts"] else "NEW"
+                print(f"  {t['created'] or '':10}  {t['id']:46} {t['difficulty'] or '':7} {status:20} {t['title']}"
+                      + ("" if t["audio_ready"] else "  (no audio)") + ("  [library]" if t["source"] == "library" else ""))
     elif a.cmd == "publish":
         test = load_json(find_test_dir(a.test_id) / "test.json")
         if a.author:

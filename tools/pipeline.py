@@ -21,7 +21,8 @@ from pathlib import Path
 
 import jsonschema
 
-from common import RESULTS_DIR, ROOT, iter_tasks, load_json, load_spec, save_json, usage_limit_message
+from common import (CLAUDE_LEAN, RESULTS_DIR, ROOT, claude_env, iter_tasks, load_json, load_spec, save_json,
+                    usage_limit_message)
 from score import compute, error_profile, goal_checks, objective_results
 
 GRADING_SCHEMA = ROOT / "schemas" / "grading.schema.json"
@@ -85,7 +86,10 @@ def grading_input(d: Path, test: dict, attempt: dict, responses: dict, transcrip
         "objective_goals": [{**g, "criteria": [c for c in g["criteria"] if c["source"] == "objective"]}
                             for g in goal_checks(test, routes, objective, None)
                             if any(c["source"] == "objective" for c in g["criteria"])],
-        "history": [h for h in history if h.get("attempt_id") != d.name],
+        # Like official raters, the grader never sees past scores or goal ratings (they anchor new scores);
+        # dates and error tags are enough to say whether recurring mistakes improved.
+        "history": [{"date": h.get("date"), "error_tags": h.get("error_tags", {})}
+                    for h in history if h.get("attempt_id") != d.name],
         "output_file": str(d / "grading.json"),
         "schema_file": "schemas/grading.schema.json",
     }
@@ -100,11 +104,12 @@ def run_claude(d: Path) -> None:
     cmd = [claude, "-p", f"/toefl-grade {folder}", "--permission-mode", "acceptEdits",
            *([] if inside else ["--add-dir", str(d.resolve())]),
            "--allowedTools", "Read", "Write", "Edit", "Glob", "Grep", "Bash(python tools/check_grading.py:*)",
-           "PowerShell(python tools/check_grading.py:*)"]   # Windows may use the PowerShell tool instead of Bash
+           "PowerShell(python tools/check_grading.py:*)",   # Windows may use the PowerShell tool instead of Bash
+           *CLAUDE_LEAN, "--effort", os.environ.get("GRADE_EFFORT", "high")]   # scoring accuracy matters most here
     if os.environ.get("CLAUDE_MODEL"):
         cmd += ["--model", os.environ["CLAUDE_MODEL"]]
     with open(d / "claude.log", "w", encoding="utf-8") as log:
-        subprocess.run(cmd, cwd=ROOT, stdout=log, stderr=subprocess.STDOUT, timeout=1800, check=False)
+        subprocess.run(cmd, cwd=ROOT, env=claude_env(), stdout=log, stderr=subprocess.STDOUT, timeout=1800, check=False)
     if limit := usage_limit_message((d / "claude.log").read_text(encoding="utf-8", errors="replace")):
         raise RuntimeError(f"Claude usage limit reached ({limit}). Your answers are saved; "
                            f"run `make grade ID={d.name}` after the reset.")

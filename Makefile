@@ -15,7 +15,13 @@ HOME_FLAG := $(if $(filter 1 yes true,$(HE)),--home-edition,)
 # Tools Claude may use non-interactively while generating / grading (no prompts in -p mode).
 # On Windows Claude Code may run commands through its PowerShell tool instead of Bash, so both are allowed.
 CLAUDE_FLAGS ?= --permission-mode acceptEdits --allowedTools Read Write Edit Glob Grep Agent Skill \
-	"Bash(python tools/*)" "Bash(python3 tools/*)" "PowerShell(python tools/*)" "PowerShell(python3 tools/*)"
+	"Bash(python tools/*)" "Bash(python3 tools/*)" "PowerShell(python tools/*)" "PowerShell(python3 tools/*)" \
+	$(CLAUDE_LEAN) --effort $(GEN_EFFORT)
+# Token savers (same as CLAUDE_LEAN in tools/common.py): project settings only, no MCP servers or claude.ai
+# connectors, only the tools the skills use. Cuts the fixed context of every turn from ~45k to ~19k tokens.
+CLAUDE_LEAN ?= --setting-sources project,local --strict-mcp-config --tools Read,Write,Edit,Glob,Grep,Agent,Skill,Bash,PowerShell
+GEN_EFFORT  ?= medium
+export ENABLE_CLAUDEAI_MCP_SERVERS = false
 
 .PHONY: help setup setup-speech sample test bank next practice weakest take serve audio validate grade regrade report trends list publish import export check
 

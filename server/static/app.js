@@ -439,6 +439,7 @@ async function runTest() {
   }
   R.meta.finished = new Date().toISOString();
   bar.section(''); bar.progress(''); bar.steps(null); bar.fill(1);
+  clearTimeout(saveTimer);     // the submit carries everything; a late autosave would overwrite the file while grading reads it
   await api.post(`/api/attempts/${AID}/submit`, R);
   if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
   gradingScreen(AID);
@@ -562,23 +563,7 @@ async function home() {
         setTimeout(home, 800);
       } catch (err) { msg.replaceChildren(h('span', { class: 'error' }, `Import failed: ${err.message}`), h('pre', {}, (err.details || []).join('\n'))); }
     } });
-    const pre = params.get('test');
-    const card = t => h('div', { class: 'panel test-row' + (t.id === pre ? ' highlight' : '') },
-      h('div', { class: 'test-info' },
-        h('div', { class: 'row' }, h('span', { class: `badge ${t.source}` }, t.source), h('span', { class: 'badge' }, t.mode),
-          t.difficulty && h('span', { class: 'badge' }, t.difficulty), !t.attempts && t.mode === 'full' && h('span', { class: 'badge new' }, 'new')),
-        h('h3', {}, t.title),
-        h('div', { class: 'muted' }, [t.created, t.attempts ? `taken ${t.attempts}×` : 'not taken yet',
-          t.section_attempts ? `${t.section_attempts} section run${t.section_attempts > 1 ? 's' : ''}` : null].filter(Boolean).join(' · ')),
-        t.description && h('div', {}, t.description),
-        !t.audio_ready && h('div', { class: 'muted' }, `Audio not rendered yet (browser speech will be used). Run: make audio ID=${t.id}`),
-        t.sections.length > 1 && h('div', { class: 'section-picks' }, h('span', { class: 'muted' }, 'Or take one section:'),
-          h('div', { class: 'seg' }, t.sections.map(sid => h('button', { class: 'btn', onclick: () => startTest(t.id, sid).catch(err => alertBox(err)) },
-            CFG.spec.sections[sid].title))))),
-      h('div', { class: 'test-actions' },
-        h('button', { class: 'btn primary', onclick: () => startTest(t.id).catch(err => alertBox(err)) }, t.sections.length > 1 ? 'Full test' : 'Start'),
-        h('a', { class: 'btn', href: `/api/tests/${t.id}/download` }, 'Download')));
-    const sorted = [...tests].sort((a, b) => (b.id === pre) - (a.id === pre) || (a.source > b.source) - (a.source < b.source));
+    const titles = Object.fromEntries(tests.map(t => [t.id, t.title]));
     app.append(h('div', { class: 'home' },
       h('div', { class: 'hero' }, h('div', {}, h('h1', {}, 'Choose a test'),
         h('p', { class: 'muted' }, 'Take a full test or a single section, generate new ones with Claude, or load a test someone shared.'))),
@@ -588,17 +573,127 @@ async function home() {
         h('button', { class: 'btn', onclick: () => fileInput.click() }, '⤒ Load test from file…'), fileInput),
       generatePanel(),
       msg,
-      tests.length ? h('div', { class: 'test-list' }, sorted.map(card)) : h('div', { class: 'panel empty' }, 'No tests yet. Run make test to generate one.'),
+      tests.length ? testBrowser(tests) : h('div', { class: 'panel empty' }, 'No tests yet. Run make test to generate one.'),
       h('h2', {}, 'Past attempts'),
       attempts.length ? h('div', { class: 'panel table-wrap', style: 'padding: 8px 12px' }, h('table', {},
         h('thead', {}, h('tr', {}, h('th', {}, 'Date'), h('th', {}, 'Test'), h('th', {}, 'Overall'), h('th', {}, 'R / L / W / S'), h('th', {}, '~/120'), h('th', {}, 'Report'))),
-        h('tbody', {}, attempts.slice(0, 15).map(a => h('tr', {}, h('td', {}, a.date), h('td', {}, a.test_id), h('td', {}, h('b', {}, a.overall_band ?? '-')),
+        h('tbody', {}, attempts.slice(0, 15).map(a => h('tr', {}, h('td', {}, a.date), h('td', {}, titles[a.test_id] || a.test_id), h('td', {}, h('b', {}, a.overall_band ?? '-')),
           h('td', {}, ['reading', 'listening', 'writing', 'speaking'].map(s => a.bands?.[s] ?? '–').join(' / ')),
           h('td', {}, a.est_total_120 ?? '-'),
           h('td', {}, h('a', { href: `/results/${a.attempt_id}/report.pdf`, target: '_blank' }, 'PDF'), ' · ',
             h('a', { href: `/results/${a.attempt_id}/report.html`, target: '_blank' }, 'HTML')))))))
         : h('div', { class: 'panel empty' }, 'No graded attempts yet. Your results will appear here.')));
   });
+}
+
+// ------------------------------------------------------------------ test list with filters
+const FILTER_KEY = 'toefl.testFilters';
+const FILTER_DEFAULTS = { q: '', mode: 'all', section: 'all', status: 'any', level: 'any', sort: 'new' };
+
+function loadFilters() {
+  try { return { ...FILTER_DEFAULTS, ...JSON.parse(localStorage.getItem(FILTER_KEY) || '{}') }; } catch { return { ...FILTER_DEFAULTS }; }
+}
+function saveFilters(f) { try { localStorage.setItem(FILTER_KEY, JSON.stringify(f)); } catch { /* private mode: filters just reset */ } }
+
+const shortDate = d => d ? new Date(`${d}T00:00`).toLocaleDateString(undefined, { day: 'numeric', month: 'short' }) : '';
+const lastBand = t => t.last && (t.last.overall_band ?? Object.values(t.last.bands || {}).find(b => b != null));
+
+document.addEventListener('click', e => {      // close an open row menu when clicking anywhere else
+  document.querySelectorAll('details.more[open]').forEach(d => d.contains(e.target) || d.removeAttribute('open'));
+});
+
+function testBrowser(rawTests) {
+  // a server started before task_types/last existed still sends the older shape
+  const tests = rawTests.map(t => ({ task_types: [], sections: [], ...t }));
+  const F = loadFilters();
+  const pre = params.get('test');
+  const list = h('div', { class: 'test-groups' });
+  const count = h('span', { class: 'muted' });
+  const clear = h('button', { class: 'btn link', onclick: () => { Object.assign(F, FILTER_DEFAULTS); sync(); } }, 'Clear filters');
+
+  const chips = (key, options) => {
+    const el = h('div', { class: 'chips', role: 'group' });
+    el.paint = () => el.replaceChildren(...options.map(([v, label]) => h('button', {
+      class: 'chip' + (F[key] === v ? ' on' : ''), 'aria-pressed': String(F[key] === v), onclick: () => { F[key] = v; sync(); } }, label)));
+    return el;
+  };
+  const select = (key, label, options) => {
+    const el = h('select', { 'aria-label': label, onchange: e => { F[key] = e.target.value; sync(); } },
+      options.map(([v, text]) => h('option', { value: v }, text)));
+    el.paint = () => { el.value = F[key]; };
+    return el;
+  };
+  const search = h('input', { type: 'search', class: 'search', placeholder: 'Search title, topic or task…', 'aria-label': 'Search tests',
+    oninput: e => { F.q = e.target.value; sync(false); } });
+  search.paint = () => { if (search.value !== F.q) search.value = F.q; };
+  const controls = [
+    search,
+    chips('mode', [['all', 'All'], ['full', 'Full tests'], ['practice', 'Practice sets']]),
+    chips('section', [['all', 'Any section'], ...CFG.spec.order.map(s => [s, CFG.spec.sections[s].title])]),
+    select('status', 'Status', [['any', 'Taken or not'], ['new', 'Not taken yet'], ['taken', 'Already taken']]),
+    select('level', 'Difficulty', [['any', 'Any difficulty'], ...['easy', 'medium', 'hard', 'mixed'].map(l => [l, l[0].toUpperCase() + l.slice(1)])]),
+    select('sort', 'Sort', [['new', 'Newest first'], ['old', 'Oldest first'], ['untaken', 'Not taken first']]),
+  ];
+
+  const matches = t => {
+    if (t.id === pre) return true;                   // a test opened by link is always shown
+    const q = F.q.trim().toLowerCase();
+    const hay = [t.title, t.description, t.id, ...t.task_types.map(x => TASK_LABELS[x] || x)].join(' ').toLowerCase();
+    return (!q || q.split(/\s+/).every(w => hay.includes(w)))
+      && (F.mode === 'all' || t.mode === F.mode)
+      && (F.section === 'all' || t.sections.includes(F.section))
+      && (F.status === 'any' || (F.status === 'new') === !t.attempts)
+      && (F.level === 'any' || t.difficulty === F.level);
+  };
+  const order = (a, b) => (b.id === pre) - (a.id === pre)
+    || (F.sort === 'untaken' && (!!a.attempts - !!b.attempts))
+    || (F.sort === 'old' ? 1 : -1) * ((a.created || '') + a.id).localeCompare((b.created || '') + b.id);
+
+  const row = t => {
+    const band = lastBand(t);
+    const multi = t.sections.length > 1;
+    const what = t.mode === 'full' ? t.sections.map(s => CFG.spec.sections[s].title[0]).join(' · ')
+      : t.task_types.map(x => TASK_LABELS[x] || x).join(' + ');
+    const menu = h('details', { class: 'more' }, h('summary', { class: 'btn', 'aria-label': 'More options' }, '⋯'),
+      h('div', { class: 'menu' },
+        multi && h('div', { class: 'menu-label' }, 'Take one section'),
+        multi && t.sections.map(sid => h('button', { onclick: () => startTest(t.id, sid).catch(alertBox) }, CFG.spec.sections[sid].title)),
+        h('a', { href: `/api/tests/${t.id}/download` }, 'Download test file')));
+    return h('div', { class: 'trow' + (t.id === pre ? ' highlight' : '') },
+      h('div', { class: 'tdate' }, shortDate(t.created)),
+      h('div', { class: 'tmain' },
+        h('div', { class: 'ttitle' }, t.title.replace(/^(Full test|[A-Za-z ]+ practice( \(\w+\))?):\s*/, '')),
+        h('div', { class: 'tmeta' }, what, t.difficulty && ` · ${t.difficulty}`, t.source === 'library' && h('span', { class: 'badge library' }, 'library'),
+          !t.audio_ready && h('span', { class: 'badge warn', title: `Run: make audio ID=${t.id}` }, 'no audio'))),
+      h('div', { class: 'tstatus' }, t.attempts
+        ? h('span', { class: 'pill' }, h('b', {}, band != null ? Number(band).toFixed(1) : '–'), ` · taken ${t.attempts}×`)
+        : h('span', { class: 'pill new' }, 'New'),
+        t.section_attempts ? h('span', { class: 'muted small' }, `${t.section_attempts} section run${t.section_attempts > 1 ? 's' : ''}`) : null),
+      h('div', { class: 'tactions' },
+        h('button', { class: 'btn primary', onclick: () => startTest(t.id).catch(alertBox) }, multi ? 'Start full' : 'Start'), menu));
+  };
+
+  function sync(paintSearch = true) {
+    saveFilters(F);
+    controls.forEach(c => (c !== search || paintSearch) && c.paint());
+    const shown = tests.filter(matches).sort(order);
+    const groups = F.mode !== 'all' ? [[null, shown]]
+      : [['Full tests', shown.filter(t => t.mode === 'full')], ['Practice sets', shown.filter(t => t.mode !== 'full')]];
+    count.replaceChildren(`${shown.length} of ${tests.length} tests`);
+    clear.hidden = JSON.stringify({ ...F }) === JSON.stringify(FILTER_DEFAULTS);
+    list.replaceChildren(...(shown.length
+      ? groups.filter(([, ts]) => ts.length).map(([name, ts]) => h('section', { class: 'test-group' },
+        name && h('h2', {}, name, h('span', { class: 'muted' }, ` ${ts.length}`)),
+        h('div', { class: 'panel tlist' }, ts.map(row))))
+      : [h('div', { class: 'panel empty' }, 'No tests match these filters. ', h('button', { class: 'btn link', onclick: () => clear.click() }, 'Clear filters'))]));
+  }
+
+  const panel = h('div', { class: 'test-browser' },
+    h('div', { class: 'panel filters' }, controls[0], h('div', { class: 'filter-row' }, ...controls.slice(1, -1)),
+      h('div', { class: 'filter-foot' }, h('div', { class: 'row' }, count, clear), controls.at(-1))),
+    list);
+  sync();
+  return panel;
 }
 
 // ------------------------------------------------------------------ generate from the browser

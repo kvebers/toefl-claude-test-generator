@@ -238,7 +238,8 @@ class Handler(SimpleHTTPRequestHandler):
         d = attempt_dir(parts[0])
         action = parts[1] if len(parts) > 1 else ""
         if action == "responses":
-            save_json(d / "responses.json", json.loads(self.body()))
+            if "finished" not in load_json(d / "attempt.json"):    # after submit the answers are frozen for grading
+                save_json(d / "responses.json", json.loads(self.body()))
             return self.send_json({"ok": True})
         if action == "recording":                       # raw audio body, ?key=<task>__<item>
             key = q["key"]

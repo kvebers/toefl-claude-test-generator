@@ -52,7 +52,8 @@ from the spec. Optional: count, difficulty (`easy|medium|hard|mixed`, default `m
    Give reading/listening practice modules a `time_sec` scaled to the number of items.
 4. Run `python tools/validate.py <id>` and fix **every** ERROR. Fix "unbalanced answer positions" warnings.
 5. **Blind-solver gate** (skip for writing/speaking-only sets):
-   `python tools/blind.py export <id>` then spawn a fresh subagent that has NOT seen the answer keys.
+   `python tools/blind.py export <id>` then spawn a fresh subagent (with `model: "sonnet"`: answering
+   questions does not need the item writers' model, and it saves tokens) that has NOT seen the answer keys.
    Give it only `tests/<id>/blind.json` and ask it to answer every question as a strong test-taker and
    write `tests/<id>/solver.json` in the format documented at the top of `tools/blind.py`.
    Then `python tools/blind.py check <id> tests/<id>/solver.json`. For every DISAGREE, decide whether

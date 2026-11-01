@@ -1,5 +1,6 @@
 # personal data: your attempts, recordings, reports
 results/
+results-lan/
 # your generated / imported tests (publish to library/ to share)
 tests/
 exports/

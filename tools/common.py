@@ -74,6 +74,8 @@ def load_spec() -> dict:
 # ---------------------------------------------------------------- test discovery
 
 def find_test_dir(test_id: str) -> Path:
+    if Path(test_id).name != test_id:        # ids come from URLs: never let one climb out of the test folders
+        raise FileNotFoundError(f"No test '{test_id}' in tests/ or library/")
     for base in (TESTS_DIR, LIBRARY_DIR):
         d = base / test_id
         if (d / "test.json").exists():

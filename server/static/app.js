@@ -566,12 +566,12 @@ async function home() {
     const titles = Object.fromEntries(tests.map(t => [t.id, t.title]));
     app.append(h('div', { class: 'home' },
       h('div', { class: 'hero' }, h('div', {}, h('h1', {}, 'Choose a test'),
-        h('p', { class: 'muted' }, 'Take a full test or a single section, generate new ones with Claude, or load a test someone shared.'))),
+        h('p', { class: 'muted' }, CFG.lan ? 'Take a full test or a single section.' : 'Take a full test or a single section, generate new ones with Claude, or load a test someone shared.'))),
       h('div', { class: 'panel toolbar' },
         h('label', { class: 'switch' }, h('input', { type: 'checkbox', checked: HOME_EDITION, onchange: e => { HOME_EDITION = e.target.checked; } }),
           h('span', {}, h('b', {}, 'Home Edition rules'), h('span', { class: 'muted' }, ' · check-in, full screen, no breaks'))),
-        h('button', { class: 'btn', onclick: () => fileInput.click() }, '⤒ Load test from file…'), fileInput),
-      generatePanel(),
+        !CFG.lan && h('button', { class: 'btn', onclick: () => fileInput.click() }, '⤒ Load test from file…'), fileInput),
+      !CFG.lan && generatePanel(),
       msg,
       tests.length ? testBrowser(tests) : h('div', { class: 'panel empty' }, 'No tests yet. Run make test to generate one.'),
       h('h2', {}, 'Past attempts'),
@@ -583,7 +583,7 @@ async function home() {
           h('td', {}, h('a', { href: `/results/${a.attempt_id}/report.pdf`, target: '_blank' }, 'PDF'), ' · ',
             h('a', { href: `/results/${a.attempt_id}/report.html`, target: '_blank' }, 'HTML')))))))
         : h('div', { class: 'panel empty' }, 'No graded attempts yet. Your results will appear here.'),
-      attempts.length ? studyPanel() : null));
+      attempts.length && !CFG.lan ? studyPanel() : null));
   });
 }
 
@@ -700,7 +700,7 @@ function testBrowser(rawTests) {
       h('div', { class: 'menu' },
         multi && h('div', { class: 'menu-label' }, 'Take one section'),
         multi && t.sections.map(sid => h('button', { onclick: () => startTest(t.id, sid).catch(alertBox) }, CFG.spec.sections[sid].title)),
-        h('a', { href: `/api/tests/${t.id}/download` }, 'Download test file')));
+        !CFG.lan && h('a', { href: `/api/tests/${t.id}/download` }, 'Download test file')));
     return h('div', { class: 'trow' + (t.id === pre ? ' highlight' : '') },
       h('div', { class: 'tdate' }, shortDate(t.created)),
       h('div', { class: 'tmain' },
@@ -712,7 +712,7 @@ function testBrowser(rawTests) {
         : h('span', { class: 'pill new' }, 'New'),
         t.section_attempts ? h('span', { class: 'muted small' }, `${t.section_attempts} section run${t.section_attempts > 1 ? 's' : ''}`) : null),
       h('div', { class: 'tactions' },
-        h('button', { class: 'btn primary', onclick: () => startTest(t.id).catch(alertBox) }, multi ? 'Start full' : 'Start'), menu));
+        h('button', { class: 'btn primary', onclick: () => startTest(t.id).catch(alertBox) }, multi ? 'Start full' : 'Start'), (multi || !CFG.lan) && menu));
   };
 
   function sync(paintSearch = true) {

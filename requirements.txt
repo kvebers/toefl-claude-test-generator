@@ -3,5 +3,6 @@ jsonschema>=4.21
 jinja2>=3.1
 edge-tts>=6.1
 matplotlib>=3.8
+cryptography>=42.0   # certificate for make lan
 # Optional PDF engine; otherwise an installed Chrome/Edge/Chromium is used headless.
 # playwright>=1.45   (then: python -m playwright install chromium)

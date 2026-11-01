@@ -1,14 +1,20 @@
 """Local exam runner: serves the web UI, hands out answer-free tests, stores responses and recordings,
 does adaptive routing server-side, and launches grading on submit.
 
-usage: python server/app.py [--test <id>|latest] [--port 8765] [--open] [--home-edition]
+usage: python server/app.py [--test <id>|latest] [--port 8765] [--open] [--home-edition] [--lan]
+
+--lan lets another device on the network take a test: HTTPS (browsers only allow the microphone on a secure
+origin) with a self-signed certificate, and only what test taking needs. It requires a separate TOEFL_RESULTS_DIR.
 """
 from __future__ import annotations
 
 import argparse
+import ipaddress
 import json
 import os
 import shutil
+import socket
+import ssl
 import subprocess
 import sys
 import threading
@@ -16,7 +22,7 @@ import time
 import uuid
 from concurrent.futures import ThreadPoolExecutor
 import webbrowser
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 from http import HTTPStatus
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -36,6 +42,8 @@ JOBS: dict[str, dict] = {}                       # generation jobs started from 
 JOB_QUEUE = ThreadPoolExecutor(max_workers=1)    # one Claude generation at a time
 STUDY_DIR = RESULTS_DIR / "study"
 STUDY: dict = {}                                 # latest study-guide run (/toefl-study), shares the Claude queue
+LAN_BLOCKED = {"GET_api_jobs", "POST_api_jobs", "GET_api_study", "POST_api_study", "POST_api_tests"}   # --lan
+LAN_REFUSED = "not available in network mode"
 
 
 def run_job(job: dict) -> None:
@@ -86,6 +94,52 @@ def attempt_dir(aid: str) -> Path:
     if not (d / "attempt.json").exists():
         raise FileNotFoundError(aid)
     return d
+
+
+def lan_readable(path: Path) -> bool:
+    """In network mode /results serves reports and their media, not test.json (answer key) or other attempt data."""
+    rel = path.relative_to(RESULTS_DIR.resolve()).parts
+    return (len(rel) == 2 and rel[1] in ("report.pdf", "report.html")) \
+        or (len(rel) == 3 and rel[1] in ("recordings", "audio"))
+
+
+def lan_ip() -> str:
+    """This computer's address on the local network (connecting a UDP socket sends nothing)."""
+    with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
+        s.connect(("8.8.8.8", 80))
+        return s.getsockname()[0]
+
+
+def lan_cert(ip: str) -> Path:
+    """Self-signed certificate + key for this address, reused so the browser warning only has to be accepted once."""
+    path = RESULTS_DIR / ".lan" / f"{ip}.pem"
+    if path.exists():
+        return path
+    try:
+        from cryptography import x509
+        from cryptography.hazmat.primitives import hashes, serialization
+        from cryptography.hazmat.primitives.asymmetric import ec
+    except ImportError:
+        sys.exit("--lan needs the cryptography package: run make setup")
+    key = ec.generate_private_key(ec.SECP256R1())
+    name = x509.Name([x509.NameAttribute(x509.NameOID.COMMON_NAME, "TOEFL runner")])
+    now = datetime.now(timezone.utc)
+    cert = (x509.CertificateBuilder().subject_name(name).issuer_name(name).public_key(key.public_key())
+            .serial_number(x509.random_serial_number()).not_valid_before(now - timedelta(days=1))
+            .not_valid_after(now + timedelta(days=365))
+            .add_extension(x509.SubjectAlternativeName([x509.IPAddress(ipaddress.ip_address(ip))]), critical=False)
+            .sign(key, hashes.SHA256()))
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_bytes(key.private_bytes(serialization.Encoding.PEM, serialization.PrivateFormat.PKCS8,
+                                       serialization.NoEncryption())
+                     + cert.public_bytes(serialization.Encoding.PEM))
+    return path
+
+
+class LanServer(ThreadingHTTPServer):
+    def handle_error(self, request, client_address):      # a browser refusing the certificate is not a server fault
+        if not isinstance(sys.exc_info()[1], (ssl.SSLError, ConnectionError)):
+            super().handle_error(request, client_address)
 
 
 def run_tool(args: list[str], log: Path | None = None) -> subprocess.Popen:
@@ -141,6 +195,8 @@ class Handler(SimpleHTTPRequestHandler):
                 parts = parts[1:]
             if handler is None:
                 return self.send_json({"error": "not found"}, HTTPStatus.NOT_FOUND)
+            if self.server.lan and handler.__name__ in LAN_BLOCKED:
+                return self.send_json({"error": LAN_REFUSED}, HTTPStatus.FORBIDDEN)
             return handler(parts, query)
         except FileNotFoundError as e:
             self.send_json({"error": f"not found: {e}"}, HTTPStatus.NOT_FOUND)
@@ -150,12 +206,16 @@ class Handler(SimpleHTTPRequestHandler):
     def do_GET(self):
         self.route("GET")
 
+    def do_HEAD(self):                        # the inherited one would look up files in the project folder
+        self.send_error(HTTPStatus.METHOD_NOT_ALLOWED)
+
     def do_POST(self):
         # Only pages served by this server may POST (stops other websites from triggering
         # Claude runs or writing results through your browser).
         origin = self.headers.get("Origin")
         host = self.headers.get("Host", "")
-        if origin and origin not in (f"http://{host}", f"http://127.0.0.1:{self.server.server_port}",
+        scheme = "https" if self.server.lan else "http"
+        if origin and origin not in (f"{scheme}://{host}", f"http://127.0.0.1:{self.server.server_port}",
                                      f"http://localhost:{self.server.server_port}"):
             return self.send_json({"error": "cross-origin request refused"}, HTTPStatus.FORBIDDEN)
         self.route("POST")
@@ -171,12 +231,16 @@ class Handler(SimpleHTTPRequestHandler):
         self.send_file(safe_join(find_test_dir(parts[0]) / "audio", *parts[1:]))
 
     def GET_results(self, parts, q):          # /results/<attempt>/<file>
-        self.send_file(safe_join(RESULTS_DIR, *parts))
+        path = safe_join(RESULTS_DIR, *parts)
+        if self.server.lan and not lan_readable(path):
+            return self.send_json({"error": LAN_REFUSED}, HTTPStatus.FORBIDDEN)
+        self.send_file(path)
 
     # ------------------------------------------------------------ tests
     def GET_api_config(self, parts, q):
         spec = load_spec()
         self.send_json({"default_test": self.server.default_test, "home_edition": self.server.home_edition,
+                        "lan": self.server.lan,
                         "spec": {"sections": spec["sections"], "order": spec["order"],
                                  "home_edition": spec["home_edition"]}})
 
@@ -185,6 +249,8 @@ class Handler(SimpleHTTPRequestHandler):
             return self.send_json(list_tests())
         d = find_test_dir(parts[0])
         if len(parts) > 1 and parts[1] == "download":   # export a test to share it
+            if self.server.lan:                         # the file includes the answer key
+                return self.send_json({"error": LAN_REFUSED}, HTTPStatus.FORBIDDEN)
             return self.send_file(d / "test.json", download=f"{parts[0]}.json")
         manifest = d / "audio" / "manifest.json"
         self.send_json({"test": sanitize(load_json(d / "test.json")),
@@ -345,17 +411,34 @@ def main():
     ap.add_argument("--port", type=int, default=8765)
     ap.add_argument("--open", action="store_true")
     ap.add_argument("--home-edition", action="store_true")
+    ap.add_argument("--lan", action="store_true", help="serve to other devices on the network (use make lan)")
     a = ap.parse_args()
+    if a.lan and RESULTS_DIR.resolve() == (ROOT / "results").resolve():
+        sys.exit("--lan needs a separate results folder so a guest cannot see your results or skew your trends. "
+                 "Use make lan, or set TOEFL_RESULTS_DIR.")
     RESULTS_DIR.mkdir(exist_ok=True)
     TESTS_DIR.mkdir(exist_ok=True)
     default = {"latest": latest_test_id, "next": next_untaken_test_id}.get(a.test, lambda: a.test)()
     if default:
         find_test_dir(default)
     render_missing_audio(default)
-    srv = ThreadingHTTPServer(("127.0.0.1", a.port), Handler)
-    srv.default_test, srv.home_edition = default, a.home_edition
-    url = f"http://127.0.0.1:{a.port}/" + (f"?test={default}" if default else "")
+    if a.lan:
+        ip = lan_ip()
+        srv = LanServer(("0.0.0.0", a.port), Handler)
+        tls = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+        tls.load_cert_chain(lan_cert(ip))
+        # handshake in the request's thread, so one stalled client cannot hold up the accept loop
+        srv.socket = tls.wrap_socket(srv.socket, server_side=True, do_handshake_on_connect=False)
+        origin = f"https://{ip}:{a.port}/"
+    else:
+        srv = ThreadingHTTPServer(("127.0.0.1", a.port), Handler)
+        origin = f"http://127.0.0.1:{a.port}/"
+    srv.default_test, srv.home_edition, srv.lan = default, a.home_edition, a.lan
+    url = origin + (f"?test={default}" if default else "")
     print(f"TOEFL runner on {url}  (Ctrl+C to stop)")
+    if a.lan:
+        print(f"Network mode: open that address on the other device and accept the certificate warning "
+              f"(Advanced, then Proceed). Results go to {RESULTS_DIR}.")
     if a.open:
         threading.Timer(0.6, webbrowser.open, [url]).start()
     try:

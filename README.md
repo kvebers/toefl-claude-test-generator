@@ -53,6 +53,7 @@ used, plus Listen and Repeat accuracy word by word. Reports are saved as `report
 | `make weakest` | Practice set aimed at your most frequent error types |
 | `make take ID=<test>` | Retake any saved test |
 | `make serve` | Start page: pick, load or import a test, and see past results |
+| `make lan` | Let someone take a test on their own device on your network (see below) |
 | `make grade ID=<attempt>` / `make regrade ID=…` | Grade (again); `ID=latest` works too |
 | `make trends` | Progress PDF: band history, error trends, predicted score, 2-week study plan |
 | `make study` | Study guide for writing and speaking: how your structure changed, a blueprint per task, linking words, key phrases, core errors, spelling list (`SECTION=writing` or `speaking` to narrow it) |
@@ -61,6 +62,21 @@ used, plus Listen and Repeat accuracy word by word. Reports are saved as `report
 | `make import FILE=x.json` / `make export ID=<test>` | Load or send a single test file |
 | `make audio ID=<test>` | Re-render the voices for a test |
 | `make check` | Offline self-test: validator, scoring, report, trends |
+
+### Taking a test on another device
+
+`make lan` prints an `https://` address to open on the other device. The certificate is self-signed, so the browser
+warns once (Advanced, then Proceed); HTTPS is what lets the browser use the microphone. Chrome or Edge on a laptop is
+the safest choice. There is no login, so use it on a network you trust and stop the server afterwards.
+
+- Guest attempts and reports go to `results-lan/`, so your own results stay private and out of your trends.
+- Only test taking is available: no generating, importing, study guide or test file download.
+- Each submitted attempt is graded with your Claude plan.
+- On Windows, allow the port if the other device cannot connect (admin PowerShell), and remove the rule afterwards:
+  ```powershell
+  New-NetFirewallRule -DisplayName "TOEFL runner" -Direction Inbound -Protocol TCP -LocalPort 8765 -RemoteAddress LocalSubnet -Action Allow -Profile Any
+  Remove-NetFirewallRule -DisplayName "TOEFL runner"
+  ```
 
 ## How it works
 

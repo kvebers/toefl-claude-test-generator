@@ -23,7 +23,7 @@ CLAUDE_LEAN ?= --setting-sources project,local --strict-mcp-config --tools Read,
 GEN_EFFORT  ?= medium
 export ENABLE_CLAUDEAI_MCP_SERVERS = false
 
-.PHONY: help setup setup-speech sample test bank next practice weakest take serve audio validate grade regrade report trends study list publish import export check
+.PHONY: help setup setup-speech sample test bank next practice weakest take serve lan audio validate grade regrade report trends study list publish import export check
 
 help:            ## show this help
 	@$(PY) -c "import re;[print(f'  make {m[0]:<14} {m[1]}') for m in re.findall(r'^([a-z-]+):.*?## (.*)$$', open('Makefile').read(), re.M)]"
@@ -62,7 +62,11 @@ take:            ## (re)take a saved test: make take ID=<test_id>   [HE=1 Home E
 serve:           ## open the start page (choose / load / import tests, past results)
 	$(PY) server/app.py --port $(PORT) --open $(HOME_FLAG)
 
-audio:           ## (re)render TTS audio for a test: make audio ID=<test_id>
+lan: export TOEFL_RESULTS_DIR ?= $(CURDIR)/results-lan
+lan:             ## let another device on your network take a test (HTTPS, guest results kept apart in results-lan/)
+	$(PY) server/app.py --lan --port $(PORT) $(HOME_FLAG)
+
+audio:          ## (re)render TTS audio for a test: make audio ID=<test_id>
 	$(PY) tools/tts.py $(if $(filter latest,$(ID)),,$(ID))
 
 validate:        ## validate a test file: make validate ID=<test_id>

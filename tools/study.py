@@ -12,7 +12,7 @@ import sys
 from collections import Counter
 from pathlib import Path
 
-from common import RESULTS_DIR, ROOT, load_json, load_spec, save_json
+from common import RESULTS_DIR, ROOT, load_grading, load_json, load_spec, save_json
 from report import env, html_to_pdf
 
 OUT = RESULTS_DIR / "study"
@@ -83,7 +83,7 @@ def collect(section: str | None) -> dict:
         d = gi.parent
         if not (d / "grading.json").exists():
             continue
-        gin, grading = load_json(gi), load_json(d / "grading.json")
+        gin, grading = load_json(gi), load_grading(d / "grading.json")
         date = d.name[:8]
         for sec in ("writing", "speaking"):
             if section and sec != section:

@@ -34,6 +34,7 @@ from common import (RESULTS_DIR, ROOT, TESTS_DIR, claude_env, find_test_dir, lat
                     usage_limit_message)
 from validate import validate  # noqa: E402
 from bank import FLAGS, run_generation  # noqa: E402
+import spelling  # noqa: E402
 
 STATIC = Path(__file__).resolve().parent / "static"
 MAX_UPLOAD = 25 * 1024 * 1024
@@ -316,6 +317,17 @@ class Handler(SimpleHTTPRequestHandler):
         STUDY.update(state="queued", section=section or "all", prompt=f"/toefl-study {section}".strip())
         JOB_QUEUE.submit(run_study, STUDY)
         self.send_json({"state": "queued"})
+
+    # ------------------------------------------------------------ spelling trainer
+    def GET_api_spelling(self, parts, q):
+        self.send_json(spelling.summary())
+
+    def POST_api_spelling(self, parts, q):         # {word, ok, typed} after a first try, or {word, ignore}
+        req = json.loads(self.body() or b"{}")
+        if not isinstance(req.get("word"), str) or ("ok" not in req and "ignore" not in req):
+            raise ValueError("send word with ok or ignore")
+        self.send_json(spelling.record(req["word"], ok=req.get("ok"), typed=str(req.get("typed") or ""),
+                                       ignore=req.get("ignore")))
 
     # ------------------------------------------------------------ attempts
     def GET_api_attempts(self, parts, q):

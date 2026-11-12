@@ -58,13 +58,13 @@ sections:
     items_total: 12                 # ETS: 12 items, 23 min, 20 raw points
     tasks:
       build_sentence:      { count: 10, time_sec: 360, cefr: "A1-C2", note: "arrange word chunks into a grammatical reply to a short prompt" }
-      email:               { count: 1, time_sec: 420, target_words: [100, 150], cefr: "B1-C2" }
+      email:               { count: 1, time_sec: 420, target_words: [70, 150], cefr: "B1-C2" }
       academic_discussion: { count: 1, time_sec: 600, target_words: [100, 150], cefr: "B1-C2" }
 
   speaking:
     title: Speaking
     adaptive: false
-    items_total: 11                 # ETS: 11 items, 8 min, 55 raw points (5 per item)
+    items_total: 11                 # ETS: 11 items, 8 min, 55 raw points (5 per item); we rate each item 0-6
     tasks:
       listen_and_repeat: { count: 7, response_sec: [8, 12], replay: false, cefr: "A1-C2", note: "sentences grow from one simple clause to compound verbs, dependent and relative clauses; one shared setting" }
       interview:         { count: 4, prep_sec: 0, answer_sec: 45, replay: false, cefr: "A1-C2", note: "pre-recorded interviewer, one topic, from brief factual answers to opinion, explanation, prediction and narration; questions do NOT react to answers" }
@@ -253,6 +253,13 @@ home_edition:
 
 scoring:
   # Section band = 1.0–6.0 in 0.5 steps; overall = mean of sections rounded to nearest 0.5.
+  # Writing and speaking tasks are rated 0-6 (half points allowed), the same scale as the bands:
+  # section band = weighted mean task score, rounded to 0.5, floor 1.0.
+  # Gradings written before the 0-6 scale (no `scale` field) were 0-5 and are rescaled when loaded.
+  task_scale: 6
+  legacy_task_scale: 5
+  criterion_points: { met: 5.5, partly: 3.5, not_met: 1.5 }   # rough 0-6 score a criterion status implies
+  criterion_tolerance: 1.0                                    # max distance between that and Claude's score
   # Approximate band -> legacy 0-30 section scale (ETS publishes the official concordance; edit as needed).
   band_to_30: { 6.0: 30, 5.5: 28, 5.0: 25, 4.5: 22, 4.0: 19, 3.5: 15, 3.0: 11, 2.5: 8, 2.0: 5, 1.5: 3, 1.0: 1 }
   cefr: { 6.0: C2, 5.5: C1, 5.0: C1, 4.5: B2, 4.0: B2, 3.5: B1, 3.0: B1, 2.5: A2, 2.0: A2, 1.5: A1, 1.0: A1 }

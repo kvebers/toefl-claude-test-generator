@@ -55,20 +55,22 @@
 <div class="muted">{{ test.title }} · {{ attempt.started[:16].replace('T', ' ') }}{% if attempt.home_edition %} · Home Edition rules{% endif %} · attempt <code>{{ attempt.id }}</code></div>
 
 <div class="tiles">
+  {% if test.score_reporting != 'raw_only' %}
   <div class="tile main"><div class="muted">Overall band</div><div class="big">{{ S.overall_band or '-' }}</div>
     <div class="muted">{% if S.overall_cefr %}CEFR {{ S.overall_cefr }} · ~{{ S.est_total_120 }}/120{% else %}needs all 4 sections{% endif %}</div></div>
+  {% endif %}
   {% for sid, s in score.get('sections', {}).items() %}
-  <div class="tile"><div class="muted">{{ sid|label }}</div><div class="big">{{ s.band or '-' }}</div>
+  <div class="tile"><div class="muted">{{ sid|label }}</div><div class="big">{{ (s.raw or 'Task ratings') if test.score_reporting == 'raw_only' else (s.band or '-') }}</div>
     <div class="muted">{% if s.est_30 %}~{{ s.est_30 }}/30 · {{ s.cefr }}{% endif %}{% if s.raw %} · {{ s.raw }}{% endif %}{% if s.route %} · {{ 'harder' if s.route == 'm2_hard' else 'easier' }} part 2{% endif %}</div></div>
   {% endfor %}
 </div>
 <div class="muted">{{ S.estimate_note }}</div>
 {% set CALC = score.get('sections', {}) %}
 {% if CALC %}
-<table class="calc" style="margin-top:10px"><tr><th>Section</th><th>How the band was calculated</th></tr>
+<table class="calc" style="margin-top:10px"><tr><th>Section</th><th>{{ 'Practice results' if test.score_reporting == 'raw_only' else 'How the band was calculated' }}</th></tr>
 {% for sid, sec in CALC.items() %}<tr><td>{{ sid|label }}</td><td>
 {% if sec.raw %}{{ sec.raw }} correct ({{ (sec.accuracy * 100)|round|int }}%){% if sec.route %} on the {{ 'harder' if sec.route == 'm2_hard' else 'easier' }} part 2, which allows bands {{ '3.5 to 6' if sec.route == 'm2_hard' else '1 to 4.5' }}{% endif %}.
-{% elif sec.task_scores_0_5 %}{% for t, v in sec.task_scores_0_5.items() %}{{ t|label }} {{ v }}/5{% if sec.weights %} (weight {{ (sec.weights[t] * 100)|round|int }}%){% endif %}{% if not loop.last %} · {% endif %}{% endfor %}. Weights follow ETS raw points.
+{% elif sec.task_scores or sec.task_scores_0_5 %}{% for t, v in (sec.task_scores or sec.task_scores_0_5).items() %}{{ t|label }} {{ v }}/{{ sec.task_scale or 5 }}{% if sec.weights %} (weight {{ (sec.weights[t] * 100)|round|int }}%){% endif %}{% if not loop.last %} · {% endif %}{% endfor %}. Weights follow ETS raw points.
 {% else %}Not scored.{% endif %}</td></tr>{% endfor %}
 </table>
 {% endif %}
@@ -158,7 +160,7 @@ your accuracy on each question type (met: 80%+, partly: 50%+); writing and speak
   </table>
   {% else %}
   {% set g = g_tasks.get(t.id) %}
-  <h3>{{ 'Write an Email' if t.type == 'email' else 'Academic Discussion' }}{% if g %} ({{ g.score }}/5){% endif %}</h3>
+  <h3>{{ 'Write an Email' if t.type == 'email' else 'Academic Discussion' }}{% if g %} ({{ g.score }}/6){% endif %}</h3>
   {% if t.type == 'email' %}<div class="muted">{{ t.scenario }}</div>{% else %}<div class="muted">{{ t.professor.post }}</div>{% endif %}
   <div class="resp">{{ responses.get(t.id, {}).get('text') or '(no response)' }}</div>
   <div class="muted">{{ (responses.get(t.id, {}).get('text') or '').split()|length }} words</div>
@@ -178,23 +180,23 @@ your accuracy on each question type (met: 80%+, partly: 50%+); writing and speak
 {% for t in tasks.speaking %}
   {% if t.type == 'listen_and_repeat' %}
   <h3>Listen and Repeat</h3>
-  <p class="muted">Each sentence is rated 0–5 by word errors: word-perfect = 5, one slip = 4, two or three = 3, more but half right = 2, any attempt = 1. Words the speech recogniser was unsure of count half.</p>
+  <p class="muted">Each sentence is rated 0-6 by word errors: word-perfect = 6, one slip = 5, two = 4, three = 3, more but half right = 2, any attempt = 1. Words the speech recogniser was unsure of count half.</p>
   <table><tr><th>Sentence</th><th>What we heard</th><th>Accuracy</th><th>Points</th><th class="play">Listen: original / you</th></tr>
   {% for r in objective.repeats if r.task_id == t.id %}
     <tr><td>{{ r.target }}</td><td>{{ r.said if r.said is not none else '(not transcribed)' }}</td>
-    <td class="{{ 'ok' if (r.accuracy or 0) >= 0.9 else 'bad' }}">{{ ((r.accuracy or 0) * 100)|round|int }}%</td><td>{{ r.points if r.points is defined else '-' }}/5</td>
+    <td class="{{ 'ok' if (r.accuracy or 0) >= 0.9 else 'bad' }}">{{ ((r.accuracy or 0) * 100)|round|int }}%</td><td>{{ r.points if r.points is defined else '-' }}/6</td>
     <td class="play">{% if originals.get(r.key) %}<audio controls preload="none" src="{{ originals[r.key] }}"></audio>{% endif %}
       {% if recordings.get(r.key) %}<audio controls preload="none" src="{{ recordings[r.key] }}"></audio><span class="file">{{ recordings[r.key] }}</span>{% endif %}</td></tr>
   {% endfor %}</table>
   {% else %}
   {% set g = g_tasks.get(t.id) %}
-  <h3>Take an Interview: {{ t.topic }}{% if g %} ({{ g.score }}/5){% endif %}</h3>
+  <h3>Take an Interview: {{ t.topic }}{% if g %} ({{ g.score }}/6){% endif %}</h3>
   {% if g %}<p>{{ g.summary }}</p>{% endif %}
   {% for q in t.questions %}
     {% set tr = transcripts.get(t.id ~ '__' ~ q.id, {}) %}
     {% set gq = (g.questions or {}).get(q.id) if g else none %}
     <div class="box">
-      <b>Q{{ loop.index }}. {{ q.text }}</b>{% if gq %} ({{ gq.score }}/5){% endif %}
+      <b>Q{{ loop.index }}. {{ q.text }}</b>{% if gq %} ({{ gq.score }}/6){% endif %}
       {% set rk = t.id ~ '__' ~ q.id %}
       {% if recordings.get(rk) %}<div class="play">Your answer: <audio controls preload="none" src="{{ recordings[rk] }}"></audio><span class="file">{{ recordings[rk] }}</span></div>{% endif %}
       <div class="resp">{{ tr.text or tr.error or '(no recording)' }}</div>

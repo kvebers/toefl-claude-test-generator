@@ -12,6 +12,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -21,12 +22,11 @@ from pathlib import Path
 
 import jsonschema
 
-from common import (CLAUDE_LEAN, RESULTS_DIR, ROOT, claude_env, iter_tasks, load_json, load_spec, save_json,
-                    usage_limit_message)
+from common import (CLAUDE_LEAN, RESULTS_DIR, ROOT, claude_env, iter_tasks, load_grading, load_json, load_spec,
+                    normalize_grading, save_json, usage_limit_message)
 from score import compute, error_profile, goal_checks, objective_results
 
 GRADING_SCHEMA = ROOT / "schemas" / "grading.schema.json"
-CRITERION_POINTS = {"met": 4.5, "partly": 3.0, "not_met": 1.5}   # rough 0-5 score a criterion status implies
 
 
 def status(d: Path, stage: str, **extra):
@@ -115,7 +115,9 @@ def run_claude(d: Path) -> None:
                            f"run `make grade ID={d.name}` after the reset.")
 
 
-def check_grading(d: Path, gin: dict) -> list[str]:
+def check_grading(d: Path, gin: dict, fresh: bool = True) -> list[str]:
+    """Problems with grading.json. `fresh` = just written by Claude, so it must be on the current 0-6 scale;
+    otherwise an older 0-5 grading (no `scale` field) is accepted and checked after rescaling."""
     path = d / "grading.json"
     if not path.exists():
         return ["grading.json was not written"]
@@ -123,10 +125,17 @@ def check_grading(d: Path, gin: dict) -> list[str]:
         g = load_json(path)
     except json.JSONDecodeError as e:
         return [f"invalid JSON: {e}"]
+    if not fresh:
+        g = normalize_grading(g)
+    sc = load_spec()["scoring"]
     errs = [f"/{'/'.join(map(str, e.path))}: {e.message[:160]}"
             for e in jsonschema.Draft202012Validator(load_json(GRADING_SCHEMA)).iter_errors(g)]
     needed = [w["task_id"] for w in gin["writing"]] + [s["task_id"] for s in gin["speaking"] if s["type"] == "interview"]
     errs += [f"missing grade for task {t}" for t in needed if t not in g.get("tasks", {})]
+    for item in gin["writing"]:
+        for m in g.get("tasks", {}).get(item["task_id"], {}).get("misspellings", []):
+            if not re.search(rf"(?<![A-Za-z]){re.escape(m.get('wrong', ''))}(?![A-Za-z])", item.get("response") or "", re.I):
+                errs.append(f"task {item['task_id']}: misspelling '{m.get('wrong')}' does not occur in the response")
     for item in gin["writing"] + [x for x in gin["speaking"] if x["type"] == "interview"]:
         rated = {c.get("id") for c in g.get("tasks", {}).get(item["task_id"], {}).get("criteria", [])}
         missing = [c["id"] for c in item.get("criteria_to_rate", []) if c["id"] not in rated]
@@ -137,9 +146,9 @@ def check_grading(d: Path, gin: dict) -> list[str]:
             if c.get("status") in ("partly", "not_met") and not (c.get("improve") and c.get("example")):
                 errs.append(f"task {item['task_id']}: criterion {c.get('id')} is {c.get('status')} but has no improve/example")
         if crit and not missing:
-            implied = sum(CRITERION_POINTS.get(c.get("status"), 0) for c in crit) / len(crit)
+            implied = sum(sc["criterion_points"].get(c.get("status"), 0) for c in crit) / len(crit)
             given = g["tasks"][item["task_id"]].get("score", 0)
-            if abs(given - implied) > 1.0:
+            if abs(given - implied) > sc["criterion_tolerance"]:
                 errs.append(f"task {item['task_id']}: score {given} contradicts its criteria (they imply about "
                             f"{implied:.1f}); re-check the criteria or the score")
     return errs
@@ -153,7 +162,8 @@ def update_index(d: Path, test: dict, attempt: dict, score: dict, profile: dict,
                  "date": attempt.get("started", "")[:10], "home_edition": attempt.get("home_edition", False),
                  "overall_band": score["summary"]["overall_band"], "est_total_120": score["summary"]["est_total_120"],
                  "bands": {k: v["band"] for k, v in score["sections"].items()},
-                 "task_scores": {k: v.get("task_scores_0_5") for k, v in score["sections"].items() if v.get("task_scores_0_5")},
+                 "task_scores": {k: v.get("task_scores") for k, v in score["sections"].items() if v.get("task_scores")},
+                 "task_scale": load_spec()["scoring"]["task_scale"],
                  "routes": attempt.get("routes", {}), **profile,
                  "goals": {g["task_type"]: {c["id"]: c["status"] for c in g["criteria"]} for g in goals}})
     rows.sort(key=lambda r: r["attempt_id"])
@@ -179,17 +189,18 @@ def grade(d: Path, use_claude: bool, do_transcribe: bool, force: bool) -> None:
     gin = grading_input(d, test, attempt, responses, transcripts, objective)
     save_json(d / "grading_input.json", gin)
 
-    grading = None
-    if use_claude and (force or check_grading(d, gin)):
+    grading, fresh = None, False
+    if use_claude and (force or check_grading(d, gin, fresh=False)):
         status(d, "claude")
         (d / "grading.json").unlink(missing_ok=True)
         run_claude(d)
+        fresh = True
         if errs := check_grading(d, gin):
             print("grading.json problems, asking Claude to fix:", errs[:5])
             save_json(d / "grading_errors.json", errs)
             run_claude(d)
-    if (d / "grading.json").exists() and not check_grading(d, gin):
-        grading = load_json(d / "grading.json")
+    if (d / "grading.json").exists() and not check_grading(d, gin, fresh=fresh):
+        grading = load_grading(d / "grading.json")
     elif use_claude:
         print("WARNING: no valid Claude grading; writing/speaking bands will be partial. See claude.log")
 

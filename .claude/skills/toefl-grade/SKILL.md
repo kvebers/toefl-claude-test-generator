@@ -19,6 +19,8 @@ Do not read the recordings (you cannot hear them) and do not re-score multiple-c
 already scored deterministically.
 
 ## Output: `<folder>/grading.json`
+Top level `"scale": 6`: every task and question score is on the 0-6 scale (same as the section bands).
+
 1. `tasks.<task_id>` for **every** email, academic_discussion and interview task in the input:
    - `criteria`: rate **every** criterion listed in that task's `criteria_to_rate` against the task's
      `measures` goal: `{"id", "status": "met" | "partly" | "not_met", "evidence"}`. Evidence quotes or
@@ -28,9 +30,9 @@ already scored deterministically.
      rewritten so it meets the criterion: "You wrote: '...' Better: '...'"). The checker rejects unmet
      criteria without both. Write like a supportive teacher: name what works, then exactly what to change.
      The criteria are the goals of the category; judge them before deciding the score, and keep the score
-     consistent with them (mostly met: 4+, mixed: about 3, mostly not met: 2 or below). The checker rejects a
-     score more than 1 point away from what the criteria imply (met 4.5, partly 3, not met 1.5, averaged).
-   - `score` 0–5 (half points allowed) using the rubric for that task type.
+     consistent with them (mostly met: 5+, mixed: about 3.5, mostly not met: 2 or below). The checker rejects a
+     score more than 1 point away from what the criteria imply (met 5.5, partly 3.5, not met 1.5, averaged).
+   - `score` 0-6 (half points allowed) using the rubric for that task type.
    - `dimensions`: one short sentence per rubric dimension.
    - `summary`: 2–3 sentences, what drove the score.
    - `strengths`: 1–3 items.
@@ -40,6 +42,11 @@ already scored deterministically.
      Also include task-level problems (missed bullet, off-topic, too short) with the quote being the
      relevant sentence or "(missing)".
    - Writing: `improved_version`: the learner's own text rewritten at a band-6 level, keeping their ideas.
+   - Writing: `misspellings`: **every** misspelt word in the response, not capped at 10 and not only the
+     ones you chose as errors: `[{"wrong": "diffrent", "right": "different"}]`. `wrong` exactly as the
+     learner typed it, once per distinct word; include split/merged words ("can not" / "cannot") and
+     homophone slips (to/too, their/there). Not capitalisation or punctuation. `[]` if there are none.
+     This list feeds the spelling trainer; the checker rejects a `wrong` that is not in the response.
    - Interview: `questions.<qid>` with `score`, `summary`, `errors`, and `model_answer` (a natural
      ~100-word 45-second answer). The task `score` is the mean of the question scores.
 2. `objective_patterns`: 2–4 sentences on what the reading/listening/build-sentence misses have in
@@ -61,7 +68,7 @@ already scored deterministically.
   missing punctuation); do note very low word counts, long pauses and fillers from the metrics.
   An `error` transcript means no usable recording -> score 0 for that question and say so.
 - An empty or near-empty written response scores 0–1.
-- Never inflate. A 5 is rare and near-flawless.
+- Never inflate. A 6 is rare and near-flawless; a 5 is a strong response with only minor slips.
 - Score each response on its own against the rubric, as an official rater would: `history` holds only
   past error tags, for feedback. Never carry a score over from an earlier attempt or nudge toward one.
 - When finished, run `python tools/check_grading.py <folder>` and fix every problem it reports until it prints OK.

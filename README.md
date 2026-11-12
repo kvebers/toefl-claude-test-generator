@@ -57,6 +57,7 @@ used, plus Listen and Repeat accuracy word by word. Reports are saved as `report
 | `make grade ID=<attempt>` / `make regrade ID=…` | Grade (again); `ID=latest` works too |
 | `make trends` | Progress PDF: band history, error trends, predicted score, 2-week study plan |
 | `make study` | Study guide for writing and speaking: how your structure changed, a blueprint per task, linking words, key phrases, core errors, spelling list (`SECTION=writing` or `speaking` to narrow it) |
+| `make spelling` | Every word you misspelt in a writing task and how far you are in training it (practise them in the **Spelling trainer** on the start page) |
 | `make list` | List your own and library tests |
 | `make publish ID=<test> AUTHOR=you` | Copy a test into `library/` so others can use it (commit it or open a PR) |
 | `make import FILE=x.json` / `make export ID=<test>` | Load or send a single test file |
@@ -97,6 +98,7 @@ make test ─► claude -p "/toefl-generate full"        .claude/skills/toefl-ge
                ├─ score.py        bands 1–6, CEFR, estimated 0–120  (conversion tables in the spec)
                └─ report.py       report.html → report.pdf (headless Chrome/Edge or Playwright)
 make trends ─► claude -p "/toefl-trends" → results/trends/trends.pdf
+start page  ─► Spelling trainer (tools/spelling.py): misspelt words from every grading → spaced-repetition drill
 ```
 
 **Single source of truth:** `spec/toefl-2026.yaml` holds the task types, counts, timings, voices, Home Edition
@@ -144,6 +146,7 @@ results/
   index.jsonl               one line per graded attempt (bands, error-tag counts) → trends
   trends/                   trends.json  analysis.json  bands.png  errors.png  trends.pdf
   study/                    study_data.json  study.json  study.pdf  (make study)
+  spelling/                 progress.json  (Spelling trainer: box, next review, every practice try)
 ```
 
 ## Development

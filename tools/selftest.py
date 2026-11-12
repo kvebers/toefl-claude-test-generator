@@ -58,6 +58,7 @@ def main() -> int:
                           if "skills" not in v and "repeat" not in v]
 
     def attempt(aid: str, score_shift: float):
+        # shift 0: a legacy 0-5 grading (no `scale`, rescaled on load); shift 1: the current 0-6 scale
         d = tmp / aid
         (d / "recordings").mkdir(parents=True)
         save_json(d / "test.json", test)
@@ -67,19 +68,20 @@ def main() -> int:
         save_json(d / "transcripts.json", transcripts)
         err = {"tag": "grammar.verb_form", "quote": "thank you for organise", "correction": "thank you for organising",
                "explanation": "After a preposition use the -ing form."}
-        q_grades = {q["id"]: {"score": 2.5 + score_shift, "summary": "Short answer with long pauses.", "errors": [
+        q_grades = {q["id"]: {"score": 4.5 if score_shift else 2.5, "summary": "Short answer with long pauses.", "errors": [
             {"tag": "speaking.fluency.pauses", "quote": "for, um, messages", "correction": "for messaging", "explanation": "Avoid fillers."}],
             "model_answer": "Mostly my phone: I use it for messages, maps and studying vocabulary on the bus."}
             for q in test["sections"][3]["modules"]["m1"]["tasks"][1]["questions"]}
         save_json(d / "grading.json", {
-            "tasks": {"w-email": {"score": 2.5 + score_shift, "summary": "Covers all points briefly.", "errors": [err],
+            **({"scale": 6} if score_shift else {}),
+            "tasks": {"w-email": {"score": 4 if score_shift else 2.5, "summary": "Covers all points briefly.", "errors": [err],
                                   "criteria": crit("email", "partly"),
                                   "dimensions": {"task_completion": "All bullets touched, thinly."}, "improved_version": "Dear Ms Chen, ..."},
-                      "w-disc": {"score": 2 + score_shift, "summary": "Off-topic: the response is an email.",
+                      "w-disc": {"score": 3.5 if score_shift else 2, "summary": "Off-topic: the response is an email.",
                                  "criteria": crit("academic_discussion", "partly" if score_shift else "not_met"), "errors": [
                           {"tag": "discourse.relevance", "quote": "Dear Ms Chen", "correction": "(answer the professor's question)",
                            "explanation": "The discussion task needs an opinion on lecture recordings."}]},
-                      "s-interview": {"score": 2.5 + score_shift, "summary": "Answers are short.", "errors": [], "questions": q_grades,
+                      "s-interview": {"score": 4.5 if score_shift else 2.5, "summary": "Answers are short.", "errors": [], "questions": q_grades,
                                       "criteria": crit("interview", "met" if score_shift else "partly")}},
             "objective_patterns": "Most misses are inference questions.",
             "overall": {"summary": "Solid B1–B2 base.", "strengths": ["Clear reading of details"],
@@ -97,6 +99,8 @@ def main() -> int:
         print(f"  {aid}: overall {score['summary']['overall_band']}, ~{score['summary']['est_total_120']}/120, "
               f"bands { {k: v['band'] for k, v in score['sections'].items()} }")
         assert score["summary"]["overall_band"] is not None, "overall band missing"
+        w = score["sections"]["writing"]
+        assert w["task_scale"] == 6 and w["task_scores"]["email"] == (4 if shift else 3.0), w  # legacy 2.5/5 -> 3/6
         assert (d / "report.html").exists(), "report.html missing"
         untested = [(g["task_type"], c["id"]) for g in score["goals"] for c in g["criteria"] if c["status"] == "not_tested"
                     and g["task_type"] != "listen_and_repeat" and not c["evidence"].startswith("no questions of this kind")]

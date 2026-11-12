@@ -10,7 +10,7 @@ import json
 import sys
 from collections import Counter
 
-from common import RESULTS_DIR, save_json, load_json
+from common import RESULTS_DIR, save_json, load_json, load_spec
 from report import env, html_to_pdf
 
 OUT = RESULTS_DIR / "trends"
@@ -24,7 +24,15 @@ def rows() -> list[dict]:
     index = RESULTS_DIR / "index.jsonl"
     if not index.exists():
         sys.exit("No graded attempts yet (results/index.jsonl missing).")
-    return [json.loads(l) for l in index.read_text(encoding="utf-8").splitlines() if l.strip()]
+    data = [json.loads(l) for l in index.read_text(encoding="utf-8").splitlines() if l.strip()]
+    sc = load_spec()["scoring"]
+    for r in data:      # rows from before the 0-6 task scale hold 0-5 task scores
+        old = r.get("task_scale", sc["legacy_task_scale"])
+        if r.get("task_scores") and old != sc["task_scale"]:
+            f = sc["task_scale"] / old
+            r["task_scores"] = {s: {t: round(v * f, 2) for t, v in ts.items()} for s, ts in r["task_scores"].items()}
+        r["task_scale"] = sc["task_scale"]
+    return data
 
 
 def tag_trends(data: list[dict]) -> list[dict]:
@@ -133,7 +141,7 @@ def build_data() -> dict:
     summary = {
         "attempts": len(data),
         "full_tests": sum(r["mode"] == "full" for r in data),
-        "history": [{k: r.get(k) for k in ("attempt_id", "date", "mode", "test_id", "overall_band", "est_total_120", "bands", "task_scores")} for r in data],
+        "history": [{k: r.get(k) for k in ("attempt_id", "date", "mode", "test_id", "overall_band", "est_total_120", "bands", "task_scores", "task_scale")} for r in data],
         "error_tag_trends": tag_trends(data),
         "skill_accuracy_last5": skill_accuracy(data),
         "goal_history": goal_history(data),

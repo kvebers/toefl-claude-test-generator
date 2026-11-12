@@ -6,7 +6,8 @@ from __future__ import annotations
 
 from collections import Counter, defaultdict
 
-from common import iter_tasks, load_spec, norm_words, repeat_accuracy, repeat_errors, repeat_points, score_task
+from common import (iter_tasks, load_spec, norm_words, normalize_grading, repeat_accuracy, repeat_errors,
+                    repeat_points, score_task)
 
 
 def half(x: float) -> float:
@@ -34,8 +35,10 @@ def objective_results(test: dict, responses: dict, routes: dict, transcripts: di
 
 def compute(test: dict, attempt: dict, objective: dict, grading: dict | None) -> dict:
     spec = load_spec()["scoring"]
+    raw_only = test.get("score_reporting") == "raw_only"
     routes = attempt.get("routes", {})
-    grading_tasks = (grading or {}).get("tasks", {})
+    scale = spec["task_scale"]
+    grading_tasks = normalize_grading(grading or {}).get("tasks", {})
     by_section = defaultdict(list)
     for it in objective["items"]:
         by_section[it["section"]].append(it)
@@ -48,7 +51,7 @@ def compute(test: dict, attempt: dict, objective: dict, grading: dict | None) ->
             p = sum(i["correct"] for i in its) / len(its) if its else 0
             route = routes.get(sid)
             lo, hi = spec["adaptive_band_range"].get(route, [1.0, 6.0])
-            sections[sid] = {"band": half(lo + (hi - lo) * p), "raw": f"{sum(i['correct'] for i in its)}/{len(its)}",
+            sections[sid] = {"band": None if raw_only else half(lo + (hi - lo) * p), "raw": f"{sum(i['correct'] for i in its)}/{len(its)}",
                              "accuracy": round(p, 3), "route": route}
             continue
 
@@ -58,7 +61,7 @@ def compute(test: dict, attempt: dict, objective: dict, grading: dict | None) ->
             t = task["type"]
             if t == "build_sentence":
                 its = [i for i in by_section[sid] if i["task_id"] == task["id"]]
-                parts.setdefault(t, []).append(5 * sum(i["correct"] for i in its) / max(1, len(its)))
+                parts.setdefault(t, []).append(scale * sum(i["correct"] for i in its) / max(1, len(its)))
             elif t == "listen_and_repeat":
                 reps = [r for r in objective["repeats"] if r["task_id"] == task["id"]]
                 if any(r["accuracy"] is not None for r in reps):   # missing recordings count as 0 points
@@ -74,12 +77,13 @@ def compute(test: dict, attempt: dict, objective: dict, grading: dict | None) ->
             notes.append(f"{sid}: not scored (missing transcription or Claude grading)")
             continue
         w = {t: weights.get(t, 1) for t in parts}
-        avg5 = sum(w[t] * sum(v) / len(v) for t, v in parts.items()) / sum(w.values())
-        sections[sid] = {"band": half(1 + avg5), "task_scores_0_5": {t: round(sum(v) / len(v), 2) for t, v in parts.items()},
+        avg = sum(w[t] * sum(v) / len(v) for t, v in parts.items()) / sum(w.values())
+        sections[sid] = {"band": None if raw_only else half(avg), "task_scale": scale,
+                         "task_scores": {t: round(sum(v) / len(v), 2) for t, v in parts.items()},
                          "weights": {t: round(w[t] / sum(w.values()), 3) for t in parts},
                          "partial": partial}
         if partial:
-            notes.append(f"{sid}: some tasks could not be graded; band based on the rest")
+            notes.append(f"{sid}: some tasks could not be graded; " + ("available task scores shown" if raw_only else "band based on the rest"))
 
     table = {float(k): v for k, v in spec["band_to_30"].items()}
     cefr = {float(k): v for k, v in spec["cefr"].items()}
@@ -97,6 +101,12 @@ def compute(test: dict, attempt: dict, objective: dict, grading: dict | None) ->
         "sections": {k: {"band": v.get("band"), "est_30": v.get("est_30")} for k, v in sections.items()},
         "estimate_note": "Estimated from a practice test with approximate conversions; real scores can differ by ±0.5 band.",
     }
+    if raw_only:
+        summary["score_reporting"] = "raw_only"
+        summary["estimate_note"] = "Raw practice results and estimated task ratings only. This fixed practice test has no validated TOEFL band or 0-120 conversion."
+        summary["sections"] = {k: {"band": None, "est_30": None, "raw": v.get("raw"),
+                                   "task_scores": v.get("task_scores"), "task_scale": v.get("task_scale"), "partial": v.get("partial", False)}
+                               for k, v in sections.items()}
     return {"summary": summary, "sections": sections, "notes": notes}
 
 

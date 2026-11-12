@@ -32,7 +32,11 @@ def validate(test: dict) -> tuple[list[str], list[str]]:
         errors.append(f"full test must contain sections {spec['order']} in order, got {sec_ids}")
     for sec in test["sections"]:
         adaptive = spec["sections"][sec["id"]]["adaptive"]
-        if test["mode"] == "full" and adaptive and "m2_easy" not in sec["modules"]:
+        if "m2" in sec["modules"] and any(k in sec["modules"] for k in ("m2_easy", "m2_hard")):
+            errors.append(f"{sec['id']}: fixed and adaptive second modules cannot be combined")
+        if "m2" in sec["modules"] and (not adaptive or test.get("score_reporting") != "raw_only"):
+            errors.append(f"{sec['id']}: fixed second modules require a reading/listening test with raw_only score reporting")
+        if test["mode"] == "full" and adaptive and not any(k in sec["modules"] for k in ("m2_easy", "m2")):
             errors.append(f"{sec['id']}: adaptive section needs m1 + m2_easy + m2_hard")
 
     for sid, mkey, task in iter_tasks(test):
@@ -67,6 +71,8 @@ def validate(test: dict) -> tuple[list[str], list[str]]:
             if it.get("voice") and it["voice"] not in voices:
                 errors.append(f"{where}/{it['id']}: unknown voice '{it['voice']}'")
             if task["type"] == "build_sentence":
+                if any(int(k) > len(it["chunks"]) for k in it.get("fixed", {})):
+                    errors.append(f"{where}/{it['id']}: fixed text position exceeds the number of chunks")
                 if sorted(it["chunks"]) != sorted(it["answer"]):
                     errors.append(f"{where}/{it['id']}: answer must be a permutation of chunks")
                 elif it["chunks"] == it["answer"]:
@@ -84,7 +90,7 @@ def validate(test: dict) -> tuple[list[str], list[str]]:
                 warnings.append(f"{where}: only {n} gaps")
 
     errors += [f"task id '{k}' used {v} times (must be unique across the test)" for k, v in task_ids.items() if v > 1]
-    if test["mode"] == "full" and "sample" not in test.get("tags", []):
+    if test["mode"] == "full" and test.get("score_reporting") != "raw_only" and "sample" not in test.get("tags", []):
         for sec in test["sections"]:
             for mkey, module in sec["modules"].items():
                 got = Counter(t["type"] for t in module["tasks"])

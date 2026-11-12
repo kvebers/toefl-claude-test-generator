@@ -23,7 +23,7 @@ CLAUDE_LEAN ?= --setting-sources project,local --strict-mcp-config --tools Read,
 GEN_EFFORT  ?= medium
 export ENABLE_CLAUDEAI_MCP_SERVERS = false
 
-.PHONY: help setup setup-speech sample test bank next practice weakest take serve lan audio validate grade regrade report trends study list publish import export check
+.PHONY: help setup setup-speech sample test bank next practice weakest take serve lan audio validate grade regrade report trends study spelling list publish import export check
 
 help:            ## show this help
 	@$(PY) -c "import re;[print(f'  make {m[0]:<14} {m[1]}') for m in re.findall(r'^([a-z-]+):.*?## (.*)$$', open('Makefile').read(), re.M)]"
@@ -87,6 +87,9 @@ trends:          ## progress PDF: score history, error trends, predicted band, s
 study:           ## study guide: structure, linking words, key phrases, core errors   [SECTION=writing|speaking]
 	$(CLAUDE) -p "/toefl-study $(SECTION)" $(CLAUDE_FLAGS)
 
+spelling:        ## list every word you misspelt in writing and its practice status (train them on the start page)
+	$(PY) tools/spelling.py
+
 list:            ## list local + library tests
 	$(PY) tools/library.py list
 
@@ -103,3 +106,5 @@ check:           ## sanity check: validate library tests and grade a synthetic a
 	$(PY) tools/validate.py $(notdir $(patsubst %/,%,$(dir $(wildcard library/*/test.json))))
 	$(PY) tools/selftest.py
 	$(PY) tools/goaltest.py
+	$(PY) tools/spelltest.py
+	$(PY) tools/fixedtest.py

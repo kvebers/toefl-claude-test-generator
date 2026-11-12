@@ -71,6 +71,29 @@ def load_spec() -> dict:
     return yaml.safe_load(SPEC_PATH.read_text(encoding="utf-8"))
 
 
+def normalize_grading(g: dict) -> dict:
+    """Bring a grading.json onto the current task scale. Gradings without `scale` predate the 0-6 scale
+    (they were 0-5), so their task and question scores are stretched to 0-6 for comparable bands and trends."""
+    sc = load_spec()["scoring"]
+    old = g.get("scale", sc["legacy_task_scale"])
+    if old == sc["task_scale"]:
+        return g
+    g = copy.deepcopy(g)
+    f = sc["task_scale"] / old
+    for t in g.get("tasks", {}).values():
+        if isinstance(t.get("score"), (int, float)):
+            t["score"] = round(t["score"] * f, 2)
+        for q in t.get("questions", {}).values():
+            if isinstance(q.get("score"), (int, float)):
+                q["score"] = round(q["score"] * f, 2)
+    g["scale"] = sc["task_scale"]
+    return g
+
+
+def load_grading(path: Path) -> dict:
+    return normalize_grading(load_json(path))
+
+
 # ---------------------------------------------------------------- test discovery
 
 def find_test_dir(test_id: str) -> Path:
@@ -258,14 +281,14 @@ def repeat_accuracy(target: str, said: str, unclear: set[str] | None = None) -> 
 
 
 def repeat_points(errors: float | None, n_words: int) -> int:
-    """Per-sentence rating 0-5 from the number of word errors, so short and long sentences are judged alike:
-    word-perfect 5, one slip 4, two or three 3, more but at least half right 2, any attempt 1.
+    """Per-sentence rating 0-6 from the number of word errors, so short and long sentences are judged alike:
+    word-perfect 6, one slip 5, two 4, three 3, more but at least half right 2, any attempt 1.
     `errors` is None when there is no recording; half errors (unclear words) round down, so a single
     word Whisper was unsure of does not cost a point but two of them do."""
     if errors is None or not n_words:
         return 0
     e = math.ceil(errors - 0.5)
-    return 5 if e == 0 else 4 if e == 1 else 3 if e <= 3 else 2 if e <= n_words / 2 else 1
+    return 6 if e == 0 else 5 if e == 1 else 4 if e == 2 else 3 if e == 3 else 2 if e <= n_words / 2 else 1
 
 
 def score_task(section: str, module: str, task: dict, resp: dict | None) -> list[dict]:
@@ -292,7 +315,12 @@ def score_task(section: str, module: str, task: dict, resp: dict | None) -> list
         given = resp.get("items", {})
         for it in task["items"]:
             g = given.get(it["id"]) or []
-            sentence = lambda parts: " ".join(x for x in [it.get("start", ""), *parts, it.get("end", "")] if x)
+            def sentence(parts):
+                fixed = it.get("fixed", {})
+                middle = []
+                for n in range(len(it["chunks"]) + 1):
+                    middle.extend([fixed.get(str(n), ""), parts[n] if n < len(parts) else ""])
+                return " ".join(x for x in [it.get("start", ""), *middle, it.get("end", "")] if x)
             out.append({**base, "item_id": it["id"], "prompt": it["prompt"], "skill": it["skill"],
                         "given": sentence(g) if g else None, "expected": sentence(it["answer"]),
                         "correct": [c.strip().lower() for c in g] == [c.strip().lower() for c in it["answer"]],

@@ -13,7 +13,7 @@ from pathlib import Path
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
-from common import find_test_dir, iter_tasks, load_json, load_spec
+from common import find_test_dir, iter_tasks, load_json, load_spec, normalize_grading
 
 TEMPLATES = Path(__file__).resolve().parent / "templates"
 BROWSERS = [
@@ -65,6 +65,7 @@ def context(d: Path) -> dict:
     test, attempt = load_json(d / "test.json"), load_json(d / "attempt.json")
     objective, score = opt(d, "objective.json", {"items": [], "repeats": []}), opt(d, "score.json", {})
     grading = opt(d, "grading.json")
+    grading = normalize_grading(grading) if grading else grading
     responses = opt(d, "responses.json", {"tasks": {}})
     transcripts = opt(d, "transcripts.json", {})
     routes = attempt.get("routes", {})

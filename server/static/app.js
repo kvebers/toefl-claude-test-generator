@@ -280,8 +280,11 @@ async function buildSentenceTask(task, expired) {
       const line = h('div', { class: 'answer-line' }), pool = h('div', { class: 'row' });
       const render = () => {
         line.classList.toggle('filled', placed.length === it.chunks.length);
+        const slots = it.fixed ? Array.from({ length: it.chunks.length }, (_, i) => placed[i] ?? null) : placed;
         line.replaceChildren(...[it.start && h('span', { class: 'fixed' }, it.start),
-          ...placed.map((c, i) => h('button', { class: 'chunk', onclick: () => { placed.splice(i, 1); save(); render(); } }, c)),
+          ...slots.flatMap((c, i) => [it.fixed?.[i] && h('span', { class: 'fixed' }, it.fixed[i]),
+            c == null ? h('span', { class: 'fixed' }, '_____') : h('button', { class: 'chunk', onclick: () => { placed.splice(i, 1); save(); render(); } }, c)]),
+          it.fixed?.[it.chunks.length] && h('span', { class: 'fixed' }, it.fixed[it.chunks.length]),
           it.end && h('span', { class: 'fixed' }, it.end)].filter(Boolean));
         const used = [...placed];
         pool.replaceChildren(...it.chunks.map(c => {
@@ -420,13 +423,14 @@ const tasksDone = { n: 0, total: 1 };
 async function runTest() {
   R.meta.started = new Date().toISOString();
   tasksDone.n = 0;
-  tasksDone.total = TEST.sections.reduce((n, s) => n + s.modules.m1.tasks.length + (s.modules.m2_hard?.tasks.length || 0), 0);
+  tasksDone.total = TEST.sections.reduce((n, s) => n + s.modules.m1.tasks.length + (s.modules.m2_hard?.tasks.length || s.modules.m2?.tasks.length || 0), 0);
   bar.fill(0);
   for (const sec of TEST.sections) {
     const title = CFG.spec.sections[sec.id].title;
     bar.section(''); bar.steps(sec.id); bar.progress('');
-    await directionsScreen(title, SECTION_INFO[sec.id]);
-    bar.section(sec.modules.m2_easy ? 'Part 1' : '');
+    await directionsScreen(title, sec.modules.m2 && sec.id === 'reading'
+      ? 'Read the texts and answer the questions. This paper practice test has two fixed modules.' : SECTION_INFO[sec.id]);
+    bar.section(sec.modules.m2_easy || sec.modules.m2 ? 'Part 1' : '');
     await runModule(sec, 'm1');
     if (sec.modules.m2_easy) {
       await api.post(`/api/attempts/${AID}/responses`, R);
@@ -435,6 +439,10 @@ async function runTest() {
       tasksDone.total += sec.modules[module].tasks.length - sec.modules.m2_hard.tasks.length;
       bar.section('Part 2');
       await runModule(sec, module);
+    } else if (sec.modules.m2) {
+      await api.post(`/api/attempts/${AID}/responses`, R);
+      bar.section('Part 2');
+      await runModule(sec, 'm2');
     }
   }
   R.meta.finished = new Date().toISOString();
@@ -466,6 +474,7 @@ function checksScreen() {
     app.append(h('div', { class: 'panel narrow' },
       h('h1', {}, HOME_EDITION ? 'Home Edition check-in' : 'Equipment check'),
       h('p', { class: 'muted' }, TEST.title),
+      TEST.score_reporting === 'raw_only' && h('p', { class: 'muted' }, TEST.description),
       HOME_EDITION && h('div', { class: 'checklist' }, h('h2', {}, 'Your environment'), boxes, h('p', { class: 'muted' }, he.notes)),
       h('div', { class: 'check-row' },
         h('div', {}, h('b', {}, 'Speakers'), h('div', { class: 'muted' }, AUDIO ? 'Pre-rendered voices' : 'Browser speech (run make audio for real voices)')),
@@ -510,7 +519,7 @@ async function startTest(testId, section = null) {
 async function gradingScreen(aid) {
   window.onbeforeunload = null;
   const STAGES = [['transcribing', 'Transcribing your speaking'], ['objective', 'Scoring reading, listening & sentences'],
-                  ['claude', 'Claude grades writing & speaking (1–3 min)'], ['scoring', 'Calculating bands'], ['report', 'Building your PDF report']]
+                  ['claude', 'Claude grades writing & speaking (1–3 min)'], ['scoring', 'Calculating results'], ['report', 'Building your PDF report']]
     .filter(([k]) => {
       const has = id => TEST?.sections.some(s => s.id === id);
       return k === 'transcribing' ? has('speaking') : k === 'claude' ? has('writing') || has('speaking') : true;
@@ -542,6 +551,14 @@ async function gradingScreen(aid) {
 
 function scoreTiles(sum) {
   if (!sum) return h('p', {}, 'No score yet.');
+  if (sum.score_reporting === 'raw_only') return h('div', { class: 'stack' },
+    h('p', { class: 'muted' }, sum.estimate_note),
+    h('div', { class: 'score-grid' }, ...Object.entries(sum.sections).map(([k, v]) =>
+      h('div', { class: 'score-tile' }, h('div', { class: 'muted' }, k[0].toUpperCase() + k.slice(1)),
+        v.raw ? h('div', { class: 'big' }, v.raw) : h('div', {},
+          ...Object.entries(v.task_scores || v.task_scores_0_5 || {}).map(([t, score]) => h('p', {}, `${TASK_LABELS[t] || t}: ${score}/${v.task_scale || 5}`)),
+          !(v.task_scores || v.task_scores_0_5) && h('p', {}, 'Not graded')),
+        v.partial && h('p', { class: 'muted' }, 'Some task grades are missing')))));
   const tile = (label, band, sub, main) => h('div', { class: 'score-tile' + (main ? ' main' : '') }, h('div', { class: 'muted' }, label),
     h('div', { class: 'big' }, band == null ? '-' : Number(band).toFixed(1)), sub && h('div', { class: 'muted' }, sub));
   return h('div', { class: 'score-grid' },
@@ -583,6 +600,7 @@ async function home() {
           h('td', {}, h('a', { href: `/results/${a.attempt_id}/report.pdf`, target: '_blank' }, 'PDF'), ' · ',
             h('a', { href: `/results/${a.attempt_id}/report.html`, target: '_blank' }, 'HTML')))))))
         : h('div', { class: 'panel empty' }, 'No graded attempts yet. Your results will appear here.'),
+      attempts.length ? spellingPanel() : null,
       attempts.length && !CFG.lan ? studyPanel() : null));
   });
 }
@@ -626,6 +644,180 @@ async function refreshStudy(go, links, status) {
     h('span', { class: 'muted' }, j.state === 'queued' ? 'waiting for other Claude jobs' : j.state === 'running' ? `writing… ${fmt(j.elapsed)}`
       : j.state === 'done' ? `ready in ${fmt(j.elapsed)}` : (j.error || 'failed')))] : []));
   if (active && go.isConnected) studyPoll = setTimeout(() => refreshStudy(go, links, status), 3000);
+}
+
+// ------------------------------------------------------------------ spelling trainer (tools/spelling.py)
+// Method: Look, Say, Cover, Write, Check for new words; reviews start from memory (retrieval first), spaced out
+// with Leitner boxes on the server. Only the first try of a session counts; a miss comes back later in the session.
+const SPELL_STATUS = { relapsed: 'Misspelt again', due: 'Due today', new: 'New', learning: 'Learning', learned: 'Learned', ignored: 'Hidden' };
+
+function spellingPanel() {
+  const body = h('div', { class: 'stack' }, h('span', { class: 'muted' }, 'Loading…'));
+  const load = () => api.get('/api/spelling').then(s => body.replaceChildren(...spellingBody(s, load)))
+    .catch(e => body.replaceChildren(h('span', { class: 'error' }, e.message)));
+  load();
+  return h('div', { class: 'panel generate spelling' },
+    h('div', { class: 'generate-head' }, h('b', {}, 'Spelling trainer'),
+      h('span', { class: 'muted' }, 'Every word you misspelt in a writing task, with a short drill that brings each word back just before you would forget it · ~5 min a day')),
+    body);
+}
+
+const boxDots = (box, total) => h('span', { class: 'box-dots', title: `box ${box} of ${total}`, 'aria-label': `box ${box} of ${total}` },
+  ...Array.from({ length: total }, (_, i) => h('i', { class: i < box ? 'on' : '' })));
+
+function spellingBody(s, reload) {
+  if (!s.words.length) return [h('span', { class: 'muted' }, 'No misspelt words yet. They appear here after a writing task has been graded.')];
+  const c = s.counts;
+  const start = h('button', { class: 'btn primary', disabled: !s.session.length, onclick: () => spellingDrill(s).catch(alertBox) },
+    s.session.length ? `Practise ${s.session.length} word${s.session.length > 1 ? 's' : ''}` : 'All caught up');
+  const stat = (n, label) => h('div', { class: 'spell-stat' }, h('b', {}, n), h('span', { class: 'muted' }, label));
+  const toggle = w => h('button', { class: 'btn link', onclick: async () => {
+    await api.post('/api/spelling', { word: w.word, ignore: w.status !== 'ignored' }).catch(alertBox); reload();
+  } }, w.status === 'ignored' ? 'Show' : 'Hide');
+  return [
+    h('div', { class: 'spell-head' },
+      h('div', { class: 'spell-stats' }, stat(c.to_practise, 'to practise'), stat(c.learning, 'waiting for review'), stat(c.learned, 'learned')),
+      h('div', { class: 'row' }, start, !s.session.length && s.next_review && h('span', { class: 'muted' }, `next review ${shortDate(s.next_review)}`))),
+    h('details', { class: 'spell-more' }, h('summary', {}, 'How the drill works'),
+      h('ol', { class: 'spell-method' },
+        h('li', {}, h('b', {}, 'Look. '), 'See the correct spelling with the part you got wrong highlighted, next to what you wrote.'),
+        h('li', {}, h('b', {}, 'Say. '), 'Hear it, then say it aloud in chunks (dif · fer · ent). Saying every letter group stops you dropping one.'),
+        h('li', {}, h('b', {}, 'Cover and write. '), 'The word disappears; type it from memory. Recalling it is what makes it stick, not rereading it.'),
+        h('li', {}, h('b', {}, 'Check. '), 'Compare letter by letter. A miss comes back a few words later in the same session.'),
+        h('li', {}, h('b', {}, 'Space it out. '), `Each word spelt right from memory waits longer: ${Object.values(s.intervals).join(', ')} days. `
+          + `After ${s.boxes} correct reviews it counts as learned. If you misspell it again in a test, it starts over.`)),
+      h('p', { class: 'muted' }, 'Short daily sessions beat one long one. Hide a word if it was only a typing slip.')),
+    h('details', { class: 'spell-more' }, h('summary', {}, `All words (${s.words.length})`),
+      h('div', { class: 'table-wrap' }, h('table', { class: 'spell-table' },
+        h('thead', {}, h('tr', {}, ['Word', 'You wrote', 'Tests', 'Progress', 'Status', 'Next review', ''].map(x => h('th', {}, x)))),
+        h('tbody', {}, s.words.map(w => h('tr', { class: w.status === 'ignored' ? 'muted' : '' },
+          h('td', {}, h('b', {}, w.word)), h('td', { class: 'wrong' }, w.wrong.join(', ')),
+          h('td', { title: w.correct_since ? `written correctly in ${w.correct_since} later test${w.correct_since > 1 ? 's' : ''}` : '' },
+            String(w.attempts.length), w.correct_since ? h('span', { class: 'ok' }, ` · ✓${w.correct_since}`) : null),
+          h('td', {}, boxDots(w.box, s.boxes)),
+          h('td', {}, h('span', { class: `spell-status ${w.status}` }, SPELL_STATUS[w.status])),
+          h('td', {}, w.status === 'learning' ? shortDate(w.due) : ''), h('td', {}, toggle(w)))))))),
+  ];
+}
+
+// Letters of `b` that are not part of the longest common subsequence with `a` (the part to look at).
+function lcsMarks(a, b) {
+  a = a.toLowerCase(); b = b.toLowerCase();
+  const L = Array.from({ length: a.length + 1 }, () => new Array(b.length + 1).fill(0));
+  for (let i = a.length - 1; i >= 0; i--) for (let j = b.length - 1; j >= 0; j--)
+    L[i][j] = a[i] === b[j] ? L[i + 1][j + 1] + 1 : Math.max(L[i + 1][j], L[i][j + 1]);
+  const marks = new Array(b.length).fill(true);
+  for (let i = 0, j = 0; i < a.length && j < b.length;) {
+    if (a[i] === b[j]) { marks[j] = false; i++; j++; } else if (L[i + 1][j] >= L[i][j + 1]) i++; else j++;
+  }
+  return marks;
+}
+const marked = (word, other, cls) => h('span', { class: 'spell-word' },
+  ...lcsMarks(other, word).map((m, i) => m ? h('mark', { class: cls }, word[i]) : word[i]));
+
+function sayWord(word) {
+  if (!window.speechSynthesis) return;
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(word);
+  u.voice = speechSynthesis.getVoices().find(v => v.lang.startsWith('en')) || null;
+  u.rate = 0.8;
+  speechSynthesis.speak(u);
+}
+
+const blankOut = (sentence, word) => sentence &&
+  sentence.replace(new RegExp(`(?<![A-Za-z])${word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?![A-Za-z])`, 'i'), '_____');
+
+function spellStudy(w, n) {
+  return show((app, done) => {
+    const quit = h('button', { class: 'btn link', onclick: () => done('quit') }, 'Stop for today');
+    app.append(h('div', { class: 'panel stack narrow spell-card' },
+      h('div', { class: 'spell-step' }, h('b', {}, '1 · Look and say'), h('span', { class: 'muted' }, n)),
+      h('div', { class: 'spell-big' }, marked(w.word, w.wrong[0] || w.word, 'hot')),
+      h('p', {}, 'You wrote: ', ...w.wrong.flatMap((x, i) => [i ? ', ' : '', h('s', { class: 'wrong' }, x)])),
+      w.tip && h('p', { class: 'muted' }, w.tip),
+      w.example && h('p', { class: 'spell-example' }, '“', w.example, '”'),
+      h('div', { class: 'row' }, h('button', { class: 'btn', onclick: () => sayWord(w.word) }, '🔊 Hear it'),
+        h('span', { class: 'muted' }, 'Say it aloud in chunks and look hard at the highlighted letters.')),
+      quit));
+    sayWord(w.word);
+    bar.next('Cover and write', () => done());
+    $('#bar-next').focus();
+  });
+}
+
+function spellWrite(w, n) {
+  return show((app, done) => {
+    const input = h('input', { class: 'spell-input', spellcheck: 'false', autocorrect: 'off', autocapitalize: 'off', autocomplete: 'off',
+      'aria-label': 'Type the word', onkeydown: e => { if (e.key === 'Enter') { e.preventDefault(); $('#bar-next').click(); } } });
+    const out = h('div', { class: 'stack' });
+    const cue = blankOut(w.example, w.word);
+    const noVoice = !window.speechSynthesis || !speechSynthesis.getVoices().some(v => v.lang.startsWith('en'));
+    const quit = h('button', { class: 'btn link', onclick: () => done({ quit: true }) }, 'Stop for today');
+    app.append(h('div', { class: 'panel stack narrow spell-card' },
+      h('div', { class: 'spell-step' }, h('b', {}, '2 · Cover and write'), h('span', { class: 'muted' }, n)),
+      h('p', {}, 'Listen, then type the word from memory.'),
+      cue && h('p', { class: 'spell-example' }, '“', cue, '”'),
+      noVoice && h('p', { class: 'muted' }, `No speech voice found. Hint: ${w.word.length} letters, starts with “${w.word[0]}”.`),
+      h('div', { class: 'row' }, input, h('button', { class: 'btn', onclick: () => { sayWord(w.word); input.focus(); } }, '🔊 Hear it again')),
+      out, quit));
+    sayWord(w.word);
+    input.focus();
+    bar.next('Check', () => {
+      const typed = input.value.trim().replace(/’/g, "'").replace(/\s+/g, ' ');
+      if (!typed) return input.focus();
+      const ok = typed.toLowerCase() === w.word.toLowerCase();
+      input.disabled = true;
+      out.replaceChildren(ok
+        ? h('p', { class: 'spell-result ok' }, '✓ Correct: ', h('b', {}, w.word))
+        : h('div', { class: 'spell-result bad stack' },
+            h('div', {}, 'You typed: ', marked(typed, w.word, 'bad')),
+            h('div', {}, 'Correct: ', marked(w.word, typed, 'hot')),
+            h('p', { class: 'muted' }, 'Look at the highlighted letters. This word comes back in a moment.')));
+      bar.next('Next', () => done({ ok, typed }));
+      $('#bar-next').focus();
+    });
+  });
+}
+
+async function spellingDrill(s) {
+  const byWord = Object.fromEntries(s.words.map(w => [w.word, w]));
+  // new and relapsed words are studied first; reviews (due) start from memory
+  const queue = s.session.map(word => ({ w: byWord[word], study: byWord[word].status !== 'due', tries: 0 }));
+  const first = new Map();                       // word -> { ok, state } from the first try only
+  bar.section('Spelling trainer'); bar.steps(null); bar.fill(0);
+  while (queue.length) {
+    const item = queue.shift();
+    const n = `${first.size + (first.has(item.w.word) ? 0 : 1)} of ${s.session.length}`;
+    bar.progress(`Word ${n}`);
+    if (item.study && await spellStudy(item.w, n) === 'quit') break;
+    const res = await spellWrite(item.w, n);
+    if (res.quit) break;
+    item.tries += 1;
+    if (!first.has(item.w.word)) {
+      const state = await api.post('/api/spelling', { word: item.w.word, ok: res.ok, typed: res.typed }).catch(e => { console.error(e); return null; });
+      first.set(item.w.word, { ok: res.ok, state });
+      bar.fill(first.size / s.session.length);
+    }
+    if (!res.ok && item.tries < 3) queue.splice(Math.min(2, queue.length), 0, { ...item, study: true });
+  }
+  speechSynthesis?.cancel();
+  bar.progress('');
+  if (first.size) {
+    const right = [...first.values()].filter(r => r.ok).length;
+    await show((app, done) => {
+      app.append(h('div', { class: 'panel stack narrow' },
+        h('h1', {}, 'Session done'),
+        h('p', {}, `${right} of ${first.size} spelt right first time.`),
+        h('table', { class: 'spell-table' }, h('tbody', {}, [...first].map(([word, r]) => h('tr', {},
+          h('td', {}, r.ok ? h('span', { class: 'ok' }, '✓') : h('span', { class: 'error' }, '✗')), h('td', {}, h('b', {}, word)),
+          h('td', {}, r.state && boxDots(r.state.box, s.boxes)),
+          h('td', { class: 'muted' }, !r.state ? '' : r.state.status === 'learned' ? 'learned' : r.ok ? `next review ${shortDate(r.state.due)}` : 'again next session'))))),
+        h('p', { class: 'muted' }, 'Come back tomorrow: the spacing is what moves words into long-term memory.')));
+      bar.next('Back to start', () => done());
+    });
+  }
+  bar.section('');
+  home();
 }
 
 // ------------------------------------------------------------------ test list with filters

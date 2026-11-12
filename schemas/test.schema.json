@@ -10,6 +10,7 @@
     "title": { "type": "string" },
     "format": { "const": "toefl-ibt-2026" },
     "mode": { "enum": ["full", "practice"] },
+    "score_reporting": { "enum": ["estimated", "raw_only"] },
     "created": { "type": "string" },
     "author": { "type": "string" },
     "difficulty": { "enum": ["easy", "medium", "hard", "mixed"] },
@@ -30,6 +31,7 @@
           "additionalProperties": false,
           "properties": {
             "m1": { "$ref": "#/$defs/module" },
+            "m2": { "$ref": "#/$defs/module" },
             "m2_easy": { "$ref": "#/$defs/module" },
             "m2_hard": { "$ref": "#/$defs/module" }
           },
@@ -110,6 +112,7 @@
               "prompt": { "type": "string" },
               "start": { "type": "string" },
               "end": { "type": "string" },
+              "fixed": { "type": "object", "patternProperties": { "^[0-9]+$": { "type": "string", "minLength": 1 } }, "additionalProperties": false },
               "chunks": { "type": "array", "minItems": 3, "items": { "type": "string" } },
               "answer": { "type": "array", "minItems": 3, "items": { "type": "string" } },
               "skill": { "type": "string" },

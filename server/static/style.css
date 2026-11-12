@@ -262,3 +262,37 @@ textarea.writing:focus { outline: none; border-color: var(--accent); box-shadow:
 #overlay[hidden] { display: none; }
 .error { color: var(--bad); }
 pre { white-space: pre-wrap; font-size: .85rem; }
+
+/* ---------- spelling trainer ---------- */
+.ok { color: var(--ok); }
+.spell-head { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; justify-content: space-between; }
+.spell-stats { display: flex; gap: 22px; }
+.spell-stat { display: flex; flex-direction: column; line-height: 1.2; }
+.spell-stat b { font-size: 1.5rem; font-variant-numeric: tabular-nums; }
+.spell-stat span { font-size: .82rem; }
+.spell-more summary { cursor: pointer; color: var(--accent); font-size: .92rem; }
+.spell-more[open] summary { margin-bottom: 8px; }
+.spell-method { margin: 0; padding-left: 22px; font-size: .95rem; }
+.spell-method li + li { margin-top: 4px; }
+.spell-table td { padding: 6px 10px; font-size: .92rem; }
+.spell-table td.wrong, s.wrong { color: var(--bad); }
+.spell-table tr.muted b { font-weight: 500; }
+.box-dots { display: inline-flex; gap: 3px; vertical-align: middle; }
+.box-dots i { width: 8px; height: 8px; border-radius: 50%; background: var(--line-strong); }
+.box-dots i.on { background: var(--ok); }
+.spell-status { font-size: .8rem; padding: 1px 9px; border-radius: 99px; border: 1px solid var(--line-strong); color: var(--muted); white-space: nowrap; }
+.spell-status.relapsed { border-color: var(--bad); color: var(--bad); }
+.spell-status.due, .spell-status.new { border-color: var(--accent); color: var(--accent); }
+.spell-status.learned { border-color: var(--ok); color: var(--ok); }
+.spell-card { max-width: 640px; margin: 0 auto; }
+.spell-step { display: flex; justify-content: space-between; font-size: .9rem; }
+.spell-big { font-size: 2.6rem; font-weight: 700; letter-spacing: .06em; text-align: center; padding: 10px 0; }
+.spell-word mark { color: inherit; padding: 0 1px; border-radius: 3px; }
+.spell-word mark.hot { background: color-mix(in srgb, #f5c400 55%, var(--panel)); }
+.spell-word mark.bad { background: color-mix(in srgb, var(--bad) 30%, var(--panel)); }
+.spell-example { font-style: italic; }
+.spell-input { flex: 1; min-width: 200px; font-size: 1.4rem; padding: 8px 14px; letter-spacing: .04em; border: 1px solid var(--line-strong);
+               border-radius: 8px; background: var(--panel); }
+.spell-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+.spell-result { font-size: 1.15rem; }
+.spell-result .spell-word { font-weight: 700; letter-spacing: .04em; }

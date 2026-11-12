@@ -3,8 +3,9 @@
   "$id": "toefl-grading.schema.json",
   "title": "Claude grading output (results/<attempt>/grading.json)",
   "type": "object",
-  "required": ["tasks", "overall"],
+  "required": ["scale", "tasks", "overall"],
   "properties": {
+    "scale": { "const": 6, "description": "Task and question scores are 0-6. Older gradings without this field were 0-5." },
     "tasks": {
       "type": "object",
       "description": "Keyed by task id. Required for every email, academic_discussion and interview task in grading_input.json.",
@@ -48,7 +49,7 @@
       "type": "object",
       "required": ["score", "summary", "errors"],
       "properties": {
-        "score": { "type": "number", "minimum": 0, "maximum": 5 },
+        "score": { "type": "number", "minimum": 0, "maximum": 6 },
         "criteria": {
           "type": "array",
           "description": "One entry per criterion in criteria_to_rate (goals from spec/toefl-2026.yaml).",
@@ -68,6 +69,15 @@
         "strengths": { "type": "array", "items": { "type": "string" } },
         "errors": { "type": "array", "items": { "$ref": "#/$defs/error" } },
         "improved_version": { "type": "string" },
+        "misspellings": {
+          "type": "array",
+          "description": "Writing only: every misspelt word in the response (not capped), once per word. Feeds the spelling trainer.",
+          "items": {
+            "type": "object",
+            "required": ["wrong", "right"],
+            "properties": { "wrong": { "type": "string", "minLength": 1 }, "right": { "type": "string", "minLength": 1 } }
+          }
+        },
         "questions": {
           "type": "object",
           "description": "Interview only: per-question grades keyed by question id.",
@@ -75,7 +85,7 @@
             "type": "object",
             "required": ["score", "summary"],
             "properties": {
-              "score": { "type": "number", "minimum": 0, "maximum": 5 },
+              "score": { "type": "number", "minimum": 0, "maximum": 6 },
               "summary": { "type": "string" },
               "errors": { "type": "array", "items": { "$ref": "#/$defs/error" } },
               "model_answer": { "type": "string" }
